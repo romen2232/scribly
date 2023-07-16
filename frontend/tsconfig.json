@@ -9,6 +9,8 @@
     /* Bundler mode */
     "moduleResolution": "node",
     "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
 
     /* Linting */
     "strict": true,
