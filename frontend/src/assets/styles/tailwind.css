@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: 'Nunito';
+    src: url('../fonts/nunito/static/Nunito-Bold.ttf');
+}
+
+body {
+    @apply bg-tiviWhite text-tiviBlack dark:bg-tiviBlack dark:text-tiviWhite;
+    height: 100vh;
+    font-family: 'Nunito', sans-serif;
+}
+#root {
+    height: 100vh;
+}

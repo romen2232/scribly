@@ -1,15 +1,20 @@
 {
     "**/*.{js,jsx,ts,tsx}": [
-        "prettier --write",
         "eslint --fix",
+        "prettier --write",
         "eslint"
     ],
-    "**/*.{css,scss}": [
-        "prettier --write",
+    // All css minus main.css
+    "**/!(*.min).css": [
         "stylelint --fix",
+        "prettier --write",
         "stylelint"
     ],
+
+    
     "**/*.{json,md,yml,yaml,html}": [
         "prettier --write"
+    ],
+    "**/*.py": [
     ]
 }

@@ -1,4 +1,4 @@
 {
-  "cSpell.words": ["corsheaders", "escribly", "titivillus", "tivi"],
-  "python.formatting.provider": "black"
+    "cSpell.words": ["consts", "corsheaders", "escribly", "titivillus", "tivi"],
+    "python.formatting.provider": "black"
 }
