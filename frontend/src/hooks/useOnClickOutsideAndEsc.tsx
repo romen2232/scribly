@@ -1,6 +1,6 @@
 import { RefObject, useEffect } from 'react';
 
-export default function useOnClickOutsideAndEsc(
+function useOnClickOutsideAndEsc(
     ref: RefObject<HTMLElement>,
     handler: (event: MouseEvent | TouchEvent | KeyboardEvent) => void,
 ) {
@@ -34,3 +34,5 @@ export default function useOnClickOutsideAndEsc(
         };
     }, [handler, ref]);
 }
+
+export default useOnClickOutsideAndEsc;

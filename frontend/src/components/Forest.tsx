@@ -1,5 +1,6 @@
 import { ForestDoor } from './ForestDoor';
-import { ForestType, useForestStore } from '../stores/forestStore';
+import { useForestStore } from '../stores/forestStore';
+import { ForestType } from '../utils/types';
 
 export interface IForestProps {
     onClose: () => void;

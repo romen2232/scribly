@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router';
 import Home from '../pages/home';
+import New from '../pages/new';
 
 export interface IAppProps {}
 
@@ -13,6 +14,7 @@ export function App() {
         <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<h1>About</h1>} />
+            <Route path="/new" element={<New />} />
         </Routes>
     );
 }

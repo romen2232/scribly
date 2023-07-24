@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import { ForestType } from '../utils/types';
 
-export type ForestType = 'poetry' | 'prose' | 'script';
 export interface ForestStore {
     forest: ForestType;
     setForest: (forest: ForestType) => void;
