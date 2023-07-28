@@ -1,21 +1,16 @@
-import { useNavigate } from 'react-router-dom';
-import { NAVIGATE_BACK_URL } from '../utils/consts';
+import { Header } from '../components/Header';
+import { Note } from '../components/Note';
 
 interface INewProps {}
 
 const New: React.FunctionComponent<INewProps> = () => {
-    const navigate = useNavigate();
-
     return (
-        <header>
-            <button onClick={() => navigate(-1)}>
-                <img
-                    src={NAVIGATE_BACK_URL}
-                    alt="Go back"
-                    className="h-12 w-12"
-                />
-            </button>
-        </header>
+        <div className="h-full max-h-screen overflow-hidden text-tiviBlack">
+            <Header />
+            <main className=" flex h-full flex-col">
+                <Note folder={{ folderName: 'Folder' }} />
+            </main>
+        </div>
     );
 };
 

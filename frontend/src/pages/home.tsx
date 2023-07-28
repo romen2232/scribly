@@ -1,4 +1,4 @@
-import { Header } from '../components/Header';
+import { Header } from '../components/HeaderHome';
 import { Learn } from '../components/Learn';
 import { Footer } from '../components/Footer';
 import { Modal } from '../components/Modal';

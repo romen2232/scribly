@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { CATEGORY_URL, NOTE_URL, FOLDER_URL } from '../utils/consts';
+import { FaFeatherAlt, FaFolder } from 'react-icons/fa';
+import { IoIosAddCircle } from 'react-icons/io';
 
 export interface IFooterProps {
     children?: React.ReactNode;
@@ -11,13 +12,13 @@ export function Footer(props: IFooterProps) {
         <footer className="h-[6.5rem] w-full">
             <nav className="flex h-full flex-row items-center justify-around">
                 <button onClick={props.onFooterModalClick}>
-                    <img src={CATEGORY_URL} alt="Category logo" />
+                    <FaFeatherAlt className="h-12 w-12 transition duration-300 ease-in-out hover:text-tiviElectricViolet" />
                 </button>
                 <Link to="/new">
-                    <img src={NOTE_URL} alt="New note" />
+                    <IoIosAddCircle className="h-12 w-12 transition duration-300 ease-in-out hover:text-tiviElectricViolet" />
                 </Link>
                 <Link to="/folders">
-                    <img src={FOLDER_URL} alt="Folders" />
+                    <FaFolder className="h-12 w-12 transition duration-300 ease-in-out hover:text-tiviElectricViolet" />
                 </Link>
             </nav>
         </footer>

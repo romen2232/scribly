@@ -1,7 +1,8 @@
 from django.db import models
+from users.models import User
 
 # Create your models here.
-class Direct(models.Model):
+class Directs(models.Model):
     sender = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name="directs_sent")
     receiver = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name="directs_received")
     message = models.TextField(max_length=1000)

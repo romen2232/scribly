@@ -17,3 +17,6 @@ export const TIVI_URL = '/src/assets/img/Tivi_0.1.0.png',
     NAVIGATE_BACK_URL = '/src/assets/img/mock/back.png',
     TURN_URL = '/src/assets/img/mock/turn.png',
     RETURN_URL = '/src/assets/img/mock/return.png';
+
+export const API_URL = 'http://localhost:8000/api',
+    AUTH_COOKIE_NAME = 'escribly.auth';

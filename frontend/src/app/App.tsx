@@ -1,6 +1,9 @@
 import { Routes, Route } from 'react-router';
 import Home from '../pages/home';
 import New from '../pages/new';
+import Folders from '../pages/folders';
+import { AuthProvider } from '../hoc/auth/context';
+import Login from '../pages/login';
 
 export interface IAppProps {}
 
@@ -11,10 +14,16 @@ export interface IAppProps {}
  */
 export function App() {
     return (
-        <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<h1>About</h1>} />
-            <Route path="/new" element={<New />} />
-        </Routes>
+        <AuthProvider>
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<h1>About</h1>} />
+                <Route path="/new" element={<New />} />
+                <Route path="/folders" element={<Folders />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<h1>Register</h1>} />
+                <Route path="*" element={<h1>Not Found</h1>} />
+            </Routes>
+        </AuthProvider>
     );
 }

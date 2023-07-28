@@ -8,7 +8,7 @@
 }
 
 body {
-    @apply bg-tiviWhite text-tiviBlack dark:bg-tiviBlack dark:text-tiviWhite;
+    @apply bg-tiviWhite text-tiviBlack;
     height: 100vh;
     font-family: 'Nunito', sans-serif;
 }

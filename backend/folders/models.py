@@ -1,7 +1,7 @@
 from django.db import models
 
 # Create your models here.
-class Folder(models.Model):
+class Folders(models.Model):
     folder_name = models.CharField(max_length=100)
     folder_description = models.TextField(max_length=1000)
     folder_image = models.ImageField(upload_to='folder_images', blank=True)

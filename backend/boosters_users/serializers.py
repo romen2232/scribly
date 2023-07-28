@@ -1,8 +1,18 @@
-
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
-from .models import BoosterUser
+from .models import Boosters_users
 
-class BoosterUserSerializer(serializers.ModelSerializer):
+class Boosters_usersSerializer(serializers.ModelSerializer):
     class Meta:
-        model = BoosterUser
-        fields = ['booster', 'user', 'booster_start_date', 'booster_end_date']
+        model = Boosters_users
+        fields = '__all__'  # or a list of field names
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Add custom claims
+        # token['custom_field'] = 'custom_value'
+
+        return token

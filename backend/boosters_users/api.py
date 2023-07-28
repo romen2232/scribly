@@ -1,7 +1,27 @@
 from rest_framework import viewsets
-from .models import BoosterUser
-from .serializers import BoosterUserSerializer
+from .models import Boosters_users
+from .serializers import Boosters_usersSerializer
+
+
+from rest_framework import viewsets
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def secure_view(request):
+    # Tu lógica de vista segura aquí
+    return Response('Esta vista está protegida por JWT.', status=200)
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    # Puedes personalizar el serializador de tokens aquí si es necesario
+    # serializer_class = CustomTokenObtainPairSerializer
+    pass
 
 class Boosters_usersViewSet(viewsets.ModelViewSet):
-    queryset = BoosterUser.objects.all()
-    serializer_class = BoosterUserSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = Boosters_users.objects.all()
+    serializer_class = Boosters_usersSerializer

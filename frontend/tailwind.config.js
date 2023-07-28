@@ -17,6 +17,10 @@ export default {
             tiviViolet: '#33054C',
             tiviIndigo: '#4A0175',
             tiviElectricViolet: '#B601FD',
+            tiviElectricPurple: {
+                50: '#F3D6FF',
+                100: '#D286FE',
+            },
             tiviPhlox: '#DD0CFC',
             ...colors,
         },
