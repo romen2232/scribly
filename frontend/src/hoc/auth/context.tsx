@@ -5,7 +5,7 @@ import { IUser, IUserLogin, IUserRegister } from '../../utils/types';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { AUTH_COOKIE_NAME } from '../../utils/consts';
-import { login, register } from '../../services/auth';
+import { getUser, login, register } from '../../services/auth';
 
 // Defining the shape of our context
 export interface IAuthContextProps {
@@ -36,25 +36,36 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
 
     // Login function
     const loginUser = useCallback(
-        async ({ username, password }: IUserLogin) => {
+        async ({ email, password }: IUserLogin) => {
             setLoading(true);
-            const response = await login(username, password); // Authenticate user
-            setLoading(false);
+            const response = await login(email, password); // Authenticate user
 
             if (response) {
-                const { user, token } = response;
-                // Display a success message
-                toast(`Bienvenide ${user.username}`, {
-                    position: 'top-right',
-                    type: 'success',
-                    pauseOnHover: false,
-                });
+                const { access } = response;
+                const user = await getUser(access); // Get user data
+                setLoading(false);
+
+                if (!user) {
+                    // Display an error message
+                    toast('Error al iniciar sesión', {
+                        position: 'top-right',
+                        type: 'error',
+                        pauseOnHover: false,
+                    });
+                    return;
+                }
                 // Save authorization token in cookies
-                setCookie(undefined, AUTH_COOKIE_NAME, token, {
+                setCookie(undefined, AUTH_COOKIE_NAME, access, {
                     sameSite: true,
                     maxAge: 60 * 60, // 1 hour
                 });
 
+                // Display a success message
+                toast(`Bienvenide ${user.email}`, {
+                    position: 'top-right',
+                    type: 'success',
+                    pauseOnHover: false,
+                });
                 // Redirect to main page
                 navigate('/');
 
@@ -68,9 +79,9 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
 
     // Registration function
     const registerUser = useCallback(
-        async ({ username, password }: IUserRegister) => {
+        async ({ email, password }: IUserRegister) => {
             setLoading(true);
-            const response = await register(username, password); // Register user
+            const response = await register(email, password); // Register user
             setLoading(false);
 
             if (response) {
@@ -123,11 +134,11 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
     return (
         <AuthContext.Provider
             value={{
-                checkToken,
                 isAuthenticated: !!token, // Double-bang operator coerces the value into a boolean
                 user,
                 login: loginUser,
                 loading,
+                checkToken: checkToken,
                 logout,
                 register: registerUser,
             }}
