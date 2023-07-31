@@ -2,27 +2,27 @@ import React, { FC, useState } from 'react';
 import { InputField } from './InputField';
 
 interface LoginFormProps {
-    onLogin: (username: string, password: string) => void;
+    onLogin: (email: string, password: string) => void;
 }
 
 export const LoginForm: FC<LoginFormProps> = ({ onLogin }) => {
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const handleLogin = (event: React.FormEvent) => {
         event.preventDefault();
-        onLogin(username, password);
+        onLogin(email, password);
     };
 
     return (
         <form className="mt-8 space-y-6" onSubmit={handleLogin}>
             <InputField
-                label="Username"
+                label="Email"
                 inputType="text"
-                name="username"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                name="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
             />
             <InputField
                 label="Password"

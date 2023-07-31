@@ -11,7 +11,7 @@ route = routers.DefaultRouter()
 urlpatterns = [
 
     # Create user
-    path('create/', CreateUserView.as_view(), name='create_user'),
+    path('register/', CreateUserView.as_view(), name='create_user'),
 
     # Activate user
     path('activate/', activate_user_account, name='activate_user'),

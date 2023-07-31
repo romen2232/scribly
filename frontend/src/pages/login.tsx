@@ -6,8 +6,8 @@ import { PageContainer } from '../components/PageContainer';
 const Login: React.FC = () => {
     const { login, loading } = useContext(AuthContext);
 
-    const handleLogin = async (username: string, password: string) => {
-        login({ username, password });
+    const handleLogin = async (email: string, password: string) => {
+        login({ email, password });
     };
 
     return (

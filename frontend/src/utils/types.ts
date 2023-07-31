@@ -1,12 +1,11 @@
 export type ForestType = 'poetry' | 'prose' | 'script';
 
 export interface IUserLogin {
-    username: string;
+    email: string;
     password: string;
 }
 
 export interface IUserRegister {
-    username: string;
     email: string;
     password: string;
 }
