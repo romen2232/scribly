@@ -951,6 +951,11 @@ video {
   color: rgb(7 13 14 / var(--tw-text-opacity));
 }
 
+.text-tiviElectricViolet {
+  --tw-text-opacity: 1;
+  color: rgb(182 1 253 / var(--tw-text-opacity));
+}
+
 .text-tiviWhite {
   --tw-text-opacity: 1;
   color: rgb(245 244 246 / var(--tw-text-opacity));

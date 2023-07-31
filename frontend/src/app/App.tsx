@@ -5,6 +5,7 @@ import Folders from '../pages/folders';
 import { withAuth } from '../hoc/auth/withAuth';
 import Login from '../pages/login';
 import { AuthProvider } from '../hoc/auth/context';
+import Register from '../pages/register';
 
 export interface IAppProps {}
 
@@ -26,7 +27,7 @@ export default function App() {
                 <Route path="/new" element={<ProtectedNew />} />
                 <Route path="/folders" element={<ProtectedFolders />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<h1>Register</h1>} />
+                <Route path="/register" element={<Register />} />
                 <Route path="*" element={<h1>Not Found</h1>} />
             </Routes>
         </AuthProvider>
