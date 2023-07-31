@@ -25,6 +25,8 @@ urlpatterns = [
     # Update user password
     path('update/password/', update_user_password, name='update_user_password'),
 
+
+
     # Delete user account
     path('delete/', delete_user_account, name='delete_user_account'),
 

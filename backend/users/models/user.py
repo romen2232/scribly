@@ -12,9 +12,23 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError('The given email must be set!')
         email = self.normalize_email(email)
+        
+        user_permissions = extra_fields.pop('user_permissions', None)
+        groups = extra_fields.pop('groups', None)
+        
+        
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
+        
+        
+        if user_permissions is not None:
+            user.user_permissions.set(user_permissions)
+            
+        if groups is not None:
+            user.groups.set(groups)
+        
+        
         return user
 
     def create_user(self, email, password=None, **extra_fields):

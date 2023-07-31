@@ -3,3 +3,4 @@ notas.local.md
 backend/venv
 .history
 .env
+__pycache__/
