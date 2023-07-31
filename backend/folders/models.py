@@ -8,3 +8,4 @@ class Folders(models.Model):
     folder_created = models.DateTimeField(auto_now_add=True)
     favorite = models.BooleanField(default=False)
     folder_parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
+    depth = models.IntegerField(default=0)
