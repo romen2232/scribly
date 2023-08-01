@@ -1,18 +1,20 @@
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from .models import Leaderboards_users
 
-class Leaderboards_usersSerializer(serializers.ModelSerializer):
+class LeaderboardUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Leaderboards_users
-        fields = '__all__'  # or a list of field names
+        fields = ['leaderboard', 'user', 'leaderboard_update_date', 'leaderboard_score']
+    
+    def create(self, validated_data):
+        leaderboard = validated_data['leaderboard']
+        user = validated_data['user']
+        leaderboard_user = Leaderboards_users.objects.create(leaderboard=leaderboard, user=user)
+        leaderboard_user.save()
+        return leaderboard_user
 
-class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-
-        # Add custom claims
-        # token['custom_field'] = 'custom_value'
-
-        return token
+    def get(self, validated_data):
+        leaderboard = validated_data['leaderboard']
+        user = validated_data['user']
+        leaderboard_user = Leaderboards_users.objects.get(leaderboard=leaderboard, user=user)
+        return leaderboard_user

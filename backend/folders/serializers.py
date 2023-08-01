@@ -1,18 +1,13 @@
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from .models import Folders
 
 class FoldersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Folders
-        fields = '__all__'  # or a list of field names
+        fields = ['id', 'folder_name', 'folder_description', 'folder_image', 
+                  'folder_created', 'favorite', 'folder_parent', 'depth']
 
-class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-
-        # Add custom claims
-        # token['custom_field'] = 'custom_value'
-
-        return token
+    def create(self, validated_data):
+        folder = Folders.objects.create(**validated_data)
+        folder.save()
+        return folder

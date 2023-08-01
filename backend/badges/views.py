@@ -1,56 +1,30 @@
+from rest_framework import generics, permissions, status
+from rest_framework.response import Response
+from .models import Badge
+from .serializers import BadgeSerializer
 
-# from django.shortcuts import render
-# from django.http import Http404
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
-# from rest_framework import status
-# from rest_framework.permissions import IsAuthenticated
-# from .models import Badge
-# from .serializers import BadgeSerializer
+class BadgeListCreateView(generics.ListCreateAPIView):
+    queryset = Badge.objects.all()
+    serializer_class = BadgeSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
+    def create(self, request, *args, **kwargs):
 
-# class BadgeList(APIView):
-#     permission_classes = [IsAuthenticated]
-    
-#     def get(self, request, format=None):
-#         badges = Badge.objects.all()
-#         serializer = BadgeSerializer(badges, many=True)
-#         return Response(serializer.data)
-
-#     def post(self, request, format=None):
-#         serializer = BadgeSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        badge = serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-# class BadgeDetail(APIView):
-#     permission_classes = [IsAuthenticated]
-    
-    
-#     def get_object(self, pk):
-#         try:
-#             return Badge.objects.get(pk=pk)
-#         except Badge.DoesNotExist:
-#             raise Http404
+class BadgeRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Badge.objects.all()
+    serializer_class = BadgeSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-#     def get(self, request, pk, format=None):
-#         badge = self.get_object(pk)
-#         serializer = BadgeSerializer(badge)
-#         return Response(serializer.data)
-
-#     def put(self, request, pk, format=None):
-#         badge = self.get_object(pk)
-#         serializer = BadgeSerializer(badge, data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-#     def delete(self, request, pk, format=None):
-#         badge = self.get_object(pk)
-#         badge.delete()
-#         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        badge = serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)

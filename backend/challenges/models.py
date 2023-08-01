@@ -1,8 +1,6 @@
 from django.db import models
 from django.conf import settings
 
-
-# Create your models here.
 class Challenges(models.Model):
     challenge_name = models.CharField(max_length=100)
     challenge_description = models.TextField(max_length=1000)

@@ -1,49 +1,47 @@
-
-from django.shortcuts import render
-from django.http import Http404
+from rest_framework import generics, permissions, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from .models import Challenges_users
+from .serializers import ChallengeUserSerializer
 
-from .models import ChallengeUser
-from .serializers import ChallengeUser
+class ChallengeUserCreateView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
-
-class ChallengeUserList(APIView):
-    def get(self, request, format=None):
-        challengeusers = ChallengeUser.objects.all()
-        serializer = ChallengeUser(challengeusers, many=True)
-        return Response(serializer.data)
-
-    def post(self, request, format=None):
-        serializer = ChallengeUser(data=request.data)
+    def post(self, request, *args, **kwargs):
+        serializer = ChallengeUserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class UserChallengesView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
-class ChallengeUserDetail(APIView):
-    def get_object(self, pk):
+    def get(self, request, user_id, *args, **kwargs):
+        challenges_users = Challenges_users.objects.filter(user=user_id)
+        return Response(ChallengeUserSerializer(challenges_users, many=True).data)
+
+class ChallengeUsersView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, challenge_id, *args, **kwargs):
+        challenges_users = Challenges_users.objects.filter(challenge=challenge_id)
+        return Response(ChallengeUserSerializer(challenges_users, many=True).data)
+
+class SpecificUserChallengeView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, user_id, challenge_id, *args, **kwargs):
         try:
-            return ChallengeUser.objects.get(pk=pk)
-        except ChallengeUser.DoesNotExist:
-            raise Http404
+            challenge_user = Challenges_users.objects.get(user=user_id, challenge=challenge_id)
+            return Response(ChallengeUserSerializer(challenge_user).data)
+        except Challenges_users.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
-    def get(self, request, pk, format=None):
-        challengeuser = self.get_object(pk)
-        serializer = ChallengeUser(challengeuser)
-        return Response(serializer.data)
-
-    def put(self, request, pk, format=None):
-        challengeuser = self.get_object(pk)
-        serializer = ChallengeUser(challengeuser, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        challengeuser = self.get_object(pk)
-        challengeuser.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def delete(self, request, user_id, challenge_id, *args, **kwargs):
+        try:
+            challenge_user = Challenges_users.objects.get(user=user_id, challenge=challenge_id)
+            challenge_user.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Challenges_users.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)

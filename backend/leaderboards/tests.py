@@ -1,57 +1,70 @@
-from django.test import TestCase
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework.test import APIClient, APITestCase
-from rest_framework import status
 from .models import Leaderboards
-from .serializers import LeaderboardsSerializer
-from django.contrib.auth.models import User
-from rest_framework_simplejwt.tokens import RefreshToken
+from leagues.models import Leagues
 
-class LeaderboardsViewSetTestCase(APITestCase):
-    """Test the LeaderboardsViewSet."""
-
+class LeaderboardsTests(APITestCase):
     def setUp(self):
         self.client = APIClient()
-        self.leaderboards_data = {'field1': 'Test field1', 'field2': 'Test field2'}
-        self.user = User.objects.create_user(username='testuser', password='testpass')
-        refresh = RefreshToken.for_user(self.user)
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
-        self.response = self.client.post(reverse('leaderboards-list'), self.leaderboards_data, format="json")
-        self.assertEqual(self.response.status_code, status.HTTP_201_CREATED)
-
-    def test_can_retrieve_leaderboards(self):
-        leaderboards_id = self.response.data['id']
-        response = self.client.get(reverse('leaderboards-detail', kwargs={'pk': leaderboards_id}))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_can_update_leaderboards(self):
-        leaderboards_id = self.response.data['id']
-        response = self.client.put(
-            reverse('leaderboards-detail', kwargs={'pk': leaderboards_id}),
-            {
-                'field1': 'Updated field1',
-                'field2': 'Updated field2'
-            },
-            format='json'
+        self.user = get_user_model().objects.create_user(
+            email='testuser',
+            password='testpassword',
+            is_active=True
         )
-        if response.status_code != status.HTTP_200_OK:
-            print(response.content)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.post(reverse('token_obtain_pair'), 
+                                    {'email': 'testuser', 'password': 'testpassword'}, 
+                                    format='json')
+        if 'access' in response.data:
+            token = response.data['access']
+            self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
+        else:
+           for key in response.data:
+               print(key, response.data[key])
 
-class JWTAuthTestCase(APITestCase):
-    """Test JWT authentication."""
+        self.league = Leagues.objects.create(
+            league_name='Test League', 
+            league_description='Test Description'
+        )
+        
+        self.leaderboard = Leaderboards.objects.create(league=self.league)
 
-    def setUp(self):
-        self.client = APIClient()
-        self.user = User.objects.create_user(username='testuser', password='testpass')
+    def test_create_leaderboard(self):
+        url = reverse('leaderboard-list-create')
+        data = {
+            'league': self.league.id
+        }
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 201)
 
-    def test_can_obtain_token(self):
-        response = self.client.post(reverse('token_obtain_pair'), {'username': 'testuser', 'password': 'testpass'}, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('access', response.data)
-        self.assertIn('refresh', response.data)
+    def test_get_leaderboards(self):
+        url = reverse('leaderboard-list-create')
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['league'], self.league.id)    
 
-    def test_cannot_access_view_without_token(self):
-        self.client.credentials(HTTP_AUTHORIZATION='')
-        response = self.client.get(reverse('leaderboards-list'))
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+    def test_get_single_leaderboard(self):
+        url = reverse('leaderboard-retrieve-update-delete', args=[self.leaderboard.id])
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['league'], self.league.id)
+
+    def test_update_leaderboard(self):
+        url = reverse('leaderboard-retrieve-update-delete', args=[self.leaderboard.id])
+        new_league = Leagues.objects.create(
+            league_name='Test League Updated', 
+            league_description='Test Description Updated'
+        )
+        data = {
+            'league': new_league.id
+        }
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['league'], new_league.id)
+
+    def test_delete_leaderboard(self):
+        url = reverse('leaderboard-retrieve-update-delete', args=[self.leaderboard.id])
+        response = self.client.delete(url, format='json')
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(len(Leaderboards.objects.all()), 0)

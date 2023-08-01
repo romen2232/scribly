@@ -1,49 +1,53 @@
-
-from django.shortcuts import render
-from django.http import Http404
+from rest_framework import generics, permissions, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from .models import Badges_users
+from .serializers import BadgeUserSerializer
 
-from .models import BadgeUser
-from .serializers import BadgeUsers
+class BadgeUserCreateView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
-
-class BadgeUserList(APIView):
-    def get(self, request, format=None):
-        badgeusers = BadgeUser.objects.all()
-        serializer = BadgeUsers(badgeusers, many=True)
-        return Response(serializer.data)
-
-    def post(self, request, format=None):
-        serializer = BadgeUsers(data=request.data)
+    def post(self, request, *args, **kwargs):
+        serializer = BadgeUserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class BadgeUserDetail(APIView):
-    def get_object(self, pk):
-        try:
-            return BadgeUser.objects.get(pk=pk)
-        except BadgeUser.DoesNotExist:
-            raise Http404
+class UserBadgesView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request, pk, format=None):
-        badgeuser = self.get_object(pk)
-        serializer = BadgeUsers(badgeuser)
+    def get(self, request, user_id, *args, **kwargs):
+        badges_users = Badges_users.objects.filter(user=user_id)
+        return Response(BadgeUserSerializer(badges_users, many=True).data)
+        
+
+
+class BadgeUsersView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, badge_id, *args, **kwargs):
+        badges_users = Badges_users.objects.filter(badge=badge_id)
+        serializer = BadgeUserSerializer(badges_users, many=True)
         return Response(serializer.data)
 
-    def put(self, request, pk, format=None):
-        badgeuser = self.get_object(pk)
-        serializer = BadgeUsers(badgeuser, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk, format=None):
-        badgeuser = self.get_object(pk)
-        badgeuser.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+class SpecificUserBadgeView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, user_id, badge_id, *args, **kwargs):
+        try:
+            badge_user = Badges_users.objects.get(user=user_id, badge=badge_id)
+            serializer = BadgeUserSerializer(badge_user)
+            return Response(serializer.data)
+        except Badges_users.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+    def delete(self, request, user_id, badge_id, *args, **kwargs):
+        try:
+            badge_user = Badges_users.objects.get(user=user_id, badge=badge_id)
+            badge_user.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Badges_users.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)

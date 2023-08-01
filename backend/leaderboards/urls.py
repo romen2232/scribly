@@ -1,11 +1,7 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .api import LeaderboardsViewSet, CustomTokenObtainPairView
-
-router = DefaultRouter()
-router.register(r'leaderboards', LeaderboardsViewSet, basename='leaderboards')
+from django.urls import path
+from .views import LeaderboardsListCreateView, LeaderboardsRetrieveUpdateDeleteView
 
 urlpatterns = [
-    path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('', include(router.urls)),
+    path('leaderboards/', LeaderboardsListCreateView.as_view(), name='leaderboard-list-create'),
+    path('leaderboard/<int:pk>/', LeaderboardsRetrieveUpdateDeleteView.as_view(), name='leaderboard-retrieve-update-delete')
 ]

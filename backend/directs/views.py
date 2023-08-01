@@ -1,49 +1,38 @@
-
-from django.shortcuts import render
-from django.http import Http404
+from rest_framework import generics, permissions, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from .models import Directs
+from .serializers import DirectSerializer
 
-from .models import Direct
-from .serializers import Direct
+class DirectCreateView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
-
-class DirectList(APIView):
-    def get(self, request, format=None):
-        directs = Direct.objects.all()
-        serializer = Direct(directs, many=True)
-        return Response(serializer.data)
-
-    def post(self, request, format=None):
-        serializer = Direct(data=request.data)
+    def post(self, request, *args, **kwargs):
+        serializer = DirectSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class DirectDetail(APIView):
-    def get_object(self, pk):
+class ConversationView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, sender_id, receiver_id, *args, **kwargs):
+        # get all messages between two users either as sender or receiver (order by date)
+        conversation = Directs.objects.filter(sender=sender_id, receiver=receiver_id) | Directs.objects.filter(sender=receiver_id, receiver=sender_id)
+        ordered_conversation = conversation.order_by('sent_date')
+        serializer = DirectSerializer(ordered_conversation, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+        
+
+class DirectDeleteView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def delete(self, request, direct_id, *args, **kwargs):
         try:
-            return Direct.objects.get(pk=pk)
-        except Direct.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk, format=None):
-        direct = self.get_object(pk)
-        serializer = Direct(direct)
-        return Response(serializer.data)
-
-    def put(self, request, pk, format=None):
-        direct = self.get_object(pk)
-        serializer = Direct(direct, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        direct = self.get_object(pk)
-        direct.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+            direct = Directs.objects.get(id=direct_id)
+            direct.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Directs.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)

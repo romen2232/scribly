@@ -7,3 +7,6 @@ class Challenges_users(models.Model):
     challenge = models.ForeignKey('challenges.Challenges', on_delete=models.CASCADE)
     user = models.ForeignKey('users.User', on_delete=models.CASCADE)
     challenge_end_date = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = (("challenge", "user"),)

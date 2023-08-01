@@ -1,11 +1,9 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .api import Badges_usersViewSet, CustomTokenObtainPairView
-
-router = DefaultRouter()
-router.register(r'badges_users', Badges_usersViewSet, basename='badges-users')
+from django.urls import path
+from .views import BadgeUserCreateView, UserBadgesView, BadgeUsersView, SpecificUserBadgeView
 
 urlpatterns = [
-    path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('', include(router.urls)),
+    path('badge/user/', BadgeUserCreateView.as_view(), name='badge_user-create'),
+    path('user/<int:user_id>/badges/', UserBadgesView.as_view(), name='user-badges'),
+    path('badge/<int:badge_id>/users/', BadgeUsersView.as_view(), name='badge-users'),
+    path('user/<int:user_id>/badge/<int:badge_id>/', SpecificUserBadgeView.as_view(), name='specific-user-badge'),
 ]

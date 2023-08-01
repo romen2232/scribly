@@ -1,57 +1,51 @@
-from django.test import TestCase
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework.test import APIClient, APITestCase
-from rest_framework import status
 from .models import Directs
-from .serializers import DirectsSerializer
-from django.contrib.auth.models import User
-from rest_framework_simplejwt.tokens import RefreshToken
 
-class DirectsViewSetTestCase(APITestCase):
-    """Test the DirectsViewSet."""
-
+class DirectTests(APITestCase):
     def setUp(self):
         self.client = APIClient()
-        self.directs_data = {'field1': 'Test field1', 'field2': 'Test field2'}
-        self.user = User.objects.create_user(username='testuser', password='testpass')
-        refresh = RefreshToken.for_user(self.user)
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
-        self.response = self.client.post(reverse('directs-list'), self.directs_data, format="json")
-        self.assertEqual(self.response.status_code, status.HTTP_201_CREATED)
 
-    def test_can_retrieve_directs(self):
-        directs_id = self.response.data['id']
-        response = self.client.get(reverse('directs-detail', kwargs={'pk': directs_id}))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_can_update_directs(self):
-        directs_id = self.response.data['id']
-        response = self.client.put(
-            reverse('directs-detail', kwargs={'pk': directs_id}),
-            {
-                'field1': 'Updated field1',
-                'field2': 'Updated field2'
-            },
-            format='json'
+        # Create users
+        self.sender = get_user_model().objects.create_user(
+            email='sender@test.com',
+            password='testpassword',
+            is_active=True
         )
-        if response.status_code != status.HTTP_200_OK:
-            print(response.content)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.receiver = get_user_model().objects.create_user(
+            email='receiver@test.com',
+            password='testpassword',
+            is_active=True
+        )
 
-class JWTAuthTestCase(APITestCase):
-    """Test JWT authentication."""
+        # Obtain a JWT token for the sender
+        response = self.client.post(reverse('token_obtain_pair'), 
+                                    {'email': 'sender@test.com', 'password': 'testpassword'}, 
+                                    format='json')
+        token = response.data['access']
+        # Authenticate the sender
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
 
-    def setUp(self):
-        self.client = APIClient()
-        self.user = User.objects.create_user(username='testuser', password='testpass')
+        # Create a direct
+        self.direct = Directs.objects.create(sender=self.sender, receiver=self.receiver, message="Hello")
 
-    def test_can_obtain_token(self):
-        response = self.client.post(reverse('token_obtain_pair'), {'username': 'testuser', 'password': 'testpass'}, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('access', response.data)
-        self.assertIn('refresh', response.data)
+    def test_post_direct(self):
+        url = reverse('direct-create')
+        data = {'sender': self.sender.id, 'receiver': self.receiver.id, 'message': 'Test message'}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data['message'], 'Test message')
 
-    def test_cannot_access_view_without_token(self):
-        self.client.credentials(HTTP_AUTHORIZATION='')
-        response = self.client.get(reverse('directs-list'))
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+    def test_get_conversation(self):
+        url = reverse('conversation', args=[self.sender.id, self.receiver.id])
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['message'], 'Hello')
+
+    def test_delete_direct(self):
+        url = reverse('direct-delete', args=[self.direct.id])
+        response = self.client.delete(url, format='json')
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(Directs.objects.count(), 0)

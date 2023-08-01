@@ -1,57 +1,112 @@
-from django.test import TestCase
+# ratings/tests.py
+
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework.test import APIClient, APITestCase
-from rest_framework import status
 from .models import Ratings
-from .serializers import RatingsSerializer
-from django.contrib.auth.models import User
-from rest_framework_simplejwt.tokens import RefreshToken
+from challenges.models import Challenges
+from tasks.models import Tasks
 
-class RatingsViewSetTestCase(APITestCase):
-    """Test the RatingsViewSet."""
-
+class RatingsTests(APITestCase):
     def setUp(self):
         self.client = APIClient()
-        self.ratings_data = {'field1': 'Test field1', 'field2': 'Test field2'}
-        self.user = User.objects.create_user(username='testuser', password='testpass')
-        refresh = RefreshToken.for_user(self.user)
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
-        self.response = self.client.post(reverse('ratings-list'), self.ratings_data, format="json")
-        self.assertEqual(self.response.status_code, status.HTTP_201_CREATED)
 
-    def test_can_retrieve_ratings(self):
-        ratings_id = self.response.data['id']
-        response = self.client.get(reverse('ratings-detail', kwargs={'pk': ratings_id}))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_can_update_ratings(self):
-        ratings_id = self.response.data['id']
-        response = self.client.put(
-            reverse('ratings-detail', kwargs={'pk': ratings_id}),
-            {
-                'field1': 'Updated field1',
-                'field2': 'Updated field2'
-            },
-            format='json'
+        # Create a user
+        self.user = get_user_model().objects.create_user(
+            email='testuser',
+            password='testpassword',
+            is_active=True
         )
-        if response.status_code != status.HTTP_200_OK:
-            print(response.content)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        # Obtain a JWT token for the user
+        response = self.client.post(reverse('token_obtain_pair'), 
+                                    {'email': 'testuser', 'password': 'testpassword'}, 
+                                    format='json')
+        if 'access' in response.data:
+            token = response.data['access']
+            # Authenticate the user
+            self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
+        else:
+           for key in response.data:
+               print(key, response.data[key])
 
-class JWTAuthTestCase(APITestCase):
-    """Test JWT authentication."""
+        # create a challenge
+        self.challenge = Challenges.objects.create(challenge_name='testChallenge', challenge_description='testDescription', challenge_points=10, user=self.user)
 
-    def setUp(self):
-        self.client = APIClient()
-        self.user = User.objects.create_user(username='testuser', password='testpass')
+        # create a task
+        self.task = Tasks.objects.create(task_name='testTask', task_description='testDescription', task_points=10)
 
-    def test_can_obtain_token(self):
-        response = self.client.post(reverse('token_obtain_pair'), {'username': 'testuser', 'password': 'testpass'}, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('access', response.data)
-        self.assertIn('refresh', response.data)
+        # Create a rating for the challenge
+        self.rating1 = Ratings.objects.create(user=self.user, rating=5, challenge=self.challenge)
 
-    def test_cannot_access_view_without_token(self):
-        self.client.credentials(HTTP_AUTHORIZATION='')
-        response = self.client.get(reverse('ratings-list'))
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        # Create a rating for the task
+        self.rating2 = Ratings.objects.create(user=self.user, rating=4, task=self.task)
+
+    def test_create_rating(self):
+        url = reverse('ratings-list')
+        data = {'user': self.user.id, 'rating': 3, 'challenge': self.challenge.id}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data['rating'], 3)
+
+    def test_get_all_ratings(self):
+        url = reverse('ratings-list')
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 2)
+
+    def test_get_user_ratings(self):
+        url = reverse('user-ratings', args=[self.user.id])
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 2)
+
+    def test_get_challenge_ratings(self):
+        url = reverse('challenge-ratings', args=[self.challenge.id])
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+
+    def test_get_task_ratings(self):
+        url = reverse('task-ratings', args=[self.task.id])
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+    
+    def test_get_challenge_rating(self):
+        url = reverse('challenge-rating-detail', args=[self.user.id, self.challenge.id])
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['rating'], 5)
+
+    def test_update_challenge_rating(self):
+        url = reverse('challenge-rating-detail', kwargs={'user_id': self.user.id, 'challenge_id': self.challenge.id})
+        data = {'rating': 3}
+        response = self.client.patch(url, data, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['rating'], 3)
+        self.assertEqual(Ratings.objects.get(user=self.user, challenge=self.challenge).rating, 3)
+
+    def test_delete_challenge_rating(self):
+        url = reverse('challenge-rating-detail', args=[self.user.id, self.challenge.id])
+        response = self.client.delete(url, format='json')
+        self.assertEqual(response.status_code, 204)
+
+    def test_get_task_rating(self):
+        url = reverse('task-rating-detail', args=[self.user.id, self.task.id])
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['rating'], 4)
+    
+    def test_update_task_rating(self):
+        url = reverse('task-rating-detail', args=[self.user.id, self.task.id])
+        data = {'rating': 6}
+        response = self.client.patch(url, data, format='json')
+        print(response.data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['rating'], 6)
+
+    def test_delete_task_rating(self):
+        url = reverse('task-rating-detail', args=[self.user.id, self.task.id])
+        response = self.client.delete(url, format='json')
+        self.assertEqual(response.status_code, 204)

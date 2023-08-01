@@ -1,18 +1,23 @@
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from .models import Badges_users
 
-class Badges_usersSerializer(serializers.ModelSerializer):
+class BadgeUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Badges_users
-        fields = '__all__'  # or a list of field names
-
-class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-
-        # Add custom claims
-        # token['custom_field'] = 'custom_value'
-
-        return token
+        fields = ['badge', 'user', 'earned_date']
+    def create(self, validated_data):
+        badge = validated_data['badge']
+        user = validated_data['user']
+        
+        badge_user = Badges_users.objects.create(badge=badge, user=user)
+        badge_user.save()
+        
+        return badge_user
+    
+    def get(self, validated_data):
+        badge = validated_data['badge']
+        user = validated_data['user']
+        badge_user = Badges_users.objects.get(badge=badge, user=user)
+        
+        return badge_user
+    

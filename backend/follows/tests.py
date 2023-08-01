@@ -1,57 +1,90 @@
-from django.test import TestCase
+from datetime import datetime
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework.test import APIClient, APITestCase
-from rest_framework import status
 from .models import Follows
-from .serializers import FollowsSerializer
-from django.contrib.auth.models import User
-from rest_framework_simplejwt.tokens import RefreshToken
 
-class FollowsViewSetTestCase(APITestCase):
-    """Test the FollowsViewSet."""
-
+class FollowsTests(APITestCase):
     def setUp(self):
         self.client = APIClient()
-        self.follows_data = {'field1': 'Test field1', 'field2': 'Test field2'}
-        self.user = User.objects.create_user(username='testuser', password='testpass')
-        refresh = RefreshToken.for_user(self.user)
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
-        self.response = self.client.post(reverse('follows-list'), self.follows_data, format="json")
-        self.assertEqual(self.response.status_code, status.HTTP_201_CREATED)
 
-    def test_can_retrieve_follows(self):
-        follows_id = self.response.data['id']
-        response = self.client.get(reverse('follows-detail', kwargs={'pk': follows_id}))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_can_update_follows(self):
-        follows_id = self.response.data['id']
-        response = self.client.put(
-            reverse('follows-detail', kwargs={'pk': follows_id}),
-            {
-                'field1': 'Updated field1',
-                'field2': 'Updated field2'
-            },
-            format='json'
+        # Create users
+        self.user1 = get_user_model().objects.create_user(
+            email='testuser1',
+            password='testpassword1',
+            is_active=True
         )
-        if response.status_code != status.HTTP_200_OK:
-            print(response.content)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-class JWTAuthTestCase(APITestCase):
-    """Test JWT authentication."""
+        self.user2 = get_user_model().objects.create_user(
+            email='testuser2',
+            password='testpassword2',
+            is_active=True
+        )
 
-    def setUp(self):
-        self.client = APIClient()
-        self.user = User.objects.create_user(username='testuser', password='testpass')
+        # Obtain a JWT token for the first user
+        response = self.client.post(reverse('token_obtain_pair'), 
+                                    {'email': 'testuser1', 'password': 'testpassword1'}, 
+                                    format='json')
+        if 'access' in response.data:
+            token = response.data['access']
+            # Authenticate the user
+            self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
+        else:
+           for key in response.data:
+               print(key, response.data[key])
 
-    def test_can_obtain_token(self):
-        response = self.client.post(reverse('token_obtain_pair'), {'username': 'testuser', 'password': 'testpass'}, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('access', response.data)
-        self.assertIn('refresh', response.data)
+        # create a follow
+        self.follow = Follows.objects.create(follower=self.user1, followed=self.user2)
 
-    def test_cannot_access_view_without_token(self):
-        self.client.credentials(HTTP_AUTHORIZATION='')
-        response = self.client.get(reverse('follows-list'))
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+    def test_create_follow(self):
+        url = reverse('follow-list')
+        user3 = get_user_model().objects.create_user(
+            email='testuser3',
+            password='testpassword3',
+            is_active=True
+        )
+        data = {'follower': self.user1.id, 'followed': user3.id}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data['follower'], self.user1.id)
+        self.assertEqual(response.data['followed'], user3.id)
+
+    def test_get_user_follows(self):
+        url = reverse('following', args=[self.user1.id])
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['follower'], self.user1.id)
+        self.assertEqual(response.data[0]['followed'], self.user2.id)
+
+    def test_get_followers(self):
+        url = reverse('followers', args=[self.user2.id])
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['follower'], self.user1.id)
+        self.assertEqual(response.data[0]['followed'], self.user2.id)
+
+    def test_get_follow_detail(self):
+        url = reverse('follow-detail', args=[self.user1.id, self.user2.id])
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['follower'], self.user1.id)
+        self.assertEqual(response.data['followed'], self.user2.id)
+
+    def test_delete_follow(self):
+        url = reverse('unfollow', args=[self.user1.id, self.user2.id])
+        response = self.client.delete(url, format='json')
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(Follows.objects.count(), 0)
+
+    def test_get_friends(self):
+        # Make user2 follow user1
+        Follows.objects.create(follower=self.user2, followed=self.user1)
+
+        url = reverse('friends', args=[self.user1.id])
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['follower'], self.user1.id)
+        self.assertEqual(response.data[0]['followed'], self.user2.id)

@@ -1,11 +1,9 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .api import Leaderboards_usersViewSet, CustomTokenObtainPairView
-
-router = DefaultRouter()
-router.register(r'leaderboards_users', Leaderboards_usersViewSet, basename='leaderboards_users')
+from django.urls import path
+from .views import LeaderboardUserCreateView, UserLeaderboardsView, LeaderboardUsersView, SpecificUserLeaderboardView
 
 urlpatterns = [
-    path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('', include(router.urls)),
+    path('leaderboard/user/', LeaderboardUserCreateView.as_view(), name='leaderboard_user-create'),
+    path('user/<int:user_id>/leaderboards/', UserLeaderboardsView.as_view(), name='user-leaderboards'),
+    path('leaderboard/<int:leaderboard_id>/users/', LeaderboardUsersView.as_view(), name='leaderboard-users'),
+    path('user/<int:user_id>/leaderboard/<int:leaderboard_id>/', SpecificUserLeaderboardView.as_view(), name='specific-user-leaderboard'),
 ]

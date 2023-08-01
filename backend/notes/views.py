@@ -1,61 +1,29 @@
-from django.shortcuts import render
-from django.http import Http404
-from rest_framework.views import APIView
+from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from rest_framework import status
-
-from .models import Note
+from .models import Notes
 from .serializers import NoteSerializer
 
+class NoteListCreateView(generics.ListCreateAPIView):
+    queryset = Notes.objects.all()
+    serializer_class = NoteSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-class NoteList(APIView):
-    def get(self, request, format=None):
-        notes = Note.objects.all()
-        serializer = NoteSerializer(notes, many=True)
-        return Response(serializer.data)
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        note = serializer.save()
+        return Response({"status": "success", "data": NoteSerializer(note).data}, 
+                        status=status.HTTP_201_CREATED)
 
-    def post(self, request, format=None):
-        serializer = NoteSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class NoteRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Notes.objects.all()
+    serializer_class = NoteSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-
-class NoteDetail(APIView):
-    def get_object(self, pk):
-        try:
-            return Note.objects.get(pk=pk)
-        except Note.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk, format=None):
-        note = self.get_object(pk)
-        serializer = NoteSerializer(note)
-        return Response(serializer.data)
-
-    def put(self, request, pk, format=None):
-        note = self.get_object(pk)
-        serializer = NoteSerializer(note, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        note = self.get_object(pk)
-        note.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class CreateNote(APIView):
-    """
-    View to create a new note.
-    """
-
-    def post(self, request, format=None):
-        serializer = NoteSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        note = serializer.save()
+        return Response({"status": "success", "data": NoteSerializer(note).data})

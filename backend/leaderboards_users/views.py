@@ -1,49 +1,63 @@
-
-from django.shortcuts import render
-from django.http import Http404
+from rest_framework import generics, permissions, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from .models import Leaderboards_users
+from .serializers import LeaderboardUserSerializer
 
-from .models import LeaderboardUser
-from .serializers import LeaderboardUser
+class LeaderboardUserCreateView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
-
-class LeaderboardUserList(APIView):
-    def get(self, request, format=None):
-        leaderboardusers = LeaderboardUser.objects.all()
-        serializer = LeaderboardUser(leaderboardusers, many=True)
-        return Response(serializer.data)
-
-    def post(self, request, format=None):
-        serializer = LeaderboardUser(data=request.data)
+    def post(self, request, *args, **kwargs):
+        serializer = LeaderboardUserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class LeaderboardUserDetail(APIView):
-    def get_object(self, pk):
-        try:
-            return LeaderboardUser.objects.get(pk=pk)
-        except LeaderboardUser.DoesNotExist:
-            raise Http404
+class UserLeaderboardsView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request, pk, format=None):
-        leaderboarduser = self.get_object(pk)
-        serializer = LeaderboardUser(leaderboarduser)
+    def get(self, request, user_id, *args, **kwargs):
+        leaderboard_users = Leaderboards_users.objects.filter(user=user_id)
+        return Response(LeaderboardUserSerializer(leaderboard_users, many=True).data)
+
+
+class LeaderboardUsersView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, leaderboard_id, *args, **kwargs):
+        leaderboard_users = Leaderboards_users.objects.filter(leaderboard=leaderboard_id)
+        serializer = LeaderboardUserSerializer(leaderboard_users, many=True)
         return Response(serializer.data)
 
-    def put(self, request, pk, format=None):
-        leaderboarduser = self.get_object(pk)
-        serializer = LeaderboardUser(leaderboarduser, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class SpecificUserLeaderboardView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
-    def delete(self, request, pk, format=None):
-        leaderboarduser = self.get_object(pk)
-        leaderboarduser.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def get(self, request, user_id, leaderboard_id, *args, **kwargs):
+        try:
+            leaderboard_user = Leaderboards_users.objects.get(user=user_id, leaderboard=leaderboard_id)
+            serializer = LeaderboardUserSerializer(leaderboard_user)
+            return Response(serializer.data)
+        except Leaderboards_users.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def patch(self, request, user_id, leaderboard_id, *args, **kwargs):
+        try:
+            leaderboard_user = Leaderboards_users.objects.get(user=user_id, leaderboard=leaderboard_id)
+            serializer = LeaderboardUserSerializer(leaderboard_user, data=request.data, partial=True) 
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Leaderboards_users.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+    def delete(self, request, user_id, leaderboard_id, *args, **kwargs):
+        try:
+            leaderboard_user = Leaderboards_users.objects.get(user=user_id, leaderboard=leaderboard_id)
+            leaderboard_user.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Leaderboards_users.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+

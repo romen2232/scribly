@@ -1,18 +1,14 @@
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from .models import Challenges_users
 
-class Challenges_usersSerializer(serializers.ModelSerializer):
+class ChallengeUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Challenges_users
-        fields = '__all__'  # or a list of field names
+        fields = ['challenge', 'user', 'challenge_end_date']
 
-class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-
-        # Add custom claims
-        # token['custom_field'] = 'custom_value'
-
-        return token
+    def create(self, validated_data):
+        challenge = validated_data['challenge']
+        user = validated_data['user']
+        challenge_user = Challenges_users.objects.create(challenge=challenge, user=user)
+        challenge_user.save()
+        return challenge_user

@@ -1,18 +1,12 @@
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from .models import Directs
 
-class DirectsSerializer(serializers.ModelSerializer):
+class DirectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Directs
-        fields = '__all__'  # or a list of field names
+        fields = ['sender', 'receiver', 'message', 'sent_date']
 
-class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-
-        # Add custom claims
-        # token['custom_field'] = 'custom_value'
-
-        return token
+    def create(self, validated_data):
+        direct = Directs.objects.create(**validated_data)
+        direct.save()
+        return direct

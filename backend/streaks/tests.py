@@ -1,57 +1,63 @@
-from django.test import TestCase
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework.test import APIClient, APITestCase
-from rest_framework import status
 from .models import Streaks
-from .serializers import StreaksSerializer
-from django.contrib.auth.models import User
-from rest_framework_simplejwt.tokens import RefreshToken
 
-class StreaksViewSetTestCase(APITestCase):
-    """Test the StreaksViewSet."""
-
+class StreakTests(APITestCase):
     def setUp(self):
         self.client = APIClient()
-        self.streaks_data = {'field1': 'Test field1', 'field2': 'Test field2'}
-        self.user = User.objects.create_user(username='testuser', password='testpass')
-        refresh = RefreshToken.for_user(self.user)
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
-        self.response = self.client.post(reverse('streaks-list'), self.streaks_data, format="json")
-        self.assertEqual(self.response.status_code, status.HTTP_201_CREATED)
 
-    def test_can_retrieve_streaks(self):
-        streaks_id = self.response.data['id']
-        response = self.client.get(reverse('streaks-detail', kwargs={'pk': streaks_id}))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_can_update_streaks(self):
-        streaks_id = self.response.data['id']
-        response = self.client.put(
-            reverse('streaks-detail', kwargs={'pk': streaks_id}),
-            {
-                'field1': 'Updated field1',
-                'field2': 'Updated field2'
-            },
-            format='json'
+        # Create a user
+        self.user = get_user_model().objects.create_user(
+            email='testuser',
+            password='testpassword',
+            is_active=True
         )
-        if response.status_code != status.HTTP_200_OK:
-            print(response.content)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-class JWTAuthTestCase(APITestCase):
-    """Test JWT authentication."""
+        # Obtain a JWT token for the user
+        response = self.client.post(reverse('token_obtain_pair'), 
+                                    {'email': 'testuser', 'password': 'testpassword'}, 
+                                    format='json')
+        if 'access' in response.data:
+            token = response.data['access']
+            # Authenticate the user
+            self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
+        else:
+           for key in response.data:
+               print(key, response.data[key])
 
-    def setUp(self):
-        self.client = APIClient()
-        self.user = User.objects.create_user(username='testuser', password='testpass')
+        # create a streak
+        self.streak = Streaks.objects.create(user=self.user, streak=5)
 
-    def test_can_obtain_token(self):
-        response = self.client.post(reverse('token_obtain_pair'), {'username': 'testuser', 'password': 'testpass'}, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('access', response.data)
-        self.assertIn('refresh', response.data)
+    def test_create_streak(self):
+        url = reverse('streak-list-create')
+        data = {'user': self.user.id, 'streak': 7}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data['data']['streak'], 7)
 
-    def test_cannot_access_view_without_token(self):
-        self.client.credentials(HTTP_AUTHORIZATION='')
-        response = self.client.get(reverse('streaks-list'))
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+    def test_get_streaks(self):
+        url = reverse('streak-list-create')
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['streak'], 5)
+
+    def test_get_single_streak(self):
+        url = reverse('streak-retrieve-update-delete', args=[self.streak.id])
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['streak'], 5)
+
+    def test_update_streak(self):
+        url = reverse('streak-retrieve-update-delete', args=[self.streak.id])
+        data = {'streak': 10}
+        response = self.client.patch(url, data, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['data']['streak'], 10)
+
+    def test_delete_streak(self):
+        url = reverse('streak-retrieve-update-delete', args=[self.streak.id])
+        response = self.client.delete(url, format='json')
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(len(Streaks.objects.all()), 0)

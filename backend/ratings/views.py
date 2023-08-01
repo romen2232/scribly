@@ -1,49 +1,68 @@
+# ratings/views.py
 
-from django.shortcuts import render
-from django.http import Http404
+from rest_framework import generics, permissions, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from .models import Ratings
+from .serializers import RatingsSerializer
 
-from .models import Rating
-from .serializers import Rating
+class RatingsListView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
-
-class RatingList(APIView):
-    def get(self, request, format=None):
-        ratings = Rating.objects.all()
-        serializer = Rating(ratings, many=True)
-        return Response(serializer.data)
-
-    def post(self, request, format=None):
-        serializer = Rating(data=request.data)
+    def get(self, request, *args, **kwargs):
+        ratings = Ratings.objects.all()
+        return Response(RatingsSerializer(ratings, many=True).data)
+    def post(self, request, *args, **kwargs):
+        serializer = RatingsSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class UserRatingsView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
-class RatingDetail(APIView):
-    def get_object(self, pk):
+    def get(self, request, user_id, *args, **kwargs):
+        ratings = Ratings.objects.filter(user_id=user_id)
+        return Response(RatingsSerializer(ratings, many=True).data)
+
+class ChallengeRatingsView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, challenge_id, *args, **kwargs):
+        ratings = Ratings.objects.filter(challenge_id=challenge_id)
+        return Response(RatingsSerializer(ratings, many=True).data)
+
+class TaskRatingsView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, task_id, *args, **kwargs):
+        ratings = Ratings.objects.filter(task_id=task_id)
+        return Response(RatingsSerializer(ratings, many=True).data)
+
+class RatingDetailView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self, user_id, challenge_id=None, task_id=None):
         try:
-            return Rating.objects.get(pk=pk)
-        except Rating.DoesNotExist:
-            raise Http404
+            return Ratings.objects.get(user=user_id, challenge=challenge_id, task=task_id)
+        except Ratings.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
-    def get(self, request, pk, format=None):
-        rating = self.get_object(pk)
-        serializer = Rating(rating)
+    def get(self, request, user_id, challenge_id=None, task_id=None, format=None):
+        rating = self.get_object(user_id, challenge_id, task_id)
+        serializer = RatingsSerializer(rating)
         return Response(serializer.data)
-
-    def put(self, request, pk, format=None):
-        rating = self.get_object(pk)
-        serializer = Rating(rating, data=request.data)
+    
+    def patch(self, request, user_id, challenge_id=None, task_id=None, format=None):
+        rating = self.get_object(user_id, challenge_id, task_id)
+        serializer = RatingsSerializer(rating, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk, format=None):
-        rating = self.get_object(pk)
+    def delete(self, request, user_id, challenge_id=None, task_id=None, format=None):
+        rating = self.get_object(user_id, challenge_id, task_id)
         rating.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
