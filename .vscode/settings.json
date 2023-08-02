@@ -3,6 +3,7 @@
         "consts",
         "corsheaders",
         "escribly",
+        "openapi",
         "titivillus",
         "tivi",
         "toastify"

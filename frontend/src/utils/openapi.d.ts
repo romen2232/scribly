@@ -333,6 +333,10 @@ export interface components {
             refresh: string;
             access?: string;
         };
+        BadgeUser: {
+            badge: number;
+            user: number;
+        };
     };
     responses: never;
     parameters: never;
