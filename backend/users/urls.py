@@ -14,7 +14,8 @@ urlpatterns = [
     path('auth/register/', CreateUserView.as_view(), name='create_user'),
 
     # Activate user
-    path('auth/activate/', activate_user_account, name='activate_user'),
+    path('auth/activate/',
+         activate_user_account, name='activate_user'),
 
     # List user data
     path('auth/me/', ListUserView.as_view(), name='list_user'),
@@ -23,7 +24,8 @@ urlpatterns = [
     path('auth/update/', update_user, name='update_user'),
 
     # Update user password
-    path('auth/update/password/', update_user_password, name='update_user_password'),
+    path('auth/update/password/', update_user_password,
+         name='update_user_password'),
 
 
 

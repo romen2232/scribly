@@ -9,14 +9,16 @@ from escribly_api import settings
 def send_mail_to_verify_account(user_email, first_name, token):
     """ Task that sends the account activation email """
 
+    print("Sending email to verify account")
+
     send_mail(
         subject='Account Activation',
-        from_email='from@example.com',
+        from_email='escribly@gmail.com',
         message="",
         recipient_list=[user_email, ],
         html_message=f"<h3>Hello, {first_name},</h3>"
                      f"<p>Click on the link below to activate your account."
-                     f"<a href='{settings.FRONTEND_URL}/activate-account/{token}'>ACTIVATE ACCOUNT</a>"
+                     f"<a href='{settings.FRONTEND_URL}/activate/{token}'>ACTIVATE ACCOUNT</a>"
     )
 
 
