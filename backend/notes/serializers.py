@@ -1,18 +1,12 @@
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from .models import Notes
 
-class NotesSerializer(serializers.ModelSerializer):
+class NoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notes
-        fields = '__all__'  # or a list of field names
+        fields = ['id', 'note_name', 'note_content', 'note_image', 'note_last_modified', 'public', 'note_average_rating', 'tags', 'task', 'challenge', 'folder']
 
-class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-
-        # Add custom claims
-        # token['custom_field'] = 'custom_value'
-
-        return token
+    def create(self, validated_data):
+        note = Notes.objects.create(**validated_data)
+        note.save()
+        return note

@@ -10,3 +10,6 @@ class Badges_users(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
     earned_date = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = (("badge", "user"),)

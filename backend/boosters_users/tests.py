@@ -1,57 +1,90 @@
-from django.test import TestCase
+from datetime import datetime
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework.test import APIClient, APITestCase
-from rest_framework import status
 from .models import Boosters_users
-from .serializers import Boosters_usersSerializer
-from django.contrib.auth.models import User
-from rest_framework_simplejwt.tokens import RefreshToken
+from boosters.models import Boosters
 
-class Boosters_usersViewSetTestCase(APITestCase):
-    """Test the Boosters_usersViewSet."""
-
+class BoosterUserTests(APITestCase):
     def setUp(self):
         self.client = APIClient()
-        self.boosters_users_data = {'field1': 'Test field1', 'field2': 'Test field2'}
-        self.user = User.objects.create_user(username='testuser', password='testpass')
-        refresh = RefreshToken.for_user(self.user)
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
-        self.response = self.client.post(reverse('boosters_users-list'), self.boosters_users_data, format="json")
-        self.assertEqual(self.response.status_code, status.HTTP_201_CREATED)
 
-    def test_can_retrieve_boosters_users(self):
-        boosters_users_id = self.response.data['id']
-        response = self.client.get(reverse('boosters_users-detail', kwargs={'pk': boosters_users_id}))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_can_update_boosters_users(self):
-        boosters_users_id = self.response.data['id']
-        response = self.client.put(
-            reverse('boosters_users-detail', kwargs={'pk': boosters_users_id}),
-            {
-                'field1': 'Updated field1',
-                'field2': 'Updated field2'
-            },
-            format='json'
+        # Create a user
+        self.user = get_user_model().objects.create_user(
+            email='testuser',
+            password='testpassword',
+            is_active=True
         )
-        if response.status_code != status.HTTP_200_OK:
-            print(response.content)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-class JWTAuthTestCase(APITestCase):
-    """Test JWT authentication."""
+        # Obtain a JWT token for the user
+        response = self.client.post(reverse('token_obtain_pair'), 
+                                    {'email': 'testuser', 'password': 'testpassword'}, 
+                                    format='json')
+        if 'access' in response.data:
+            token = response.data['access']
+            # Authenticate the user
+            self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
+        else:
+           for key in response.data:
+               print(key, response.data[key])
 
-    def setUp(self):
-        self.client = APIClient()
-        self.user = User.objects.create_user(username='testuser', password='testpass')
+        # create a booster
+        self.booster = Boosters.objects.create(booster_name='testBooster', booster_image='booster_image.jpg', booster_description='test booster')
+        self.booster_user = Boosters_users.objects.create(booster=self.booster, user=self.user)
 
-    def test_can_obtain_token(self):
-        response = self.client.post(reverse('token_obtain_pair'), {'username': 'testuser', 'password': 'testpass'}, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('access', response.data)
-        self.assertIn('refresh', response.data)
+    def test_assign_booster_to_user(self):
+        url = reverse('booster_user-create')
+        self.testBooster= Boosters.objects.create(booster_name='testBooster2', booster_image='booster_image.jpg', booster_description='test booster')
+        data = {'booster': self.testBooster.id, 'user': self.user.id}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data['booster'], self.testBooster.id)
+        self.assertEqual(response.data['user'], self.user.id)
 
-    def test_cannot_access_view_without_token(self):
-        self.client.credentials(HTTP_AUTHORIZATION='')
-        response = self.client.get(reverse('boosters_users-list'))
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+    def test_get_boosters_for_user(self):
+        url = reverse('user-boosters', args=[self.user.id])
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['booster'], self.booster.id)
+        self.assertEqual(response.data[0]['user'], self.user.id)
+
+    def test_get_users_for_booster(self):
+        url = reverse('booster-users', args=[self.booster.id])
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['booster'], self.booster.id)
+        self.assertEqual(response.data[0]['user'], self.user.id)
+
+    def test_get_specific_user_booster(self):
+        url = reverse('specific-user-booster', args=[self.user.id, self.booster.id])
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['booster'], self.booster.id)
+        self.assertEqual(response.data['user'], self.user.id)
+
+    def test_delete_specific_user_booster(self):
+        url = reverse('specific-user-booster', args=[self.user.id, self.booster.id])
+        response = self.client.delete(url, format='json')
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(Boosters_users.objects.count(), 0)
+
+    def test_update_specific_user_booster(self):
+        url = reverse('specific-user-booster', args=[self.user.id, self.booster.id])
+        date=datetime.now()
+        data = { 'booster': self.booster.id, 'user': self.user.id, 'booster_end_date': date}
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['booster'], self.booster.id)
+        self.assertEqual(response.data['user'], self.user.id)
+        self.assertEqual(response.data['booster_end_date'], date.strftime("%Y-%m-%dT%H:%M:%S.%fZ"))
+
+    def test_partial_update_specific_user_booster(self):
+        url = reverse('specific-user-booster', args=[self.user.id, self.booster.id])
+        data = {'booster_end_date': datetime.now()}
+        response = self.client.patch(url, data, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['booster'], self.booster.id)
+        self.assertEqual(response.data['user'], self.user.id)
+        self.assertEqual(response.data['booster_end_date'], data['booster_end_date'].strftime("%Y-%m-%dT%H:%M:%S.%fZ"))

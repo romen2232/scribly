@@ -1,18 +1,20 @@
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from .models import Leagues
 
-class LeaguesSerializer(serializers.ModelSerializer):
+class LeagueSerializer(serializers.ModelSerializer):
     class Meta:
         model = Leagues
-        fields = '__all__'  # or a list of field names
+        fields = ['id', 'league_name', 'league_description', 'league_image']
 
-class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
+    def create(self, validated_data):
+        league_name = validated_data['league_name']
+        league_description = validated_data['league_description']
+        league_image = self.context['request'].FILES.get('league_image')
 
-        # Add custom claims
-        # token['custom_field'] = 'custom_value'
+        league = Leagues.objects.create(league_name=league_name, 
+                                        league_description=league_description, 
+                                        league_image=league_image)
 
-        return token
+        league.save()
+
+        return league

@@ -1,0 +1,2642 @@
+openapi: 3.0.2
+info:
+    title: ''
+    version: ''
+paths:
+    /api/v1/badges/:
+        get:
+            operationId: listBadges
+            description: Return a list of all the existing badges.
+            parameters: []
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/Badge'
+                    description: ''
+            tags:
+                - api
+        post:
+            operationId: createBadge
+            description: Create a new badge instance.
+            parameters: []
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Badge'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/Badge'
+                    multipart/form-data:
+                        schema:
+                            $ref: '#/components/schemas/Badge'
+            responses:
+                '201':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Badge'
+                    description: ''
+            tags:
+                - api
+    /api/v1/badge/{id}/:
+        get:
+            operationId: retrieveBadge
+            description: Return the given badge.
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this badge.
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Badge'
+                    description: ''
+            tags:
+                - api
+        put:
+            operationId: updateBadge
+            description: ''
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this badge.
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Badge'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/Badge'
+                    multipart/form-data:
+                        schema:
+                            $ref: '#/components/schemas/Badge'
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Badge'
+                    description: ''
+            tags:
+                - api
+        patch:
+            operationId: partialUpdateBadge
+            description: ''
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this badge.
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Badge'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/Badge'
+                    multipart/form-data:
+                        schema:
+                            $ref: '#/components/schemas/Badge'
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Badge'
+                    description: ''
+            tags:
+                - api
+        delete:
+            operationId: destroyBadge
+            description: Delete the given badge.
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this badge.
+                  schema:
+                      type: string
+            responses:
+                '204':
+                    description: ''
+            tags:
+                - api
+    /api/v1/auth/me/:
+        get:
+            operationId: listUsers
+            description: List all users
+            parameters: []
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/User'
+                    description: ''
+            tags:
+                - api
+    /api/v1/notes/:
+        get:
+            operationId: listNotes
+            description: ''
+            parameters: []
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/Note'
+                    description: ''
+            tags:
+                - api
+        post:
+            operationId: createNotes
+            description: ''
+            parameters: []
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Note'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/Note'
+                    multipart/form-data:
+                        schema:
+                            $ref: '#/components/schemas/Note'
+            responses:
+                '201':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Note'
+                    description: ''
+            tags:
+                - api
+    /api/v1/note/{id}/:
+        get:
+            operationId: retrieveNotes
+            description: ''
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this notes.
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Note'
+                    description: ''
+            tags:
+                - api
+        put:
+            operationId: updateNotes
+            description: ''
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this notes.
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Note'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/Note'
+                    multipart/form-data:
+                        schema:
+                            $ref: '#/components/schemas/Note'
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Note'
+                    description: ''
+            tags:
+                - api
+        patch:
+            operationId: partialUpdateNotes
+            description: ''
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this notes.
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Note'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/Note'
+                    multipart/form-data:
+                        schema:
+                            $ref: '#/components/schemas/Note'
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Note'
+                    description: ''
+            tags:
+                - api
+        delete:
+            operationId: destroyNotes
+            description: ''
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this notes.
+                  schema:
+                      type: string
+            responses:
+                '204':
+                    description: ''
+            tags:
+                - api
+    /api/v1/leagues/:
+        get:
+            operationId: listLeagues
+            description: ''
+            parameters: []
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/League'
+                    description: ''
+            tags:
+                - api
+        post:
+            operationId: createLeagues
+            description: ''
+            parameters: []
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/League'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/League'
+                    multipart/form-data:
+                        schema:
+                            $ref: '#/components/schemas/League'
+            responses:
+                '201':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/League'
+                    description: ''
+            tags:
+                - api
+    /api/v1/league/{id}/:
+        get:
+            operationId: retrieveLeagues
+            description: ''
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this leagues.
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/League'
+                    description: ''
+            tags:
+                - api
+        put:
+            operationId: updateLeagues
+            description: ''
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this leagues.
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/League'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/League'
+                    multipart/form-data:
+                        schema:
+                            $ref: '#/components/schemas/League'
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/League'
+                    description: ''
+            tags:
+                - api
+        patch:
+            operationId: partialUpdateLeagues
+            description: ''
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this leagues.
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/League'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/League'
+                    multipart/form-data:
+                        schema:
+                            $ref: '#/components/schemas/League'
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/League'
+                    description: ''
+            tags:
+                - api
+        delete:
+            operationId: destroyLeagues
+            description: ''
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this leagues.
+                  schema:
+                      type: string
+            responses:
+                '204':
+                    description: ''
+            tags:
+                - api
+    /api/v1/user/{user_id}/badges/:
+        get:
+            operationId: listUserBadges
+            description: ''
+            parameters:
+                - name: user_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items: {}
+                    description: ''
+            tags:
+                - api
+    /api/v1/badge/{badge_id}/users/:
+        get:
+            operationId: listBadgeUsers
+            description: ''
+            parameters:
+                - name: badge_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items: {}
+                    description: ''
+            tags:
+                - api
+    /api/v1/user/{user_id}/badge/{badge_id}/:
+        get:
+            operationId: retrieveSpecificUserBadge
+            description: ''
+            parameters:
+                - name: user_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+                - name: badge_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema: {}
+                    description: ''
+            tags:
+                - api
+        delete:
+            operationId: destroySpecificUserBadge
+            description: ''
+            parameters:
+                - name: user_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+                - name: badge_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            responses:
+                '204':
+                    description: ''
+            tags:
+                - api
+    /api/v1/user/{user_id}/leaderboards/:
+        get:
+            operationId: listUserLeaderboards
+            description: ''
+            parameters:
+                - name: user_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items: {}
+                    description: ''
+            tags:
+                - api
+    /api/v1/leaderboard/{leaderboard_id}/users/:
+        get:
+            operationId: listLeaderboardUsers
+            description: ''
+            parameters:
+                - name: leaderboard_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items: {}
+                    description: ''
+            tags:
+                - api
+    /api/v1/user/{user_id}/leaderboard/{leaderboard_id}/:
+        get:
+            operationId: retrieveSpecificUserLeaderboard
+            description: ''
+            parameters:
+                - name: user_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+                - name: leaderboard_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema: {}
+                    description: ''
+            tags:
+                - api
+        patch:
+            operationId: partialUpdateSpecificUserLeaderboard
+            description: ''
+            parameters:
+                - name: user_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+                - name: leaderboard_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema: {}
+                    application/x-www-form-urlencoded:
+                        schema: {}
+                    multipart/form-data:
+                        schema: {}
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema: {}
+                    description: ''
+            tags:
+                - api
+        delete:
+            operationId: destroySpecificUserLeaderboard
+            description: ''
+            parameters:
+                - name: user_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+                - name: leaderboard_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            responses:
+                '204':
+                    description: ''
+            tags:
+                - api
+    /api/v1/user/{user_id}/challenges/:
+        get:
+            operationId: listUserChallenges
+            description: ''
+            parameters:
+                - name: user_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items: {}
+                    description: ''
+            tags:
+                - api
+    /api/v1/challenge/{challenge_id}/users/:
+        get:
+            operationId: listChallengeUsers
+            description: ''
+            parameters:
+                - name: challenge_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items: {}
+                    description: ''
+            tags:
+                - api
+    /api/v1/user/{user_id}/challenge/{challenge_id}/:
+        get:
+            operationId: retrieveSpecificUserChallenge
+            description: ''
+            parameters:
+                - name: user_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+                - name: challenge_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema: {}
+                    description: ''
+            tags:
+                - api
+        delete:
+            operationId: destroySpecificUserChallenge
+            description: ''
+            parameters:
+                - name: user_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+                - name: challenge_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            responses:
+                '204':
+                    description: ''
+            tags:
+                - api
+    /api/v1/leaderboards/:
+        get:
+            operationId: listLeaderboards
+            description: ''
+            parameters: []
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/Leaderboards'
+                    description: ''
+            tags:
+                - api
+        post:
+            operationId: createLeaderboards
+            description: ''
+            parameters: []
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Leaderboards'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/Leaderboards'
+                    multipart/form-data:
+                        schema:
+                            $ref: '#/components/schemas/Leaderboards'
+            responses:
+                '201':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Leaderboards'
+                    description: ''
+            tags:
+                - api
+    /api/v1/leaderboard/{id}/:
+        get:
+            operationId: retrieveLeaderboards
+            description: ''
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this leaderboards.
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Leaderboards'
+                    description: ''
+            tags:
+                - api
+        put:
+            operationId: updateLeaderboards
+            description: ''
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this leaderboards.
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Leaderboards'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/Leaderboards'
+                    multipart/form-data:
+                        schema:
+                            $ref: '#/components/schemas/Leaderboards'
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Leaderboards'
+                    description: ''
+            tags:
+                - api
+        patch:
+            operationId: partialUpdateLeaderboards
+            description: ''
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this leaderboards.
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Leaderboards'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/Leaderboards'
+                    multipart/form-data:
+                        schema:
+                            $ref: '#/components/schemas/Leaderboards'
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Leaderboards'
+                    description: ''
+            tags:
+                - api
+        delete:
+            operationId: destroyLeaderboards
+            description: ''
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this leaderboards.
+                  schema:
+                      type: string
+            responses:
+                '204':
+                    description: ''
+            tags:
+                - api
+    /api/v1/conversation/{sender_id}/{receiver_id}/:
+        get:
+            operationId: retrieveConversation
+            description: ''
+            parameters:
+                - name: sender_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+                - name: receiver_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema: {}
+                    description: ''
+            tags:
+                - api
+    /api/v1/folders/:
+        get:
+            operationId: listFolders
+            description: ''
+            parameters: []
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/Folders'
+                    description: ''
+            tags:
+                - api
+        post:
+            operationId: createFolders
+            description: ''
+            parameters: []
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Folders'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/Folders'
+                    multipart/form-data:
+                        schema:
+                            $ref: '#/components/schemas/Folders'
+            responses:
+                '201':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Folders'
+                    description: ''
+            tags:
+                - api
+    /api/v1/folder/{id}/:
+        get:
+            operationId: retrieveFolders
+            description: ''
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this folders.
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Folders'
+                    description: ''
+            tags:
+                - api
+        put:
+            operationId: updateFolders
+            description: ''
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this folders.
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Folders'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/Folders'
+                    multipart/form-data:
+                        schema:
+                            $ref: '#/components/schemas/Folders'
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Folders'
+                    description: ''
+            tags:
+                - api
+        patch:
+            operationId: partialUpdateFolders
+            description: ''
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this folders.
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Folders'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/Folders'
+                    multipart/form-data:
+                        schema:
+                            $ref: '#/components/schemas/Folders'
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Folders'
+                    description: ''
+            tags:
+                - api
+        delete:
+            operationId: destroyFolders
+            description: ''
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this folders.
+                  schema:
+                      type: string
+            responses:
+                '204':
+                    description: ''
+            tags:
+                - api
+    /api/v1/ratings/:
+        get:
+            operationId: listRatings
+            description: ''
+            parameters: []
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items: {}
+                    description: ''
+            tags:
+                - api
+        post:
+            operationId: createRatingsList
+            description: ''
+            parameters: []
+            requestBody:
+                content:
+                    application/json:
+                        schema: {}
+                    application/x-www-form-urlencoded:
+                        schema: {}
+                    multipart/form-data:
+                        schema: {}
+            responses:
+                '201':
+                    content:
+                        application/json:
+                            schema: {}
+                    description: ''
+            tags:
+                - api
+    /api/v1/ratings/user/{user_id}/:
+        get:
+            operationId: retrieveUserRatings
+            description: ''
+            parameters:
+                - name: user_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema: {}
+                    description: ''
+            tags:
+                - api
+    /api/v1/ratings/challenge/{challenge_id}/:
+        get:
+            operationId: retrieveChallengeRatings
+            description: ''
+            parameters:
+                - name: challenge_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema: {}
+                    description: ''
+            tags:
+                - api
+    /api/v1/ratings/task/{task_id}/:
+        get:
+            operationId: retrieveTaskRatings
+            description: ''
+            parameters:
+                - name: task_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema: {}
+                    description: ''
+            tags:
+                - api
+    /api/v1/ratings/user/{user_id}/challenge/{challenge_id}/:
+        get:
+            operationId: retrieveRatingDetail
+            description: ''
+            parameters:
+                - name: user_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+                - name: challenge_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema: {}
+                    description: ''
+            tags:
+                - api
+        patch:
+            operationId: partialUpdateRatingDetail
+            description: ''
+            parameters:
+                - name: user_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+                - name: challenge_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema: {}
+                    application/x-www-form-urlencoded:
+                        schema: {}
+                    multipart/form-data:
+                        schema: {}
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema: {}
+                    description: ''
+            tags:
+                - api
+        delete:
+            operationId: destroyRatingDetail
+            description: ''
+            parameters:
+                - name: user_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+                - name: challenge_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            responses:
+                '204':
+                    description: ''
+            tags:
+                - api
+    /api/v1/ratings/user/{user_id}/task/{task_id}/:
+        get:
+            operationId: retrieveRatingDetail
+            description: ''
+            parameters:
+                - name: user_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+                - name: task_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema: {}
+                    description: ''
+            tags:
+                - api
+        patch:
+            operationId: partialUpdateRatingDetail
+            description: ''
+            parameters:
+                - name: user_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+                - name: task_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema: {}
+                    application/x-www-form-urlencoded:
+                        schema: {}
+                    multipart/form-data:
+                        schema: {}
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema: {}
+                    description: ''
+            tags:
+                - api
+        delete:
+            operationId: destroyRatingDetail
+            description: ''
+            parameters:
+                - name: user_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+                - name: task_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            responses:
+                '204':
+                    description: ''
+            tags:
+                - api
+    /api/v1/streaks/:
+        get:
+            operationId: listStreaks
+            description: ''
+            parameters: []
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/Streak'
+                    description: ''
+            tags:
+                - api
+        post:
+            operationId: createStreaks
+            description: ''
+            parameters: []
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Streak'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/Streak'
+                    multipart/form-data:
+                        schema:
+                            $ref: '#/components/schemas/Streak'
+            responses:
+                '201':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Streak'
+                    description: ''
+            tags:
+                - api
+    /api/v1/streak/{id}/:
+        get:
+            operationId: retrieveStreaks
+            description: ''
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this streaks.
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Streak'
+                    description: ''
+            tags:
+                - api
+        put:
+            operationId: updateStreaks
+            description: ''
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this streaks.
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Streak'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/Streak'
+                    multipart/form-data:
+                        schema:
+                            $ref: '#/components/schemas/Streak'
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Streak'
+                    description: ''
+            tags:
+                - api
+        patch:
+            operationId: partialUpdateStreaks
+            description: ''
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this streaks.
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Streak'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/Streak'
+                    multipart/form-data:
+                        schema:
+                            $ref: '#/components/schemas/Streak'
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Streak'
+                    description: ''
+            tags:
+                - api
+        delete:
+            operationId: destroyStreaks
+            description: ''
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this streaks.
+                  schema:
+                      type: string
+            responses:
+                '204':
+                    description: ''
+            tags:
+                - api
+    /api/v1/boosters/:
+        get:
+            operationId: listBoosters
+            description: ''
+            parameters: []
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/Boosters'
+                    description: ''
+            tags:
+                - api
+        post:
+            operationId: createBoosters
+            description: ''
+            parameters: []
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Boosters'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/Boosters'
+                    multipart/form-data:
+                        schema:
+                            $ref: '#/components/schemas/Boosters'
+            responses:
+                '201':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Boosters'
+                    description: ''
+            tags:
+                - api
+    /api/v1/booster/{id}/:
+        get:
+            operationId: retrieveBoosters
+            description: ''
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this boosters.
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Boosters'
+                    description: ''
+            tags:
+                - api
+        put:
+            operationId: updateBoosters
+            description: ''
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this boosters.
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Boosters'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/Boosters'
+                    multipart/form-data:
+                        schema:
+                            $ref: '#/components/schemas/Boosters'
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Boosters'
+                    description: ''
+            tags:
+                - api
+        patch:
+            operationId: partialUpdateBoosters
+            description: ''
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this boosters.
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Boosters'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/Boosters'
+                    multipart/form-data:
+                        schema:
+                            $ref: '#/components/schemas/Boosters'
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Boosters'
+                    description: ''
+            tags:
+                - api
+        delete:
+            operationId: destroyBoosters
+            description: ''
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this boosters.
+                  schema:
+                      type: string
+            responses:
+                '204':
+                    description: ''
+            tags:
+                - api
+    /api/v1/user/{user_id}/boosters/:
+        get:
+            operationId: listUserBoosters
+            description: ''
+            parameters:
+                - name: user_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items: {}
+                    description: ''
+            tags:
+                - api
+    /api/v1/booster/{booster_id}/users/:
+        get:
+            operationId: listBoosterUsers
+            description: ''
+            parameters:
+                - name: booster_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items: {}
+                    description: ''
+            tags:
+                - api
+    /api/v1/user/{user_id}/booster/{booster_id}/:
+        get:
+            operationId: retrieveSpecificUserBooster
+            description: ''
+            parameters:
+                - name: user_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+                - name: booster_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema: {}
+                    description: ''
+            tags:
+                - api
+        put:
+            operationId: updateSpecificUserBooster
+            description: ''
+            parameters:
+                - name: user_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+                - name: booster_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema: {}
+                    application/x-www-form-urlencoded:
+                        schema: {}
+                    multipart/form-data:
+                        schema: {}
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema: {}
+                    description: ''
+            tags:
+                - api
+        patch:
+            operationId: partialUpdateSpecificUserBooster
+            description: ''
+            parameters:
+                - name: user_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+                - name: booster_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema: {}
+                    application/x-www-form-urlencoded:
+                        schema: {}
+                    multipart/form-data:
+                        schema: {}
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema: {}
+                    description: ''
+            tags:
+                - api
+        delete:
+            operationId: destroySpecificUserBooster
+            description: ''
+            parameters:
+                - name: user_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+                - name: booster_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            responses:
+                '204':
+                    description: ''
+            tags:
+                - api
+    /api/v1/challenges/:
+        get:
+            operationId: listChallenges
+            description: ''
+            parameters: []
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/Challenges'
+                    description: ''
+            tags:
+                - api
+        post:
+            operationId: createChallenges
+            description: ''
+            parameters: []
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Challenges'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/Challenges'
+                    multipart/form-data:
+                        schema:
+                            $ref: '#/components/schemas/Challenges'
+            responses:
+                '201':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Challenges'
+                    description: ''
+            tags:
+                - api
+    /api/v1/challenge/{id}/:
+        get:
+            operationId: retrieveChallenges
+            description: ''
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this challenges.
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Challenges'
+                    description: ''
+            tags:
+                - api
+        put:
+            operationId: updateChallenges
+            description: ''
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this challenges.
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Challenges'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/Challenges'
+                    multipart/form-data:
+                        schema:
+                            $ref: '#/components/schemas/Challenges'
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Challenges'
+                    description: ''
+            tags:
+                - api
+        patch:
+            operationId: partialUpdateChallenges
+            description: ''
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this challenges.
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Challenges'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/Challenges'
+                    multipart/form-data:
+                        schema:
+                            $ref: '#/components/schemas/Challenges'
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Challenges'
+                    description: ''
+            tags:
+                - api
+        delete:
+            operationId: destroyChallenges
+            description: ''
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: A unique integer value identifying this challenges.
+                  schema:
+                      type: string
+            responses:
+                '204':
+                    description: ''
+            tags:
+                - api
+    /api/v1/follows/:
+        get:
+            operationId: listFollows
+            description: ''
+            parameters: []
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items: {}
+                    description: ''
+            tags:
+                - api
+        post:
+            operationId: createFollowList
+            description: ''
+            parameters: []
+            requestBody:
+                content:
+                    application/json:
+                        schema: {}
+                    application/x-www-form-urlencoded:
+                        schema: {}
+                    multipart/form-data:
+                        schema: {}
+            responses:
+                '201':
+                    content:
+                        application/json:
+                            schema: {}
+                    description: ''
+            tags:
+                - api
+    /api/v1/follows/{user_id}/followers/:
+        get:
+            operationId: listFollowers
+            description: ''
+            parameters:
+                - name: user_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items: {}
+                    description: ''
+            tags:
+                - api
+    /api/v1/follows/{user_id}/following/:
+        get:
+            operationId: listFollowings
+            description: ''
+            parameters:
+                - name: user_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items: {}
+                    description: ''
+            tags:
+                - api
+    /api/v1/follows/{follower_id}/follow/{followed_id}/:
+        get:
+            operationId: retrieveFollowDetail
+            description: ''
+            parameters:
+                - name: follower_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+                - name: followed_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema: {}
+                    description: ''
+            tags:
+                - api
+    /api/v1/friends/{user_id}/:
+        get:
+            operationId: retrieveFriends
+            description: ''
+            parameters:
+                - name: user_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema: {}
+                    description: ''
+            tags:
+                - api
+    /api/v1/auth/register/:
+        post:
+            operationId: createUser
+            description: Receives the user's data and creates a new user.
+            parameters: []
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UserCreate'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/UserCreate'
+                    multipart/form-data:
+                        schema:
+                            $ref: '#/components/schemas/UserCreate'
+            responses:
+                '201':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UserCreate'
+                    description: ''
+            tags:
+                - api
+    /api/v1/auth/activate/:
+        post:
+            operationId: createactivate_user_account
+            description:
+                Receives a token sent by email, and if valid, activates the user's
+                account
+            parameters: []
+            requestBody:
+                content:
+                    application/json:
+                        schema: {}
+                    application/x-www-form-urlencoded:
+                        schema: {}
+                    multipart/form-data:
+                        schema: {}
+            responses:
+                '201':
+                    content:
+                        application/json:
+                            schema: {}
+                    description: ''
+            tags:
+                - api
+    /api/v1/auth/login/:
+        post:
+            operationId: createTokenObtainPair
+            description:
+                'Takes a set of user credentials and returns an access and refresh
+                JSON web
+
+                token pair to prove the authentication of those credentials.'
+            parameters: []
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/TokenObtainPair'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/TokenObtainPair'
+                    multipart/form-data:
+                        schema:
+                            $ref: '#/components/schemas/TokenObtainPair'
+            responses:
+                '201':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/TokenObtainPair'
+                    description: ''
+            tags:
+                - api
+    /api/v1/auth/login/refresh/:
+        post:
+            operationId: createTokenRefresh
+            description:
+                'Takes a refresh type JSON web token and returns an access type
+                JSON web
+
+                token if the refresh token is valid.'
+            parameters: []
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/TokenRefresh'
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: '#/components/schemas/TokenRefresh'
+                    multipart/form-data:
+                        schema:
+                            $ref: '#/components/schemas/TokenRefresh'
+            responses:
+                '201':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/TokenRefresh'
+                    description: ''
+            tags:
+                - api
+    /api/v1/badge/user/:
+        post:
+            operationId: createBadgeUser
+            description: ''
+            parameters: []
+            requestBody:
+                content:
+                    application/json:
+                        schema: {}
+                    application/x-www-form-urlencoded:
+                        schema: {}
+                    multipart/form-data:
+                        schema: {}
+            responses:
+                '201':
+                    content:
+                        application/json:
+                            schema: {}
+                    description: ''
+            tags:
+                - api
+    /api/v1/leaderboard/user/:
+        post:
+            operationId: createLeaderboardUser
+            description: ''
+            parameters: []
+            requestBody:
+                content:
+                    application/json:
+                        schema: {}
+                    application/x-www-form-urlencoded:
+                        schema: {}
+                    multipart/form-data:
+                        schema: {}
+            responses:
+                '201':
+                    content:
+                        application/json:
+                            schema: {}
+                    description: ''
+            tags:
+                - api
+    /api/v1/challenge/user/:
+        post:
+            operationId: createChallengeUser
+            description: ''
+            parameters: []
+            requestBody:
+                content:
+                    application/json:
+                        schema: {}
+                    application/x-www-form-urlencoded:
+                        schema: {}
+                    multipart/form-data:
+                        schema: {}
+            responses:
+                '201':
+                    content:
+                        application/json:
+                            schema: {}
+                    description: ''
+            tags:
+                - api
+    /api/v1/direct/:
+        post:
+            operationId: createDirect
+            description: ''
+            parameters: []
+            requestBody:
+                content:
+                    application/json:
+                        schema: {}
+                    application/x-www-form-urlencoded:
+                        schema: {}
+                    multipart/form-data:
+                        schema: {}
+            responses:
+                '201':
+                    content:
+                        application/json:
+                            schema: {}
+                    description: ''
+            tags:
+                - api
+    /api/v1/booster/user/:
+        post:
+            operationId: createBoosterUser
+            description: ''
+            parameters: []
+            requestBody:
+                content:
+                    application/json:
+                        schema: {}
+                    application/x-www-form-urlencoded:
+                        schema: {}
+                    multipart/form-data:
+                        schema: {}
+            responses:
+                '201':
+                    content:
+                        application/json:
+                            schema: {}
+                    description: ''
+            tags:
+                - api
+    /api/v1/auth/update/:
+        patch:
+            operationId: partialUpdateupdate_user
+            description: Used to update the user's personal data
+            parameters: []
+            requestBody:
+                content:
+                    application/json:
+                        schema: {}
+                    application/x-www-form-urlencoded:
+                        schema: {}
+                    multipart/form-data:
+                        schema: {}
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema: {}
+                    description: ''
+            tags:
+                - api
+    /api/v1/auth/update/password/:
+        patch:
+            operationId: partialUpdateupdate_user_password
+            description:
+                Receives the current password and the new password, and after confirming
+                the current password, updates the user's password
+            parameters: []
+            requestBody:
+                content:
+                    application/json:
+                        schema: {}
+                    application/x-www-form-urlencoded:
+                        schema: {}
+                    multipart/form-data:
+                        schema: {}
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema: {}
+                    description: ''
+            tags:
+                - api
+    /api/v1/auth/delete/:
+        delete:
+            operationId: destroydelete_user_account
+            description: ''
+            parameters: []
+            responses:
+                '204':
+                    description: ''
+            tags:
+                - api
+    /api/v1/direct/{direct_id}/:
+        delete:
+            operationId: destroyDirectDelete
+            description: ''
+            parameters:
+                - name: direct_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            responses:
+                '204':
+                    description: ''
+            tags:
+                - api
+    /api/v1/follows/{follower_id}/unfollow/{followed_id}/:
+        delete:
+            operationId: destroyUnfollow
+            description: ''
+            parameters:
+                - name: follower_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+                - name: followed_id
+                  in: path
+                  required: true
+                  description: ''
+                  schema:
+                      type: string
+            responses:
+                '204':
+                    description: ''
+            tags:
+                - api
+components:
+    schemas:
+        Badge:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    readOnly: true
+                    example: 1
+                badge_name:
+                    type: string
+                    maxLength: 100
+                    example: Badge
+                badge_description:
+                    type: string
+                    maxLength: 1000
+                    example: Description
+                badge_image:
+                    type: string
+                    format: binary
+                    example:
+            required:
+                - badge_name
+                - badge_description
+
+        User:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    readOnly: true
+                password:
+                    type: string
+                    maxLength: 128
+                last_login:
+                    type: string
+                    format: date-time
+                    nullable: true
+                is_superuser:
+                    type: boolean
+                    description:
+                        Designates that this user has all permissions without explicitly
+                        assigning them.
+                username:
+                    type: string
+                    nullable: true
+                    maxLength: 30
+                first_name:
+                    type: string
+                    nullable: true
+                    maxLength: 30
+                last_name:
+                    type: string
+                    nullable: true
+                    maxLength: 100
+                email:
+                    type: string
+                    format: email
+                    maxLength: 255
+                phone_number:
+                    type: string
+                    nullable: true
+                    maxLength: 15
+                experience:
+                    type: integer
+                    maximum: 2147483647
+                    minimum: -2147483648
+                gems:
+                    type: integer
+                    maximum: 2147483647
+                    minimum: -2147483648
+                appear_daily_challenge:
+                    type: boolean
+                receive_future_promotional_emails:
+                    type: boolean
+                    description: If false, do not send emails to the user
+                provide_data_to_improve_user_exp:
+                    type: boolean
+                    description: If false, do not use the user data
+                is_staff:
+                    type: boolean
+                    description: Designates whether the user can log into this admin site.
+                is_active:
+                    type: boolean
+                    description:
+                        Designates whether this user has activated the account in the
+                        email.
+                date_joined:
+                    type: string
+                    format: date-time
+                    readOnly: true
+                groups:
+                    type: array
+                    items:
+                        type: integer
+                    description:
+                        The groups this user belongs to. A user will get all permissions
+                        granted to each of their groups.
+                user_permissions:
+                    type: array
+                    items:
+                        type: integer
+                    description: Specific permissions for this user.
+            required:
+                - password
+                - email
+        Note:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    readOnly: true
+                note_name:
+                    type: string
+                    maxLength: 100
+                note_content:
+                    type: string
+                    maxLength: 10000
+                note_image:
+                    type: string
+                    format: binary
+                note_last_modified:
+                    type: string
+                    format: date-time
+                    readOnly: true
+                public:
+                    type: boolean
+                note_average_rating:
+                    type: number
+                tags:
+                    type: string
+                    maxLength: 1000
+                task:
+                    type: integer
+                    nullable: true
+                challenge:
+                    type: integer
+                    nullable: true
+                folder:
+                    type: integer
+                    nullable: true
+            required:
+                - note_name
+                - note_content
+        League:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    readOnly: true
+                league_name:
+                    type: string
+                    maxLength: 100
+                league_description:
+                    type: string
+                    maxLength: 1000
+                league_image:
+                    type: string
+                    format: binary
+            required:
+                - league_name
+                - league_description
+        Leaderboards:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    readOnly: true
+                league:
+                    type: integer
+                week_date:
+                    type: string
+                    format: date-time
+                    readOnly: true
+            required:
+                - league
+        Folders:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    readOnly: true
+                folder_name:
+                    type: string
+                    maxLength: 100
+                folder_description:
+                    type: string
+                    maxLength: 1000
+                folder_image:
+                    type: string
+                    format: binary
+                folder_created:
+                    type: string
+                    format: date-time
+                    readOnly: true
+                favorite:
+                    type: boolean
+                folder_parent:
+                    type: integer
+                    nullable: true
+                depth:
+                    type: integer
+                    maximum: 2147483647
+                    minimum: -2147483648
+            required:
+                - folder_name
+                - folder_description
+        Streak:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    readOnly: true
+                user:
+                    type: integer
+                streak:
+                    type: integer
+                    maximum: 2147483647
+                    minimum: -2147483648
+                streak_start_date:
+                    type: string
+                    format: date-time
+                    readOnly: true
+                streak_current_date:
+                    type: string
+                    format: date-time
+                    readOnly: true
+                    nullable: true
+                streak_end_date:
+                    type: string
+                    format: date-time
+                    nullable: true
+            required:
+                - user
+        Boosters:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    readOnly: true
+                booster_name:
+                    type: string
+                    maxLength: 100
+                booster_description:
+                    type: string
+                    maxLength: 1000
+                booster_image:
+                    type: string
+                    format: binary
+                duration:
+                    type: integer
+                    maximum: 2147483647
+                    minimum: -2147483648
+                multiplier:
+                    type: integer
+                    maximum: 2147483647
+                    minimum: -2147483648
+            required:
+                - booster_name
+                - booster_description
+        Challenges:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    readOnly: true
+                challenge_name:
+                    type: string
+                    maxLength: 100
+                challenge_description:
+                    type: string
+                    maxLength: 1000
+                challenge_style:
+                    type: string
+                    maxLength: 100
+                difficulty:
+                    type: integer
+                    maximum: 2147483647
+                    minimum: -2147483648
+                challenge_points:
+                    type: integer
+                    maximum: 2147483647
+                    minimum: -2147483648
+                challenge_average_rating:
+                    type: integer
+                    maximum: 2147483647
+                    minimum: -2147483648
+                user:
+                    type: integer
+            required:
+                - challenge_name
+                - challenge_description
+                - challenge_style
+                - user
+        UserCreate:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    readOnly: true
+                password:
+                    type: string
+                    maxLength: 128
+                last_login:
+                    type: string
+                    format: date-time
+                    nullable: true
+                is_superuser:
+                    type: boolean
+                    description:
+                        Designates that this user has all permissions without explicitly
+                        assigning them.
+                username:
+                    type: string
+                    nullable: true
+                    maxLength: 30
+                first_name:
+                    type: string
+                    nullable: true
+                    maxLength: 30
+                last_name:
+                    type: string
+                    nullable: true
+                    maxLength: 100
+                email:
+                    type: string
+                    format: email
+                    maxLength: 255
+                phone_number:
+                    type: string
+                    nullable: true
+                    maxLength: 15
+                experience:
+                    type: integer
+                    maximum: 2147483647
+                    minimum: -2147483648
+                gems:
+                    type: integer
+                    maximum: 2147483647
+                    minimum: -2147483648
+                appear_daily_challenge:
+                    type: boolean
+                receive_future_promotional_emails:
+                    type: boolean
+                    description: If false, do not send emails to the user
+                provide_data_to_improve_user_exp:
+                    type: boolean
+                    description: If false, do not use the user data
+                is_staff:
+                    type: boolean
+                    description: Designates whether the user can log into this admin site.
+                is_active:
+                    type: boolean
+                    description:
+                        Designates whether this user has activated the account in the
+                        email.
+                date_joined:
+                    type: string
+                    format: date-time
+                    readOnly: true
+                groups:
+                    type: array
+                    items:
+                        type: integer
+                    description:
+                        The groups this user belongs to. A user will get all permissions
+                        granted to each of their groups.
+                user_permissions:
+                    type: array
+                    items:
+                        type: integer
+                    description: Specific permissions for this user.
+            required:
+                - password
+                - email
+        TokenObtainPair:
+            type: object
+            properties:
+                email:
+                    type: string
+                password:
+                    type: string
+                    writeOnly: true
+            required:
+                - email
+                - password
+        TokenRefresh:
+            type: object
+            properties:
+                refresh:
+                    type: string
+                access:
+                    type: string
+                    readOnly: true
+            required:
+                - refresh

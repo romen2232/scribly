@@ -1,57 +1,66 @@
-from django.test import TestCase
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework.test import APIClient, APITestCase
-from rest_framework import status
 from .models import Challenges_users
-from .serializers import Challenges_usersSerializer
-from django.contrib.auth.models import User
-from rest_framework_simplejwt.tokens import RefreshToken
+from challenges.models import Challenges
 
-class Challenges_usersViewSetTestCase(APITestCase):
-    """Test the Challenges_usersViewSet."""
-
+class ChallengeUserTests(APITestCase):
     def setUp(self):
         self.client = APIClient()
-        self.challenges_users_data = {'field1': 'Test field1', 'field2': 'Test field2'}
-        self.user = User.objects.create_user(username='testuser', password='testpass')
-        refresh = RefreshToken.for_user(self.user)
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
-        self.response = self.client.post(reverse('challenges_users-list'), self.challenges_users_data, format="json")
-        self.assertEqual(self.response.status_code, status.HTTP_201_CREATED)
-
-    def test_can_retrieve_challenges_users(self):
-        challenges_users_id = self.response.data['id']
-        response = self.client.get(reverse('challenges_users-detail', kwargs={'pk': challenges_users_id}))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_can_update_challenges_users(self):
-        challenges_users_id = self.response.data['id']
-        response = self.client.put(
-            reverse('challenges_users-detail', kwargs={'pk': challenges_users_id}),
-            {
-                'field1': 'Updated field1',
-                'field2': 'Updated field2'
-            },
-            format='json'
+        self.user = get_user_model().objects.create_user(
+            email='testuser',
+            password='testpassword',
+            is_active=True
         )
-        if response.status_code != status.HTTP_200_OK:
-            print(response.content)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-class JWTAuthTestCase(APITestCase):
-    """Test JWT authentication."""
+        response = self.client.post(reverse('token_obtain_pair'), 
+                                    {'email': 'testuser', 'password': 'testpassword'}, 
+                                    format='json')
+        if 'access' in response.data:
+            token = response.data['access']
+            self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
+        else:
+           for key in response.data:
+               print(key, response.data[key])
 
-    def setUp(self):
-        self.client = APIClient()
-        self.user = User.objects.create_user(username='testuser', password='testpass')
+        self.challenge = Challenges.objects.create(challenge_name='testChallenge', challenge_description='test challenge', user=self.user)
+        self.challenge_user = Challenges_users.objects.create(challenge=self.challenge, user=self.user)
 
-    def test_can_obtain_token(self):
-        response = self.client.post(reverse('token_obtain_pair'), {'username': 'testuser', 'password': 'testpass'}, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('access', response.data)
-        self.assertIn('refresh', response.data)
+    def test_assign_challenge_to_user(self):
+        url = reverse('challenge_user-create')
+        self.testChallenge = Challenges.objects.create(challenge_name='testChallenge2', challenge_description='test challenge', user=self.user)
+        data = {'challenge': self.testChallenge.id, 'user': self.user.id}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data['challenge'], self.testChallenge.id)
+        self.assertEqual(response.data['user'], self.user.id)
 
-    def test_cannot_access_view_without_token(self):
-        self.client.credentials(HTTP_AUTHORIZATION='')
-        response = self.client.get(reverse('challenges_users-list'))
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+    def test_get_challenges_for_user(self):
+        url = reverse('user-challenges', args=[self.user.id])
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['challenge'], self.challenge.id)
+        self.assertEqual(response.data[0]['user'], self.user.id)
+
+    def test_get_users_for_challenge(self):
+        url = reverse('challenge-users', args=[self.challenge.id])
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['challenge'], self.challenge.id)
+        self.assertEqual(response.data[0]['user'], self.user.id)
+
+    def test_get_specific_user_challenge(self):
+        url = reverse('specific-user-challenge', args=[self.user.id, self.challenge.id])
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['challenge'], self.challenge.id)
+        self.assertEqual(response.data['user'], self.user.id)
+
+    def test_delete_specific_user_challenge(self):
+        url = reverse('specific-user-challenge', args=[self.user.id, self.challenge.id])
+        response = self.client.delete(url, format='json')
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(Challenges_users.objects.count(), 0)
+

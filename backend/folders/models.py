@@ -1,6 +1,4 @@
 from django.db import models
-
-# Create your models here.
 class Folders(models.Model):
     folder_name = models.CharField(max_length=100)
     folder_description = models.TextField(max_length=1000)
@@ -8,4 +6,4 @@ class Folders(models.Model):
     folder_created = models.DateTimeField(auto_now_add=True)
     favorite = models.BooleanField(default=False)
     folder_parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
-    depth = models.IntegerField(default=0)
+    depth = models.IntegerField(default=0) # 0 = root, 1 = child, 2 = grandchild, etc.

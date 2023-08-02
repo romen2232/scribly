@@ -1,11 +1,7 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .api import ChallengesViewSet, CustomTokenObtainPairView
-
-router = DefaultRouter()
-router.register(r'challenges', ChallengesViewSet, basename='challenges')
+from django.urls import path
+from .views import ChallengesListCreateView, ChallengesRetrieveUpdateDeleteView
 
 urlpatterns = [
-    path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('', include(router.urls)),
+    path('challenges/', ChallengesListCreateView.as_view(), name='challenge-list-create'),
+    path('challenge/<int:pk>/', ChallengesRetrieveUpdateDeleteView.as_view(), name='challenge-retrieve-update-delete')
 ]

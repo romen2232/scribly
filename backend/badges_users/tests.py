@@ -1,61 +1,72 @@
-from django.test import TestCase
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework.test import APIClient, APITestCase
-from rest_framework import status
 from .models import Badges_users
 from badges.models import Badge
-from .serializers import Badges_users
-from django.contrib.auth.models import User
-from rest_framework_simplejwt.tokens import RefreshToken
 
-class BadgesUsersViewSetTestCase(APITestCase):
-    """Test the BadgesUsersViewSet."""
-
+class BadgeUserTests(APITestCase):
     def setUp(self):
         self.client = APIClient()
-        self.user = User.objects.create_user(username='testuser', password='testpass')
-        self.badge = Badge.objects.create(badge_name='Test badge', badge_description='This is a test badge')
-        self.badge_user_data = {'badge': self.badge.id, 'user': self.user.id, 'earned_date': '2023-07-24'}
-        refresh = RefreshToken.for_user(self.user)
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
-        self.response = self.client.post(reverse('badges-users-list'), self.badge_user_data, format="json")
-        self.assertEqual(self.response.status_code, status.HTTP_201_CREATED)
 
-    def test_can_retrieve_badge_user(self):
-        badge_user_id = self.response.data['id']
-        response = self.client.get(reverse('badges-users-detail', kwargs={'pk': badge_user_id}))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_can_update_badge_user(self):
-        badge_user_id = self.response.data['id']
-        response = self.client.put(
-            reverse('badges-users-detail', kwargs={'pk': badge_user_id}),
-            {
-                'badge': self.badge.id,
-                'user': self.user.id,
-                'earned_date': '2023-07-25'
-            },
-            format='json'
+        # Create a user
+        self.user = get_user_model().objects.create_user(
+            email='testuser',
+            password='testpassword',
+            is_active=True
         )
-        if response.status_code != status.HTTP_200_OK:
-            print(response.content)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Obtain a JWT token for the user
+        response = self.client.post(reverse('token_obtain_pair'), 
+                                    {'email': 'testuser', 'password': 'testpassword'}, 
+                                    format='json')
+        if 'access' in response.data:
+            token = response.data['access']
+            # Authenticate the user
+            self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
+        else:
+           for key in response.data:
+               print(key, response.data[key])
+
+        # create a badge
+        self.badge = Badge.objects.create(badge_name='testBadge', badge_image='badge_image.jpg', badge_description='test badge')
+        self.badge_user = Badges_users.objects.create(badge=self.badge, user=self.user)
+
+    def test_assign_badge_to_user(self):
+        url = reverse('badge_user-create')
+        self.testBadge= Badge.objects.create(badge_name='testBadge2', badge_image='badge_image.jpg', badge_description='test badge')
+        data = {'badge': self.testBadge.id, 'user': self.user.id}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data['badge'], self.testBadge.id)
+        self.assertEqual(response.data['user'], self.user.id)
 
 
-class JWTAuthTestCase(APITestCase):
-    """Test JWT authentication."""
+    def test_get_badges_for_user(self):
+        url = reverse('user-badges', args=[self.user.id])
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['badge'], self.badge.id)
+        self.assertEqual(response.data[0]['user'], self.user.id)
+        
+        
+    def test_get_users_for_badge(self):
+        url = reverse('badge-users', args=[self.badge.id])
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['badge'], self.badge.id)
+        self.assertEqual(response.data[0]['user'], self.user.id)
 
-    def setUp(self):
-        self.client = APIClient()
-        self.user = User.objects.create_user(username='testuser', password='testpass')
+    def test_get_specific_user_badge(self):
+        url = reverse('specific-user-badge', args=[self.user.id, self.badge.id])
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['badge'], self.badge.id)
+        self.assertEqual(response.data['user'], self.user.id)
 
-    def test_can_obtain_token(self):
-        response = self.client.post(reverse('token_obtain_pair'), {'username': 'testuser', 'password': 'testpass'}, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('access', response.data)
-        self.assertIn('refresh', response.data)
-
-    def test_cannot_access_view_without_token(self):
-        self.client.credentials(HTTP_AUTHORIZATION='')
-        response = self.client.get(reverse('badges-users-list'))
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+    def test_delete_specific_user_badge(self):
+        url = reverse('specific-user-badge', args=[self.user.id, self.badge.id])
+        response = self.client.delete(url, format='json')
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(Badges_users.objects.count(), 0)

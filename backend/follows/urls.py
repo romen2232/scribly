@@ -1,11 +1,11 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .api import FollowsViewSet, CustomTokenObtainPairView
-
-router = DefaultRouter()
-router.register(r'follows', FollowsViewSet, basename='follows')
+from django.urls import path
+from .views import FollowListView, FollowerView, FollowingView, FollowDetailView, UnfollowView, FriendsView
 
 urlpatterns = [
-    path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('', include(router.urls)),
+    path('follows/', FollowListView.as_view(), name='follow-list'),
+    path('follows/<int:user_id>/followers/', FollowerView.as_view(), name='followers'),
+    path('follows/<int:user_id>/following/', FollowingView.as_view(), name='following'),
+    path('follows/<int:follower_id>/follow/<int:followed_id>/', FollowDetailView.as_view(), name='follow-detail'),
+    path('follows/<int:follower_id>/unfollow/<int:followed_id>/', UnfollowView.as_view(), name='unfollow'),
+    path('friends/<int:user_id>/', FriendsView.as_view(), name='friends'),
 ]

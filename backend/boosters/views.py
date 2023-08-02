@@ -1,49 +1,28 @@
-
-from django.shortcuts import render
-from django.http import Http404
-from rest_framework.views import APIView
+from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from rest_framework import status
+from .models import Boosters
+from .serializers import BoostersSerializer
 
-from .models import Booster
-from .serializers import Booster
+class BoostersListCreateView(generics.ListCreateAPIView):
+    queryset = Boosters.objects.all()
+    serializer_class = BoostersSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        booster = serializer.save()
+        return Response({"status": "success", "data": BoostersSerializer(booster).data}, status=status.HTTP_201_CREATED)
 
-class BoosterList(APIView):
-    def get(self, request, format=None):
-        boosters = Booster.objects.all()
-        serializer = Booster(boosters, many=True)
-        return Response(serializer.data)
+class BoostersRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Boosters.objects.all()
+    serializer_class = BoostersSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request, format=None):
-        serializer = Booster(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class BoosterDetail(APIView):
-    def get_object(self, pk):
-        try:
-            return Booster.objects.get(pk=pk)
-        except Booster.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk, format=None):
-        booster = self.get_object(pk)
-        serializer = Booster(booster)
-        return Response(serializer.data)
-
-    def put(self, request, pk, format=None):
-        booster = self.get_object(pk)
-        serializer = Booster(booster, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        booster = self.get_object(pk)
-        booster.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        booster = serializer.save()
+        return Response({"status": "success", "data": BoostersSerializer(booster).data})

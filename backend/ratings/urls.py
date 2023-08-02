@@ -1,11 +1,12 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .api import RatingsViewSet, CustomTokenObtainPairView
-
-router = DefaultRouter()
-router.register(r'ratings', RatingsViewSet, basename='ratings')
+from django.urls import path
+from .views import RatingsListView, UserRatingsView, ChallengeRatingsView, TaskRatingsView, RatingDetailView
 
 urlpatterns = [
-    path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('', include(router.urls)),
+    path('ratings/', RatingsListView.as_view(), name='ratings-list'),
+    path('ratings/user/<int:user_id>/', UserRatingsView.as_view(), name='user-ratings'),
+    path('ratings/challenge/<int:challenge_id>/', ChallengeRatingsView.as_view(), name='challenge-ratings'),
+    path('ratings/task/<int:task_id>/', TaskRatingsView.as_view(), name='task-ratings'),
+    path('ratings/user/<int:user_id>/challenge/<int:challenge_id>/', RatingDetailView.as_view(), name='challenge-rating-detail'),
+    path('ratings/user/<int:user_id>/task/<int:task_id>/', RatingDetailView.as_view(), name='task-rating-detail'),
+    
 ]

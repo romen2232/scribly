@@ -1,49 +1,28 @@
-
-from django.shortcuts import render
-from django.http import Http404
-from rest_framework.views import APIView
+from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from rest_framework import status
+from .models import Folders
+from .serializers import FoldersSerializer
 
-from .models import Folder
-from .serializers import Folder
+class FoldersListCreateView(generics.ListCreateAPIView):
+    queryset = Folders.objects.all()
+    serializer_class = FoldersSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        folder = serializer.save()
+        return Response({"status": "success", "data": FoldersSerializer(folder).data}, status=status.HTTP_201_CREATED)
 
-class FolderList(APIView):
-    def get(self, request, format=None):
-        folders = Folder.objects.all()
-        serializer = Folder(folders, many=True)
-        return Response(serializer.data)
+class FoldersRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Folders.objects.all()
+    serializer_class = FoldersSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request, format=None):
-        serializer = Folder(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class FolderDetail(APIView):
-    def get_object(self, pk):
-        try:
-            return Folder.objects.get(pk=pk)
-        except Folder.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk, format=None):
-        folder = self.get_object(pk)
-        serializer = Folder(folder)
-        return Response(serializer.data)
-
-    def put(self, request, pk, format=None):
-        folder = self.get_object(pk)
-        serializer = Folder(folder, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        folder = self.get_object(pk)
-        folder.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        folder = serializer.save()
+        return Response({"status": "success", "data": FoldersSerializer(folder).data})

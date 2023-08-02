@@ -6,6 +6,4 @@ router = DefaultRouter()
 router.register(r'tasks', TasksViewSet, basename='tasks')
 
 urlpatterns = [
-    path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('', include(router.urls)),
 ]

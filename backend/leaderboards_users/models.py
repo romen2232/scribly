@@ -7,3 +7,4 @@ class Leaderboards_users(models.Model):
     user = models.ForeignKey('users.User', on_delete=models.CASCADE)
     leaderboard_update_date = models.DateTimeField(auto_now_add=True)
     leaderboard_score = models.IntegerField(default=0)
+        

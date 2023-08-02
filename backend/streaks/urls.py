@@ -1,11 +1,7 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .api import StreaksViewSet, CustomTokenObtainPairView
-
-router = DefaultRouter()
-router.register(r'streaks', StreaksViewSet, basename='streaks')
+from django.urls import path
+from .views import StreakListCreateView, StreakRetrieveUpdateDeleteView
 
 urlpatterns = [
-    path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('', include(router.urls)),
+    path('streaks/', StreakListCreateView.as_view(), name='streak-list-create'),
+    path('streak/<int:pk>/', StreakRetrieveUpdateDeleteView.as_view(), name='streak-retrieve-update-delete')
 ]
