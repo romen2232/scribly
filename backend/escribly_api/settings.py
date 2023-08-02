@@ -31,7 +31,11 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '*',
+]
+
+FRONTEND_URL = 'http://localhost:8000'
 
 
 # Application definition
@@ -43,13 +47,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     # Third party apps
     'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
     'celery',
-    
+
     # Local apps
     'users',
     'follows',
@@ -75,7 +79,7 @@ INSTALLED_APPS = [
     'clubs_users',
     'tivi',
     'resources'
-    
+
 ]
 
 MIDDLEWARE = [
@@ -121,12 +125,11 @@ DATABASES = {
         'PASSWORD': 'titivillus',
         'HOST': 'localhost',
         'PORT': '5432',
-        
+
     }
 }
 
 AUTH_USER_MODEL = 'users.User'
-
 
 
 # Password validation
@@ -175,7 +178,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -219,10 +221,18 @@ SIMPLE_JWT = {
 CELERY_BROKER_URL = 'amqp://localhost'
 
 # Email settings
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = os.getenv('EMAIL_HOST', 'localhost')
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
-EMAIL_PORT = os.getenv('EMAIL_PORT', 1025)
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = os.getenv('EMAIL_HOST', 'localhost')
+# EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+# EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+# EMAIL_PORT = os.getenv('EMAIL_PORT', 1025)
+# EMAIL_USE_TLS = True
+# EMAIL_USE_SSL = False
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'escribly@gmail.com'
+EMAIL_HOST_PASSWORD = 'lxbxximpemzbgeia'
+EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
+EMAIL_TIMEOUT = 300  # in seconds
+DEFAULT_FROM_EMAIL = 'german <germanamiau@gmail.com>'

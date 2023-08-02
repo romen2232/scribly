@@ -12,11 +12,9 @@ router = DefaultRouter()
 schema_view = get_schema_view(
     title="Escribly API",
     url='http://localhost:8000',
-    renderer_classes=[JSONOpenAPIRenderer],
-    public=True,
-    format="openapi",
-    version="1.0.0"
+    renderer_classes=[JSONOpenAPIRenderer]
 )
+
 
 api_urlpatterns = [
     path('', include(router.urls)),
@@ -53,4 +51,3 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include(api_urlpatterns)),
 ]
-

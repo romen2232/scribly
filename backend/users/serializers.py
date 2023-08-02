@@ -12,17 +12,17 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = "__all__"
-        #('id', 'first_name', 'last_name', 'email', 'birth_date',
-                  #'phone_number', 'receive_future_promotional_emails', 'provide_data_to_improve_user_exp')#
+        # ('id', 'first_name', 'last_name', 'email', 'birth_date',
+        # 'phone_number', 'receive_future_promotional_emails', 'provide_data_to_improve_user_exp')#
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = "__all__"
-        
-        #('id', 'email', 'password', 'first_name', 'last_name', 'birth_date', 'phone_number',
-                  #'receive_future_promotional_emails', 'provide_data_to_improve_user_exp')
+
+        # ('id', 'email', 'password', 'first_name', 'last_name', 'birth_date', 'phone_number',
+        # 'receive_future_promotional_emails', 'provide_data_to_improve_user_exp')
 
     def create(self, validated_data):
         """ Create a user, and also create a token for email verification """
@@ -48,8 +48,10 @@ class UserCreateSerializer(serializers.ModelSerializer):
         token = secrets.token_urlsafe(48)
         VerifyEmailToken.objects.create(user=user, token=token)
 
-        tasks.send_mail_to_verify_account.delay(
+        print("Sending email to verify account")
+        tasks.send_mail_to_verify_account(
             user_email=user.email, first_name=user.first_name, token=token)
+        print("Email sent!")
 
         return user
 

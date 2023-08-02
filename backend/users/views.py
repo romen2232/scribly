@@ -47,7 +47,7 @@ class ListUserView(ListAPIView):
 
 @api_view(['POST'])
 def activate_user_account(request):
-    """ Receives a token sent by email, and if valid, activates the user's account """
+    """ Receives a token sent by email the token will be pass as param, and if valid, activates the user's account """
 
     received_token = request.data.get('token', None)
 

@@ -15,7 +15,13 @@
         "project": "./frontend/tsconfig.json"
     },
     "plugins": ["@typescript-eslint", "react"],
-    "ignorePatterns": ["node_modules/", "build/", "dist/", "**/*.config.js"],
+    "ignorePatterns": [
+        "node_modules/",
+        "build/",
+        "dist/",
+        "**/*.config.js",
+        "**/*.d.ts"
+    ],
     "rules": {
         "react/react-in-jsx-scope": "off"
     },
