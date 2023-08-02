@@ -15,6 +15,9 @@ from users import tasks
 # Users views
 
 class CreateUserView(CreateAPIView):
+    """
+    Receives the user's data and creates a new user.
+    """
     serializer_class = UserCreateSerializer
     queryset = User.objects.all()
 
@@ -29,6 +32,9 @@ class CreateUserView(CreateAPIView):
 
 
 class ListUserView(ListAPIView):
+    """ 
+    List all users
+    """
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated,)
 

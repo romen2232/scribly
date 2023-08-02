@@ -4,6 +4,11 @@ from .models import Badge
 from .serializers import BadgeSerializer
 
 class BadgeListCreateView(generics.ListCreateAPIView):
+    """
+    get: Return a list of all the existing badges.
+        
+    post: Create a new badge instance.
+    """
     queryset = Badge.objects.all()
     serializer_class = BadgeSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -17,6 +22,12 @@ class BadgeListCreateView(generics.ListCreateAPIView):
 
 
 class BadgeRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    get: Return the given badge.
+    update: Update the given badge.
+    delete: Delete the given badge.
+    """
+    
     queryset = Badge.objects.all()
     serializer_class = BadgeSerializer
     permission_classes = [permissions.IsAuthenticated]

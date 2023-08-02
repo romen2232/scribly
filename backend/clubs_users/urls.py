@@ -6,6 +6,4 @@ router = DefaultRouter()
 router.register(r'clubs_users', Clubs_usersViewSet, basename='clubs_users')
 
 urlpatterns = [
-    path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('', include(router.urls)),
 ]
