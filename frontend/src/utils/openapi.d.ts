@@ -263,12 +263,12 @@ export interface components {
             leagueDescription: string;
             leagueImage?: string;
         };
-        Leaderboards: {
+        Leaderboard: {
             id?: number;
             league: number;
             weekDate?: string;
         };
-        Folders: {
+        Folder: {
             id?: number;
             folderName: string;
             folderDescription: string;
@@ -286,7 +286,7 @@ export interface components {
             streakCurrentDate?: string | null;
             streakEndDate?: string | null;
         };
-        Boosters: {
+        Booster: {
             id?: number;
             boosterName: string;
             boosterDescription: string;
@@ -294,7 +294,7 @@ export interface components {
             duration?: number;
             multiplier?: number;
         };
-        Challenges: {
+        Challenge: {
             id?: number;
             challengeName: string;
             challengeDescription: string;
@@ -944,7 +944,7 @@ export interface operations {
         responses: {
             200: {
                 content: {
-                    'application/json': components['schemas']['Folders'][];
+                    'application/json': components['schemas']['Folder'][];
                 };
             };
         };
@@ -952,15 +952,15 @@ export interface operations {
     createFolders: {
         requestBody?: {
             content: {
-                'application/json': components['schemas']['Folders'];
-                'application/x-www-form-urlencoded': components['schemas']['Folders'];
-                'multipart/form-data': components['schemas']['Folders'];
+                'application/json': components['schemas']['Folder'];
+                'application/x-www-form-urlencoded': components['schemas']['Folder'];
+                'multipart/form-data': components['schemas']['Folder'];
             };
         };
         responses: {
             201: {
                 content: {
-                    'application/json': components['schemas']['Folders'];
+                    'application/json': components['schemas']['Folder'];
                 };
             };
         };
@@ -975,7 +975,7 @@ export interface operations {
         responses: {
             200: {
                 content: {
-                    'application/json': components['schemas']['Folders'];
+                    'application/json': components['schemas']['Folder'];
                 };
             };
         };
@@ -989,15 +989,15 @@ export interface operations {
         };
         requestBody?: {
             content: {
-                'application/json': components['schemas']['Folders'];
-                'application/x-www-form-urlencoded': components['schemas']['Folders'];
-                'multipart/form-data': components['schemas']['Folders'];
+                'application/json': components['schemas']['Folder'];
+                'application/x-www-form-urlencoded': components['schemas']['Folder'];
+                'multipart/form-data': components['schemas']['Folder'];
             };
         };
         responses: {
             200: {
                 content: {
-                    'application/json': components['schemas']['Folders'];
+                    'application/json': components['schemas']['Folder'];
                 };
             };
         };

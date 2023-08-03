@@ -21,7 +21,6 @@ const listBadges = async (token: string): Promise<Badge[]> => {
         throw new Error(`Error fetching badges: ${error}`);
     }
 };
-
 /**
  * Creates a new badge
  * @param badge Badge to create
@@ -42,7 +41,6 @@ const createBadge = async (badge: Badge, token: string): Promise<Badge> => {
         throw new Error(`Error creating badge: ${error}`);
     }
 };
-
 /**
  * Fetches a badge from the API
  * @param id Badge ID
@@ -60,7 +58,6 @@ const retrieveBadge = async (id: number, token: string): Promise<Badge> => {
         throw new Error(`Error retrieving badge: ${error}`);
     }
 };
-
 /**
  * Updates a badge
  * @param id Badge ID to update
@@ -90,7 +87,6 @@ const updateBadge = async (
         throw new Error(`Error updating badge: ${error}`);
     }
 };
-
 /**
  * Partially updates a badge
  * @param id Badge ID to update
@@ -120,7 +116,6 @@ const partialUpdateBadge = async (
         throw new Error(`Error partially updating badge: ${error}`);
     }
 };
-
 /**
  * Deletes a badge
  * @param id Badge ID to delete
@@ -137,7 +132,6 @@ const destroyBadge = async (id: number, token: string): Promise<void> => {
         throw new Error(`Error deleting badge: ${error}`);
     }
 };
-
 /**
  * Lists all users that have a badge
  * @param badgeId Badge ID
@@ -161,7 +155,6 @@ const listBadgeUsers = async (
         throw new Error(`Error listing badge users: ${error}`);
     }
 };
-
 /**
  * Creates a new badge user relationship
  * @param badgeUser Badge user relationship to create
@@ -189,7 +182,6 @@ const createBadgeUser = async (
         throw new Error(`Error creating badge user: ${error}`);
     }
 };
-
 /**
  * Lists all badges that a user has
  * @param userId User ID
@@ -213,7 +205,6 @@ const listUserBadges = async (
         throw new Error(`Error listing user badges: ${error}`);
     }
 };
-
 /**
  * Fetches a specific user badge relationship from the API
  * @param userId User ID
@@ -239,7 +230,6 @@ const retrieveBadgeUser = async (
         throw new Error(`Error retrieving user badge: ${error}`);
     }
 };
-
 /**
  * Deletes a badge user relationship
  * @param userId User ID
@@ -261,7 +251,6 @@ const destroyBadgeUser = async (
         throw new Error(`Error deleting user badge: ${error}`);
     }
 };
-
 export {
     listBadges,
     createBadge,

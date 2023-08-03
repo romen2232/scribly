@@ -27,6 +27,6 @@
         "src/utils/openapi.d.ts",
         "jest.config.js"
     ],
-    "include": ["src/**/*", "vite.config.ts", "tailwind.config.js"],
+    "include": ["vite.config.ts", "tailwind.config.js", "src/**/*"],
     "references": [{ "path": "./tsconfig.node.json" }]
 }
