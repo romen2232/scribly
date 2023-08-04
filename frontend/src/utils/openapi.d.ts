@@ -263,12 +263,12 @@ export interface components {
             leagueDescription: string;
             leagueImage?: string;
         };
-        Leaderboards: {
+        Leaderboard: {
             id?: number;
             league: number;
             weekDate?: string;
         };
-        Folders: {
+        Folder: {
             id?: number;
             folderName: string;
             folderDescription: string;
@@ -286,7 +286,7 @@ export interface components {
             streakCurrentDate?: string | null;
             streakEndDate?: string | null;
         };
-        Boosters: {
+        Booster: {
             id?: number;
             boosterName: string;
             boosterDescription: string;
@@ -294,7 +294,7 @@ export interface components {
             duration?: number;
             multiplier?: number;
         };
-        Challenges: {
+        Challenge: {
             id?: number;
             challengeName: string;
             challengeDescription: string;
@@ -333,10 +333,45 @@ export interface components {
             refresh: string;
             access?: string;
         };
-
+        Direct: {
+            sender: number;
+            receiver: number;
+            message: string;
+            sent_date: Date;
+        };
+        Follow: {
+            follower: number;
+            followed: number;
+            follow_date: Date;
+        };
+        Rating: {
+            user: number;
+            rating: number;
+            challenge?: number | null;
+            task?: number | null;
+            rating_date: Date;
+        };
         BadgeUser: {
             badge: number;
             user: number;
+            earned_date: Date;
+        };
+        BoosterUser: {
+            booster: number;
+            user: number;
+            booster_start_date?: Date;
+            booster_end_date?: Date | null;
+        };
+        ChallengeUser: {
+            challenge: number;
+            user: number;
+            challenge_end_date?: Date;
+        };
+        LeaderboardUser: {
+            leaderboard: number;
+            user: number;
+            leaderboard_update_date?: Date;
+            leaderboard_score: number;
         };
     };
     responses: never;
@@ -945,7 +980,7 @@ export interface operations {
         responses: {
             200: {
                 content: {
-                    'application/json': components['schemas']['Folders'][];
+                    'application/json': components['schemas']['Folder'][];
                 };
             };
         };
@@ -953,15 +988,15 @@ export interface operations {
     createFolders: {
         requestBody?: {
             content: {
-                'application/json': components['schemas']['Folders'];
-                'application/x-www-form-urlencoded': components['schemas']['Folders'];
-                'multipart/form-data': components['schemas']['Folders'];
+                'application/json': components['schemas']['Folder'];
+                'application/x-www-form-urlencoded': components['schemas']['Folder'];
+                'multipart/form-data': components['schemas']['Folder'];
             };
         };
         responses: {
             201: {
                 content: {
-                    'application/json': components['schemas']['Folders'];
+                    'application/json': components['schemas']['Folder'];
                 };
             };
         };
@@ -976,7 +1011,7 @@ export interface operations {
         responses: {
             200: {
                 content: {
-                    'application/json': components['schemas']['Folders'];
+                    'application/json': components['schemas']['Folder'];
                 };
             };
         };
@@ -990,15 +1025,15 @@ export interface operations {
         };
         requestBody?: {
             content: {
-                'application/json': components['schemas']['Folders'];
-                'application/x-www-form-urlencoded': components['schemas']['Folders'];
-                'multipart/form-data': components['schemas']['Folders'];
+                'application/json': components['schemas']['Folder'];
+                'application/x-www-form-urlencoded': components['schemas']['Folder'];
+                'multipart/form-data': components['schemas']['Folder'];
             };
         };
         responses: {
             200: {
                 content: {
-                    'application/json': components['schemas']['Folders'];
+                    'application/json': components['schemas']['Folder'];
                 };
             };
         };

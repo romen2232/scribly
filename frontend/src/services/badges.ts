@@ -5,8 +5,7 @@ type Badge = components['schemas']['Badge'];
 type User = components['schemas']['User'];
 type BadgeUser = components['schemas']['BadgeUser'];
 
-/**
- * Fetches all badges from the API
+/** Fetches all badges from the API
  * @param token JWT token
  * @returns List of badges
  * @throws Error if fetching badges fails
@@ -21,15 +20,16 @@ const listBadges = async (token: string): Promise<Badge[]> => {
         throw new Error(`Error fetching badges: ${error}`);
     }
 };
-
-/**
- * Creates a new badge
+/** Creates a new badge
  * @param badge Badge to create
  * @param token JWT token
  * @returns Created badge
  * @throws Error if creating badge fails
  */
-const createBadge = async (badge: Badge, token: string): Promise<Badge> => {
+const createBadge = async (
+    badge: Partial<Badge>,
+    token: string,
+): Promise<Badge> => {
     try {
         const response = await apiClient.post<Badge>('/api/v1/badges/', badge, {
             headers: {
@@ -42,9 +42,7 @@ const createBadge = async (badge: Badge, token: string): Promise<Badge> => {
         throw new Error(`Error creating badge: ${error}`);
     }
 };
-
-/**
- * Fetches a badge from the API
+/** Fetches a badge from the API
  * @param id Badge ID
  * @param token JWT token
  * @returns Badge
@@ -60,9 +58,7 @@ const retrieveBadge = async (id: number, token: string): Promise<Badge> => {
         throw new Error(`Error retrieving badge: ${error}`);
     }
 };
-
-/**
- * Updates a badge
+/** Updates a badge
  * @param id Badge ID to update
  * @param badge Badge to update with new values (must have all fields)
  * @param token JWT token
@@ -90,9 +86,7 @@ const updateBadge = async (
         throw new Error(`Error updating badge: ${error}`);
     }
 };
-
-/**
- * Partially updates a badge
+/** Partially updates a badge
  * @param id Badge ID to update
  * @param badge Badge to update with new values (can have only some fields)
  * @param token JWT token
@@ -120,9 +114,7 @@ const partialUpdateBadge = async (
         throw new Error(`Error partially updating badge: ${error}`);
     }
 };
-
-/**
- * Deletes a badge
+/** Deletes a badge
  * @param id Badge ID to delete
  * @param token JWT token
  * @returns void
@@ -137,9 +129,7 @@ const destroyBadge = async (id: number, token: string): Promise<void> => {
         throw new Error(`Error deleting badge: ${error}`);
     }
 };
-
-/**
- * Lists all users that have a badge
+/** Lists all users that have a badge
  * @param badgeId Badge ID
  * @param token JWT token
  * @returns List of users
@@ -161,9 +151,7 @@ const listBadgeUsers = async (
         throw new Error(`Error listing badge users: ${error}`);
     }
 };
-
-/**
- * Creates a new badge user relationship
+/**  Creates a new badge user relationship
  * @param badgeUser Badge user relationship to create
  * @param token JWT token
  * @returns Created badge user relationship
@@ -189,9 +177,7 @@ const createBadgeUser = async (
         throw new Error(`Error creating badge user: ${error}`);
     }
 };
-
-/**
- * Lists all badges that a user has
+/** Lists all badges that a user has
  * @param userId User ID
  * @param token JWT token
  * @returns List of badges
@@ -213,9 +199,7 @@ const listUserBadges = async (
         throw new Error(`Error listing user badges: ${error}`);
     }
 };
-
-/**
- * Fetches a specific user badge relationship from the API
+/** Fetches a specific user badge relationship from the API
  * @param userId User ID
  * @param badgeId Badge ID
  * @param token JWT token
@@ -239,9 +223,7 @@ const retrieveBadgeUser = async (
         throw new Error(`Error retrieving user badge: ${error}`);
     }
 };
-
-/**
- * Deletes a badge user relationship
+/**  Deletes a badge user relationship
  * @param userId User ID
  * @param badgeId Badge ID
  * @param token JWT token
@@ -261,7 +243,6 @@ const destroyBadgeUser = async (
         throw new Error(`Error deleting user badge: ${error}`);
     }
 };
-
 export {
     listBadges,
     createBadge,

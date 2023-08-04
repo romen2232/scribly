@@ -10,9 +10,11 @@
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
+        "parser": "@typescript-eslint/parser",
         "ecmaVersion": "latest",
         "sourceType": "module",
-        "project": "./frontend/tsconfig.json"
+        "project": "./frontend/tsconfig.json",
+        "tsconfigRootDir": "./"
     },
     "plugins": ["@typescript-eslint", "react"],
     "ignorePatterns": [
