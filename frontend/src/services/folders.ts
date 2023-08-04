@@ -3,8 +3,7 @@ import { components } from '../utils/openapi';
 
 type Folder = components['schemas']['Folder'];
 
-/**
- * Fetches all folders from the API
+/** Fetches all folders from the API
  * @param token JWT token
  * @returns List of folders
  * @throws Error if fetching folders fails
@@ -20,8 +19,7 @@ const listFolders = async (token: string): Promise<Folder[]> => {
     }
 };
 
-/**
- * Creates a new folder
+/** Creates a new folder
  * @param folder Folder to create
  * @param token JWT token
  * @returns Created folder
@@ -45,8 +43,7 @@ const createFolder = async (folder: Folder, token: string): Promise<Folder> => {
     }
 };
 
-/**
- * Fetches a single folder from the API
+/** Fetches a single folder from the API
  * @param id ID of the folder to fetch
  * @param token JWT token
  * @returns Folder
@@ -63,8 +60,7 @@ const retrieveFolder = async (id: number, token: string): Promise<Folder> => {
     }
 };
 
-/**
- * Updates a folder
+/** Updates a folder
  * @param id ID of the folder to update
  * @param folder Folder to update, all fields are required
  * @param token JWT token
@@ -93,8 +89,7 @@ const updateFolder = async (
     }
 };
 
-/**
- * Partially updates a folder
+/** Partially updates a folder
  * @param id ID of the folder to update
  * @param folder Folder to update, it can contain only the fields to update
  * @param token JWT token
@@ -123,8 +118,7 @@ const partialUpdateFolder = async (
     }
 };
 
-/**
- * Deletes a folder
+/** Deletes a folder
  * @param id ID of the folder to delete
  * @param token JWT token
  * @returns void

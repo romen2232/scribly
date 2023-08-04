@@ -333,9 +333,45 @@ export interface components {
             refresh: string;
             access?: string;
         };
+        Direct: {
+            sender: number;
+            receiver: number;
+            message: string;
+            sent_date: Date;
+        };
+        Follow: {
+            follower: number;
+            followed: number;
+            follow_date: Date;
+        };
+        Rating: {
+            user: number;
+            rating: number;
+            challenge?: number | null;
+            task?: number | null;
+            rating_date: Date;
+        };
         BadgeUser: {
             badge: number;
             user: number;
+            earned_date: Date;
+        };
+        BoosterUser: {
+            booster: number;
+            user: number;
+            booster_start_date?: Date;
+            booster_end_date?: Date | null;
+        };
+        ChallengeUser: {
+            challenge: number;
+            user: number;
+            challenge_end_date?: Date;
+        };
+        LeaderboardUser: {
+            leaderboard: number;
+            user: number;
+            leaderboard_update_date?: Date;
+            leaderboard_score: number;
         };
     };
     responses: never;

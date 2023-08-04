@@ -3,8 +3,7 @@ import { components } from '../utils/openapi';
 
 type Note = components['schemas']['Note'];
 
-/**
- * Fetches all notes from the API
+/** Fetches all notes from the API
  * @param token JWT token
  * @returns List of notes
  * @throws Error if fetching notes fails
@@ -20,8 +19,7 @@ const listNotes = async (token: string): Promise<Note[]> => {
     }
 };
 
-/**
- * Creates a new note
+/** Creates a new note
  * @param note Note to create
  * @param token JWT token
  * @returns Created note
@@ -41,8 +39,7 @@ const createNote = async (note: Note, token: string): Promise<Note> => {
     }
 };
 
-/**
- * Fetches a single note from the API
+/** Fetches a single note from the API
  * @param id Note ID
  * @param token JWT token
  * @returns Note
@@ -59,8 +56,7 @@ const retrieveNote = async (id: number, token: string): Promise<Note> => {
     }
 };
 
-/**
- * Updates a note
+/** Updates a note
  * @param id Note ID
  * @param note Note to update (all fields)
  * @param token JWT token
@@ -89,8 +85,7 @@ const updateNote = async (
     }
 };
 
-/**
- * Partially updates a note
+/** Partially updates a note
  * @param id Note ID
  * @param note Note to partially update (only fields to update)
  * @param token JWT token
@@ -119,8 +114,7 @@ const partialUpdateNote = async (
     }
 };
 
-/**
- * Deletes a note
+/** Deletes a note
  * @param id Note ID
  * @param token JWT token
  * @returns void
