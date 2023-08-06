@@ -1,11 +1,12 @@
 import { Routes, Route } from 'react-router';
-import Home from '../pages/home';
-import New from '../pages/new';
-import Folders from '../pages/folders';
+import { lazy } from 'react';
 import { withAuth } from '../hoc/auth/withAuth';
-import Login from '../pages/login';
 import { AuthProvider } from '../hoc/auth/context';
-import Register from '../pages/register';
+const Home = lazy(() => import('../pages/home'));
+const New = lazy(() => import('../pages/new'));
+const Folders = lazy(() => import('../pages/folders'));
+const Login = lazy(() => import('../pages/login'));
+const Register = lazy(() => import('../pages/register'));
 
 export interface IAppProps {}
 
@@ -16,7 +17,7 @@ const ProtectedFolders = withAuth(Folders);
 /**
  * Component App is the root component of our application. It renders the different
  * pages of our application depending on the current route.
- * @returns JSX.Element
+ * @returns JSX.Elemenlt
  */
 export default function App() {
     return (
