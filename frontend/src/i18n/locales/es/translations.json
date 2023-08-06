@@ -1,0 +1,14 @@
+{
+    "login.Title": "Login",
+    "login.Username": "Username",
+    "login.Email": "Email",
+    "login.Password": "Contraseña",
+    "login.Login": "Inicia sesión",
+    "login.Error": "Correo o contraseña incorrectos",
+    "login.Remember": "Recordar",
+    "login.Forgot": "¿Olvidaste tu contraseña?",
+    "login.Register": "Regístrate",
+    "login.NoAccount": "¿No tienes una cuenta?",
+
+    "Loading": "Cargando..."
+}
