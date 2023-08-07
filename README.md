@@ -2,7 +2,7 @@
 
 Summer of code 2023 Aircury
 
-## Backend
+# Backend
 
 cd ./backend
 
@@ -25,15 +25,15 @@ password guest
 
 pip install -r requirements.txt
 
-# Celery Worker Command
+## Celery Worker Command
 
 Este comando ejecuta una instancia de Celery como un trabajador para procesar tareas en segundo plano.
 
-## Comando:
+### Comando:
 
 celery -A escribly_api worker -l info -P eventlet
 
-## Detalles:
+### Detalles:
 
 -   `celery`: Comando principal para interactuar con Celery, un sistema de cola y programación distribuida en Python.
 
@@ -47,6 +47,9 @@ celery -A escribly_api worker -l info -P eventlet
 
 Asegúrate de configurar tu aplicación con las tareas que deseas ejecutar utilizando Celery antes de ejecutar este comando.
 
+---
+
+```bash
 python manage.py makemigrations badges
 python manage.py makemigrations badges_users
 python manage.py makemigrations boosters
@@ -58,6 +61,7 @@ python manage.py makemigrations clubs_users
 python manage.py makemigrations directs
 python manage.py makemigrations follows
 python manage.py makemigrations folders
+python manage.py makemigrations leagues
 python manage.py makemigrations leaderboards
 python manage.py makemigrations leaderboards_users
 python manage.py makemigrations lessons
@@ -71,3 +75,15 @@ python manage.py makemigrations tasks_users
 python manage.py makemigrations tivi
 python manage.py makemigrations users
 python3 manage.py migrate
+```
+
+---
+
+---
+
+# Frontend
+
+cd ./frontend
+npm install
+npx tailwindcss -i ./src/assets/styles/tailwind.css -o ./src/assets/styles/main.css --watch
+npm run dev

@@ -1,21 +1,31 @@
 // Importing necessary modules and components
 import React, { ReactNode, createContext, useCallback, useState } from 'react';
 import { destroyCookie, parseCookies, setCookie } from 'nookies';
-import { IUser, IUserLogin, IUserRegister } from '../../utils/types';
+import { User, IUserLogin, IUserRegister } from '../../utils/types';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { AUTH_COOKIE_NAME } from '../../utils/consts';
-import { getUser, login, register } from '../../services/auth';
+import {
+    retrieveUser,
+    loginUser,
+    registerUser,
+    activateUser,
+} from '../../services/auth';
+import { useTranslation } from 'react-i18next';
+import { isStrongPassword } from '../../utils/functions';
 
 // Defining the shape of our context
 export interface IAuthContextProps {
-    user: IUser | null;
+    user: User | null;
     isAuthenticated: boolean;
     loading: boolean;
+    activate: boolean;
+    email: string | null;
     checkToken: () => Promise<boolean>;
-    login: (data: IUserLogin) => void;
+    loginUser: (data: IUserLogin) => void;
     logout: () => void;
-    register: (data: IUserRegister) => void;
+    registerUser: (data: IUserRegister) => void;
+    activateUser: (token: string) => void;
 }
 
 export interface IAuthProviderProps {
@@ -27,76 +37,118 @@ export const AuthContext = createContext({} as IAuthContextProps);
 
 // Provider component that wraps around parts of our app where the context will be used
 export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
 
     // Setting up local state using React useState hook
-    const [user, setUser] = useState<IUser | null>(null);
+    const [user, setUser] = useState<User | null>(null);
     const [token, setToken] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+    const [activate, setActivate] = useState(false);
+    const [emailUser, setEmail] = useState<string | null>(null);
 
     // Login function
-    const loginUser = useCallback(
+    const login = useCallback(
         async ({ email, password }: IUserLogin) => {
             setLoading(true);
-            const response = await login(email, password); // Authenticate user
+            try {
+                const response = await loginUser(email, password); // Authenticate user
 
-            if (response) {
-                const { access } = response;
-                const user = await getUser(access); // Get user data
-                setLoading(false);
+                if (response) {
+                    const { access } = response;
+                    const user = await retrieveUser(access);
+                    setLoading(false);
 
-                if (!user) {
-                    // Display an error message
-                    toast('Error al iniciar sesión', {
+                    console.log(user);
+                    console.log(user.username);
+                    console.log(user);
+
+                    if (!user) {
+                        // Display an error message
+                        toast('Error al iniciar sesión', {
+                            position: 'top-right',
+                            type: 'error',
+                            pauseOnHover: false,
+                        });
+                        return;
+                    }
+                    // Save authorization token in cookies
+                    setCookie(undefined, AUTH_COOKIE_NAME, access, {
+                        sameSite: true,
+                        maxAge: 60 * 60, // 1 hour
+                    });
+
+                    // Display a success message
+                    toast(`Bienvenide ${user.username}`, {
                         position: 'top-right',
-                        type: 'error',
+                        type: 'success',
                         pauseOnHover: false,
                     });
-                    return;
+                    // Redirect to main page
+                    navigate(t('/'));
+
+                    // Update state with user data and token
+                    setUser(user);
+                    setToken(token);
+                    setActivate(true);
                 }
-                // Save authorization token in cookies
-                setCookie(undefined, AUTH_COOKIE_NAME, access, {
-                    sameSite: true,
-                    maxAge: 60 * 60, // 1 hour
-                });
-
-                // Display a success message
-                toast(`Bienvenide ${user.email}`, {
+            } catch (error) {
+                setLoading(false);
+                // Display an error message
+                toast(t('login.Error'), {
                     position: 'top-right',
-                    type: 'success',
+                    type: 'error',
                     pauseOnHover: false,
+                    autoClose: 2000,
                 });
-                // Redirect to main page
-                navigate('/');
-
-                // Update state with user data and token
-                setUser(user);
-                setToken(token);
             }
         },
         [navigate],
     );
 
     // Registration function
-    const registerUser = useCallback(
-        async ({ email, password }: IUserRegister) => {
+    const register = useCallback(
+        async ({ email, password, username }: IUserRegister) => {
             setLoading(true);
-            const response = await register(email, password); // Register user
-            setLoading(false);
-
-            if (response) {
-                // Display a success message
-                toast(
-                    'Bienvenide a bordo. Inicia sesión para utilizar Escribly!',
-                    {
+            if (!isStrongPassword(password)) {
+                setLoading(false);
+                console.log(t('weak password'));
+                toast(t('register.weakPassword'), {
+                    position: 'top-right',
+                    type: 'error',
+                    pauseOnHover: true,
+                    autoClose: 5000,
+                });
+                return;
+            }
+            try {
+                const response = await registerUser({
+                    email,
+                    password,
+                    username,
+                });
+                setLoading(false);
+                setEmail(email);
+                if (response) {
+                    toast(t('register.Welcome'), {
                         position: 'top-right',
                         type: 'success',
                         pauseOnHover: false,
-                    },
-                );
-
-                // Redirect to login page
-                navigate('/login');
+                        autoClose: 2000,
+                    });
+                    // Redirect to login page
+                    console.log(emailUser);
+                    navigate(t('/activate'));
+                }
+            } catch (error) {
+                setLoading(false);
+                // Display an error message
+                toast(t('register.Error'), {
+                    position: 'top-right',
+                    type: 'error',
+                    pauseOnHover: false,
+                    autoClose: 2000,
+                });
             }
         },
         [navigate],
@@ -108,6 +160,8 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
         destroyCookie(undefined, AUTH_COOKIE_NAME);
         setUser(null);
         setToken(null);
+        setActivate(false);
+        navigate(t('/login'));
     }, []);
 
     // Token checker function
@@ -118,7 +172,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
 
             if (!storedToken) {
                 // If no token, redirect to login page
-                navigate('/login');
+                navigate(t('/login'));
                 resolve(true);
             } else {
                 // If token exists, update state with token
@@ -130,17 +184,50 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
         return checking;
     };
 
+    const activateUserReact = async (token: string) => {
+        setLoading(true);
+        try {
+            const response = await activateUser(token);
+            setLoading(false);
+            if (response) {
+                toast(t('activate.Success'), {
+                    position: 'top-right',
+                    type: 'success',
+                    pauseOnHover: false,
+                    autoClose: 2000,
+                });
+
+                setActivate(true);
+
+                // Redirect to login page
+                navigate(t('/login'));
+            }
+        } catch (error) {
+            setLoading(false);
+            // Display an error message
+            toast(t('activate.Error'), {
+                position: 'top-right',
+                type: 'error',
+                pauseOnHover: false,
+                autoClose: 2000,
+            });
+        }
+    };
+
     // Return the context provider with value and children
     return (
         <AuthContext.Provider
             value={{
                 isAuthenticated: !!token, // Double-bang operator coerces the value into a boolean
                 user,
-                login: loginUser,
+                loginUser: login,
                 loading,
                 checkToken: checkToken,
                 logout,
-                register: registerUser,
+                registerUser: register,
+                activateUser: activateUserReact,
+                activate,
+                email: emailUser,
             }}
         >
             {children}

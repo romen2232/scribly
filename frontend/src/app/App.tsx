@@ -1,11 +1,16 @@
 import { Routes, Route } from 'react-router';
-import Home from '../pages/home';
-import New from '../pages/new';
-import Folders from '../pages/folders';
+import { Suspense, lazy } from 'react';
 import { withAuth } from '../hoc/auth/withAuth';
-import Login from '../pages/login';
 import { AuthProvider } from '../hoc/auth/context';
-import Register from '../pages/register';
+import Loader from '../pages/loader';
+import { ToastContainer } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
+const Home = lazy(() => import('../pages/home'));
+const New = lazy(() => import('../pages/new'));
+const Folders = lazy(() => import('../pages/folders'));
+const Login = lazy(() => import('../pages/login'));
+const Register = lazy(() => import('../pages/register'));
+const Activate = lazy(() => import('../pages/activate'));
 
 export interface IAppProps {}
 
@@ -16,20 +21,45 @@ const ProtectedFolders = withAuth(Folders);
 /**
  * Component App is the root component of our application. It renders the different
  * pages of our application depending on the current route.
- * @returns JSX.Element
+ * @returns JSX.Elemenlt
  */
 export default function App() {
+    const { t } = useTranslation();
     return (
-        <AuthProvider>
-            <Routes>
-                <Route path="/" element={<ProtectedHome />} />
-                <Route path="/about" element={<h1>About</h1>} />
-                <Route path="/new" element={<ProtectedNew />} />
-                <Route path="/folders" element={<ProtectedFolders />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="*" element={<h1>Not Found</h1>} />
-            </Routes>
-        </AuthProvider>
+        <>
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
+            <AuthProvider>
+                <Suspense fallback={<Loader />}>
+                    <Routes>
+                        <Route path={t('/')} element={<ProtectedHome />} />
+                        <Route path={t('/about')} element={<h1>About</h1>} />
+                        <Route path={t('/new')} element={<ProtectedNew />} />
+                        <Route
+                            path={t('/folders')}
+                            element={<ProtectedFolders />}
+                        />
+                        <Route path={t('/login')} element={<Login />} />
+                        <Route path={t('/register')} element={<Register />} />
+                        <Route
+                            path={t('/activate') + '/:token'}
+                            element={<Activate />}
+                        />
+                        <Route path={t('/activate')} element={<Activate />} />
+                        <Route path="*" element={<h1>Not Found</h1>} />
+                    </Routes>
+                </Suspense>
+            </AuthProvider>
+        </>
     );
 }
