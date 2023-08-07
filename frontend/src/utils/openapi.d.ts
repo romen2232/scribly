@@ -329,9 +329,9 @@ export interface components {
             email: string;
             password: string;
         };
-        TokenRefresh: {
+        Token: {
             refresh: string;
-            access?: string;
+            access: string;
         };
         Direct: {
             sender: number;

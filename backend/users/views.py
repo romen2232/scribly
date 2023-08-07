@@ -29,7 +29,23 @@ class CreateUserView(CreateAPIView):
             data.pop('password')
 
             return Response(data, status=status.HTTP_201_CREATED)
+        
+class UserViewSet(ModelViewSet):
+    """
+    Retrieves, updates or deletes one user instance.
+    """
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+    permission_classes = (IsAuthenticated,)
 
+    def get_object(self):
+        pk = self.request.user.id
+        queryset = User.objects.all().filter(pk=pk)
+        obj = get_object_or_404(queryset, pk=pk)
+        self.check_object_permissions(self.request, obj)
+
+        return obj
+    
 
 class ListUserView(ListAPIView):
     """ 
@@ -64,7 +80,7 @@ def activate_user_account(request):
     user.save()
     token.delete()
 
-    return Response(status=status.HTTP_200_OK)
+    return Response(data={"details": "User account activated!"}, status=status.HTTP_200_OK)
 
 
 @api_view(['PATCH'])

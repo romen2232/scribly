@@ -35,8 +35,13 @@ ALLOWED_HOSTS = [
     '*',
 ]
 
-FRONTEND_URL = 'http://localhost:8000'
+FRONTEND_URL = 'http://localhost:5173'
+BACKEND_URL = 'http://localhost:8000'
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
 
 # Application definition
 
@@ -98,7 +103,7 @@ ROOT_URLCONF = 'escribly_api.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

@@ -36,35 +36,17 @@ class UserCreateSerializer(serializers.ModelSerializer):
         password = validated_data.get('password', None)
         validated_data.pop('password')
 
-        first_name = validated_data.get('first_name', None)
-        validated_data.pop('first_name')
-
-        last_name = validated_data.get('last_name', None)
-        validated_data.pop('last_name')
-
-        user = User.objects.create_user(email=email, password=password, first_name=first_name,
-                                        last_name=last_name, username=username, **validated_data)
+        user = User.objects.create_user(email=email, password=password, username=username, **validated_data)
 
         token = secrets.token_urlsafe(48)
         VerifyEmailToken.objects.create(user=user, token=token)
 
         print("Sending email to verify account")
         tasks.send_mail_to_verify_account(
-            user_email=user.email, first_name=user.first_name, token=token)
+            user_email=user.email, username=user.username, token=token)
         print("Email sent!")
 
         return user
-
-    def validate(self, data):
-        first_name = data['first_name']
-        last_name = data['last_name']
-
-        if not first_name.isalpha() or not last_name.isalpha():
-            raise ValidationError(
-                'First and last name should only contain letters!')
-
-        return data
-
 
 class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:

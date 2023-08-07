@@ -1,31 +1,36 @@
 import React, { useContext } from 'react';
 import { AuthContext } from '../hoc/auth/context';
-import { Form } from '../components/Form';
+import { FormRegister } from '../components/FormRegister';
 import { PageContainer } from '../components/PageContainer';
 import { Splash } from '../components/Splash';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const Login: React.FC = () => {
-    const { register, loading } = useContext(AuthContext);
+    const { t } = useTranslation();
+    const { registerUser } = useContext(AuthContext);
 
-    const handleLogin = async (email: string, password: string) => {
-        register({ email, password });
+    const handleLogin = async (
+        email: string,
+        password: string,
+        username: string,
+    ) => {
+        registerUser({ email, password, username });
     };
 
     return (
         <PageContainer>
             <Splash>
                 <h2 className="my-4 text-center text-2xl font-bold">
-                    Register
+                    {t('register.Register')}
                 </h2>
                 <p>
-                    Already have an account? &nbsp;
-                    <Link to="/login" className="text-tiviElectricViolet">
-                        Sing in
+                    {t('register.Already')} &nbsp;
+                    <Link to={t('/login')} className="text-tiviElectricViolet">
+                        {t('register.Login')}
                     </Link>
                 </p>
-                <Form onSubmit={handleLogin} type="register" />
-                {loading && <p>Loading...</p>}
+                <FormRegister onSubmit={handleLogin} />
             </Splash>
         </PageContainer>
     );

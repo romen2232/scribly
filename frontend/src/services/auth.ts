@@ -2,6 +2,10 @@ import { apiClient } from './api';
 import { components } from '../utils/openapi';
 
 type User = components['schemas']['User'];
+type Token = components['schemas']['Token'];
+type Activate = {
+    detail: string;
+};
 
 /**
  * Fetches the logged in user from the API using the JWT token
@@ -26,9 +30,9 @@ const retrieveUser = async (token: string): Promise<User> => {
  * @returns Registered user
  * @throws Error if registering user fails
  */
-const registerUser = async (user: User): Promise<User> => {
+const registerUser = async (user: User): Promise<Response> => {
     try {
-        const response = await apiClient.post<User>(
+        const response = await apiClient.post<Response>(
             '/api/v1/auth/register/',
             user,
             {
@@ -50,9 +54,9 @@ const registerUser = async (user: User): Promise<User> => {
  * @throws Error if activating user fails
  * TODO: I don't know if this works
  */
-const activateUser = async (token: string): Promise<User> => {
+const activateUser = async (token: string): Promise<Activate> => {
     try {
-        const response = await apiClient.post<User>(
+        const response = await apiClient.post<Activate>(
             '/api/v1/auth/activate/',
             { token },
             {
@@ -71,17 +75,17 @@ const activateUser = async (token: string): Promise<User> => {
  * Logs in a user
  * @param email User email
  * @param password User password
- * @returns Logged in user
+ * @returns JWT token
  * @throws Error if logging in user fails
  */
-const loginUser = async (email: string, password: string): Promise<User> => {
+const loginUser = async (email: string, password: string): Promise<Token> => {
     try {
-        const response = await apiClient.post<User>(
+        const response = await apiClient.post<Token>(
             '/api/v1/auth/login/',
             { email, password },
             {
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Content-Type': 'application/json',
                 },
             },
         );

@@ -3,13 +3,16 @@ import { Link } from 'react-router-dom';
 
 import { FaDumbbell, FaFireAlt } from 'react-icons/fa';
 import { FaUsers, FaTrophy, FaUser } from 'react-icons/fa6';
-
+import { AuthContext } from '../hoc/auth/context';
+import { useContext } from 'react';
 export interface IHeaderProps {
     children?: React.ReactNode;
     onHeaderModalClick: () => void;
 }
 
 export function Header(props: IHeaderProps) {
+    const { logout } = useContext(AuthContext);
+
     return (
         <header
             className="h-[8.25rem] w-full
@@ -43,9 +46,9 @@ export function Header(props: IHeaderProps) {
                     <FaUsers className="h-16 w-16 transition duration-300 ease-in-out hover:text-tiviBlack" />
                 </Link>
 
-                <Link to="/profile">
+                <button onClick={logout}>
                     <FaUser className="h-16 w-16 transition duration-300 ease-in-out hover:text-tiviBlack" />
-                </Link>
+                </button>
             </nav>
         </header>
     );
