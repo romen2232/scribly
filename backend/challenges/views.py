@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from .models import Challenges
 from .serializers import ChallengesSerializer
 
+
 class ChallengesListCreateView(generics.ListCreateAPIView):
     queryset = Challenges.objects.all()
     serializer_class = ChallengesSerializer
@@ -14,6 +15,7 @@ class ChallengesListCreateView(generics.ListCreateAPIView):
         challenge = serializer.save(user=request.user)
         return Response({"status": "success", "data": ChallengesSerializer(challenge).data}, status=status.HTTP_201_CREATED)
 
+
 class ChallengesRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Challenges.objects.all()
     serializer_class = ChallengesSerializer
@@ -22,7 +24,8 @@ class ChallengesRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer = self.get_serializer(
+            instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         challenge = serializer.save()
         return Response({"status": "success", "data": ChallengesSerializer(challenge).data})
