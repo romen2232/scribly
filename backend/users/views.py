@@ -2,10 +2,11 @@ from secrets import token_urlsafe
 from django.shortcuts import get_object_or_404
 from rest_framework import status, permissions
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.generics import CreateAPIView, ListAPIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+
 
 from users.serializers import *
 from users.models import User, VerifyEmailToken, PasswordResetToken
@@ -30,22 +31,21 @@ class CreateUserView(CreateAPIView):
 
             return Response(data, status=status.HTTP_201_CREATED)
         
-class UserViewSet(ModelViewSet):
-    """
-    Retrieves, updates or deletes one user instance.
+# class UserViewSet(ModelViewSet):
+
+
+
+class UserDetailView(RetrieveAPIView):
+    """ 
+    Retrieve the authenticated user
     """
     serializer_class = UserSerializer
-    queryset = User.objects.all()
     permission_classes = (IsAuthenticated,)
 
     def get_object(self):
-        pk = self.request.user.id
-        queryset = User.objects.all().filter(pk=pk)
-        obj = get_object_or_404(queryset, pk=pk)
-        self.check_object_permissions(self.request, obj)
+        return self.request.user
 
-        return obj
-    
+
 
 class ListUserView(ListAPIView):
     """ 
@@ -54,12 +54,28 @@ class ListUserView(ListAPIView):
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated,)
 
+    # def get_queryset(self):
+    #     pk = self.request.user.id
+    #     queryset = User.objects.all().filter(pk=pk)
+
+    #     return (list(queryset))[0]
     def get_queryset(self):
-        pk = self.request.user.id
-        queryset = User.objects.all().filter(pk=pk)
+        
+        queryset = User.objects.all()
 
         return queryset
 
+class UserDetailViewByUsername(RetrieveAPIView):
+    """
+    Retrieve a user by their username
+    """
+    serializer_class = UserDetailSerializer
+    permission_classes = (IsAuthenticated,)
+    lookup_field = 'username'
+
+    def get_queryset(self):
+        username = self.kwargs['username']
+        return User.objects.filter(username=username)
 
 @api_view(['POST'])
 def activate_user_account(request):

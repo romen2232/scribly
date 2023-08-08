@@ -14,6 +14,12 @@ class UserSerializer(serializers.ModelSerializer):
         fields = "__all__"
         # ('id', 'first_name', 'last_name', 'email', 'birth_date',
         # 'phone_number', 'receive_future_promotional_emails', 'provide_data_to_improve_user_exp')#
+        
+class UserDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        #fields = "__all__"  
+        exclude = ('password', 'is_superuser', 'is_staff', 'is_active', 'groups', 'user_permissions') 
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
