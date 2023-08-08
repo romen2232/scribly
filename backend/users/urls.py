@@ -33,14 +33,15 @@ urlpatterns = [
     path('auth/delete/', delete_user_account, name='delete_user_account'),
 
     # Login
-    path('auth/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-
+    # path('auth/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('auth/login/', CustomTokenObtainPairView.as_view(),
+         name='token_obtain_pair'),
     # Refresh token
     path('auth/login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
 
     # Search user by username
-    path('user/<str:username>/', UserDetailViewByUsername.as_view(),
+    path('users/<str:username>/', UserDetailViewByUsername.as_view(),
          name='user-detail-by-username'),
 
 

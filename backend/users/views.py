@@ -6,6 +6,7 @@ from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 
 from users.serializers import *
@@ -30,9 +31,6 @@ class CreateUserView(CreateAPIView):
             data.pop('password')
 
             return Response(data, status=status.HTTP_201_CREATED)
-        
-# class UserViewSet(ModelViewSet):
-
 
 
 class UserDetailView(RetrieveAPIView):
@@ -198,3 +196,35 @@ def delete_user_account(request):
     user.delete()
 
     return Response(status=status.HTTP_200_OK)
+
+
+
+# class CustomTokenObtainPairView(TokenObtainPairView):
+    
+    
+#     serializer_class = CustomTokenObtainPairSerializer
+#     def post(self, request, *args, **kwargs):
+#         email = request.data.get('email')
+#         username = request.data.get('username')
+#         password = request.data.get('password')
+
+#         # If email is provided, let the original TokenObtainPairView handle the authentication
+#         if email:
+#             return super().post(request, *args, **kwargs)
+
+#         # If username is provided, fetch the associated email
+#         elif username:
+#             try:
+#                 user = User.objects.get(username=username)
+#                 new_request = request.data.copy()
+#                 new_request['email'] = user.email
+#                 print(email)
+        
+#                 return super().post(request, *args, **kwargs)
+#             except User.DoesNotExist:
+#                 return Response({"details": "User does not exist"}, status=status.HTTP_404_NOT_FOUND)
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    permission_classes = [AllowAny]
+    serializer_class = CustomTokenObtainPairSerializer
