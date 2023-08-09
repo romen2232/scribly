@@ -1,3 +1,5 @@
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 import secrets
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.db.models import Q
@@ -14,15 +16,19 @@ from users import tasks
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = "__all__"
+        # fields = "__all__"
         # ('id', 'first_name', 'last_name', 'email', 'birth_date',
         # 'phone_number', 'receive_future_promotional_emails', 'provide_data_to_improve_user_exp')#
-        
+        exclude = ('password', 'is_superuser', 'is_staff',
+                   'is_active', 'groups', 'user_permissions')
+
+
 class UserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        #fields = "__all__"  
-        exclude = ('password', 'is_superuser', 'is_staff', 'is_active', 'groups', 'user_permissions') 
+        # fields = "__all__"
+        exclude = ('password', 'is_superuser', 'is_staff',
+                   'is_active', 'groups', 'user_permissions')
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -45,7 +51,8 @@ class UserCreateSerializer(serializers.ModelSerializer):
         password = validated_data.get('password', None)
         validated_data.pop('password')
 
-        user = User.objects.create_user(email=email, password=password, username=username, **validated_data)
+        user = User.objects.create_user(
+            email=email, password=password, username=username, **validated_data)
 
         token = secrets.token_urlsafe(48)
         VerifyEmailToken.objects.create(user=user, token=token)
@@ -56,6 +63,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
         print("Email sent!")
 
         return user
+
 
 class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -80,10 +88,6 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         return data
 
 
-from django.core.validators import validate_email
-from django.core.exceptions import ValidationError
-
-
 def validateEmail(email):
     try:
         validate_email(email)
@@ -102,46 +106,28 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['email'] = user.email
 
         return token
-    
+
     def validate(self, attrs):
         userName = attrs.get("email")
         password = attrs.get("password")
 
-        # 
+        #
 
         if validateEmail(userName) is False:
-            #check the input whether it is username or email
-            #if it is username, then get the email of the user
+            # check the input whether it is username or email
+            # if it is username, then get the email of the user
             try:
                 user = User.objects.get(username=userName)
                 if user.check_password(password):
                     attrs['email'] = user.email
-         
 
             except Users.DoesNotExist:
                 raise exceptions.AuthenticationFailed(
-                    'No such user with provided credentials'.title()) 
-        
+                    'No such user with provided credentials'.title())
+
         data = super().validate(attrs)
         return data
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     # email = serializers.EmailField(required=False)
     # username = serializers.CharField(required=False)
     # password = serializers.CharField(write_only=True, required=True)
@@ -149,7 +135,6 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     # def validate(self, attrs):
     #     email = attrs.get('email')
     #     password = attrs.get('password')
-
 
     #     # Autenticar al usuario con el email y password proporcionados
     #     user = authenticate(email=email, password=password)
@@ -163,14 +148,8 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     #     self.user = user
     #     return super().validate(attrs)
 
-
-
-
-
-
-
     # def post(self, request, *args, **kwargs):
-        
+
     #     username = request.data.get('username', required=False)
     #     email = request.data.get('email', requiered=False)
     #     password = request.data.get('password')

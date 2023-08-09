@@ -9,7 +9,8 @@ class BadgeUserCreateView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        serializer = BadgeUserSerializer(data=request.data)
+        serializer = BadgeUserSerializer(
+            data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -31,7 +32,8 @@ class BadgeUsersView(APIView):
 
     def get(self, request, badge_id, *args, **kwargs):
         badges_users = Badges_users.objects.filter(badge=badge_id)
-        serializer = BadgeUserSerializer(badges_users, many=True)
+        serializer = BadgeUserSerializer(
+            badges_users, many=True, context={'request': request})
         return Response(serializer.data)
 
 
@@ -41,7 +43,8 @@ class SpecificUserBadgeView(APIView):
     def get(self, request, user_id, badge_id, *args, **kwargs):
         try:
             badge_user = Badges_users.objects.get(user=user_id, badge=badge_id)
-            serializer = BadgeUserSerializer(badge_user)
+            serializer = BadgeUserSerializer(
+                badge_user, context={'request': request})
             return Response(serializer.data)
         except Badges_users.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)

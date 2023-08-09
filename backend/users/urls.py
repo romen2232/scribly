@@ -41,7 +41,7 @@ urlpatterns = [
 
 
     # Search user by username
-    path('users/<str:username>/', UserDetailViewByUsername.as_view(),
+    path('user/<str:username>/', UserDetailViewByUsername.as_view(),
          name='user-detail-by-username'),
 
 

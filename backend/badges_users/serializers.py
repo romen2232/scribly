@@ -2,11 +2,17 @@ from rest_framework import serializers
 from .models import Badges_users
 from badges.serializers import BadgeSerializer
 from users.serializers import UserSerializer
+from badges.models import Badge
+from users.models import User
 
 
 class BadgeUserSerializer(serializers.ModelSerializer):
     badge = BadgeSerializer(read_only=True)
     user = UserSerializer(read_only=True)
+    badge = serializers.PrimaryKeyRelatedField(
+        queryset=Badge.objects.all(), write_only=True)
+    user = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(), write_only=True)
 
     class Meta:
         model = Badges_users
