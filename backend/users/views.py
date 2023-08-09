@@ -44,7 +44,6 @@ class UserDetailView(RetrieveAPIView):
         return self.request.user
 
 
-
 class ListUserView(ListAPIView):
     """ 
     List all users
@@ -58,10 +57,11 @@ class ListUserView(ListAPIView):
 
     #     return (list(queryset))[0]
     def get_queryset(self):
-        
+
         queryset = User.objects.all()
 
         return queryset
+
 
 class UserDetailViewByUsername(RetrieveAPIView):
     """
@@ -74,6 +74,7 @@ class UserDetailViewByUsername(RetrieveAPIView):
     def get_queryset(self):
         username = self.kwargs['username']
         return User.objects.filter(username=username)
+
 
 @api_view(['POST'])
 def activate_user_account(request):
@@ -198,10 +199,9 @@ def delete_user_account(request):
     return Response(status=status.HTTP_200_OK)
 
 
-
 # class CustomTokenObtainPairView(TokenObtainPairView):
-    
-    
+
+
 #     serializer_class = CustomTokenObtainPairSerializer
 #     def post(self, request, *args, **kwargs):
 #         email = request.data.get('email')
@@ -219,7 +219,7 @@ def delete_user_account(request):
 #                 new_request = request.data.copy()
 #                 new_request['email'] = user.email
 #                 print(email)
-        
+
 #                 return super().post(request, *args, **kwargs)
 #             except User.DoesNotExist:
 #                 return Response({"details": "User does not exist"}, status=status.HTTP_404_NOT_FOUND)

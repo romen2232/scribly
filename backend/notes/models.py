@@ -2,6 +2,7 @@ from django.db import models
 from tasks.models import Tasks
 from challenges.models import Challenges
 from folders.models import Folders
+from users.models import User
 # Create your models here.
 
 
@@ -19,3 +20,5 @@ class Notes(models.Model):
         'challenges.Challenges', on_delete=models.CASCADE, null=True, blank=True)
     folder = models.ForeignKey(
         'folders.Folders', on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(
+        'users.User', on_delete=models.CASCADE)

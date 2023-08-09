@@ -1,14 +1,14 @@
 from rest_framework import serializers
 from .models import Ratings
 from users.serializers import UserSerializer
-from challenges.serializers import ChallengeSerializer
-from tasks.serializers import TaskSerializer
+from challenges.serializers import ChallengesSerializer
+from tasks.serializers import TasksSerializer
 
 
 class RatingsSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
-    challenge = ChallengeSerializer(read_only=True)
-    task = TaskSerializer(read_only=True)
+    challenge = ChallengesSerializer(read_only=True)
+    task = TasksSerializer(read_only=True)
 
     class Meta:
         model = Ratings
@@ -19,9 +19,9 @@ class RatingsSerializer(serializers.ModelSerializer):
 
         # Explicitly set the context for nested serializers
         user_serializer = UserSerializer(instance.user, context=self.context)
-        challenge_serializer = ChallengeSerializer(
+        challenge_serializer = ChallengesSerializer(
             instance.challenge, context=self.context)
-        task_serializer = TaskSerializer(
+        task_serializer = TasksSerializer(
             instance.task, context=self.context)
 
         representation['user'] = user_serializer.data

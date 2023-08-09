@@ -3,10 +3,11 @@ from rest_framework.response import Response
 from .models import Badge
 from .serializers import BadgeSerializer
 
+
 class BadgeListCreateView(generics.ListCreateAPIView):
     """
     get: Return a list of all the existing badges.
-        
+
     post: Create a new badge instance.
     """
     queryset = Badge.objects.all()
@@ -15,7 +16,8 @@ class BadgeListCreateView(generics.ListCreateAPIView):
 
     def create(self, request, *args, **kwargs):
 
-        serializer = self.get_serializer(data=request.data)
+        serializer = self.get_Serializer(
+            data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         badge = serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -27,7 +29,7 @@ class BadgeRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     update: Update the given badge.
     delete: Delete the given badge.
     """
-    
+
     queryset = Badge.objects.all()
     serializer_class = BadgeSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -35,7 +37,8 @@ class BadgeRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer = self.get_serializer(
+            instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         badge = serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)

@@ -9,7 +9,8 @@ class BoosterUserCreateView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        serializer = BoosterUserSerializer(data=request.data)
+        serializer = BoosterUserSerializer(
+            data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

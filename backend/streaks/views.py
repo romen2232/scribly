@@ -10,7 +10,8 @@ class StreakListCreateView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        serializer = self.get_Serializer(
+            data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         streak = serializer.save()
         return Response({"status": "success", "data": StreakSerializer(streak).data},
