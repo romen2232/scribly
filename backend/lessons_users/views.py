@@ -11,8 +11,8 @@ from .serializers import Lessons_Users_
 
 class Lessons_UsersList(APIView):
     def get(self, request, format=None):
-        lessons_userss = Lessons_Users.objects.all()
-        serializer = Lessons_Users_(lessons_userss, many=True)
+        lessons_users = Lessons_Users.objects.all()
+        serializer = Lessons_Users_(lessons_users, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):

@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from .models import Leaderboards_users
 from .serializers import LeaderboardUserSerializer
 
+
 class LeaderboardUserCreateView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -20,23 +21,28 @@ class UserLeaderboardsView(APIView):
 
     def get(self, request, user_id, *args, **kwargs):
         leaderboard_users = Leaderboards_users.objects.filter(user=user_id)
-        return Response(LeaderboardUserSerializer(leaderboard_users, many=True).data)
+        serializer = LeaderboardUserSerializer(
+            leaderboard_users, many=True, context={'request': request})
+        return Response(serializer.data)
 
 
 class LeaderboardUsersView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, leaderboard_id, *args, **kwargs):
-        leaderboard_users = Leaderboards_users.objects.filter(leaderboard=leaderboard_id)
+        leaderboard_users = Leaderboards_users.objects.filter(
+            leaderboard=leaderboard_id)
         serializer = LeaderboardUserSerializer(leaderboard_users, many=True)
         return Response(serializer.data)
+
 
 class SpecificUserLeaderboardView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, user_id, leaderboard_id, *args, **kwargs):
         try:
-            leaderboard_user = Leaderboards_users.objects.get(user=user_id, leaderboard=leaderboard_id)
+            leaderboard_user = Leaderboards_users.objects.get(
+                user=user_id, leaderboard=leaderboard_id)
             serializer = LeaderboardUserSerializer(leaderboard_user)
             return Response(serializer.data)
         except Leaderboards_users.DoesNotExist:
@@ -44,20 +50,22 @@ class SpecificUserLeaderboardView(APIView):
 
     def patch(self, request, user_id, leaderboard_id, *args, **kwargs):
         try:
-            leaderboard_user = Leaderboards_users.objects.get(user=user_id, leaderboard=leaderboard_id)
-            serializer = LeaderboardUserSerializer(leaderboard_user, data=request.data, partial=True) 
+            leaderboard_user = Leaderboards_users.objects.get(
+                user=user_id, leaderboard=leaderboard_id)
+            serializer = LeaderboardUserSerializer(
+                leaderboard_user, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Leaderboards_users.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        
+
     def delete(self, request, user_id, leaderboard_id, *args, **kwargs):
         try:
-            leaderboard_user = Leaderboards_users.objects.get(user=user_id, leaderboard=leaderboard_id)
+            leaderboard_user = Leaderboards_users.objects.get(
+                user=user_id, leaderboard=leaderboard_id)
             leaderboard_user.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Leaderboards_users.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
-

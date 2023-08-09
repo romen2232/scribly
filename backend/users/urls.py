@@ -18,7 +18,7 @@ urlpatterns = [
          activate_user_account, name='activate_user'),
 
     # List user data
-    path('auth/me/', ListUserView.as_view(), name='list_user'),
+    path('auth/me/', UserDetailView.as_view(), name='list_user'),
 
     # Update user data
     path('auth/update/', update_user, name='update_user'),
@@ -33,8 +33,19 @@ urlpatterns = [
     path('auth/delete/', delete_user_account, name='delete_user_account'),
 
     # Login
-    path('auth/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-
+    # path('auth/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('auth/login/', CustomTokenObtainPairView.as_view(),
+         name='token_obtain_pair'),
     # Refresh token
     path('auth/login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
+
+    # Search user by username
+    path('users/<str:username>/', UserDetailViewByUsername.as_view(),
+         name='user-detail-by-username'),
+
+
+    # List all users
+    path('users/', ListUserView.as_view(), name='list-users'),
+
 ]

@@ -18,6 +18,7 @@ backend/clubs_users/migrations/
 backend/directs/migrations/
 backend/follows/migrations/
 backend/folders/migrations/
+backend/leagues/migrations/
 backend/leaderboards/migrations/
 backend/leaderboards_users/migrations/
 backend/lessons/migrations/
@@ -30,3 +31,4 @@ backend/tasks/migrations/
 backend/tasks_users/migrations/
 backend/tivi/migrations/
 backend/users/migrations/
+backend/media/

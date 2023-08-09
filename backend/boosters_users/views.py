@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from .models import Boosters_users
 from .serializers import BoosterUserSerializer
 
+
 class BoosterUserCreateView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -20,7 +21,9 @@ class UserBoostersView(APIView):
 
     def get(self, request, user_id, *args, **kwargs):
         boosters_users = Boosters_users.objects.filter(user=user_id)
-        return Response(BoosterUserSerializer(boosters_users, many=True).data)
+        serializer = BoosterUserSerializer(
+            boosters_users, many=True, context={'request': request})
+        return Response(serializer.data)
 
 
 class BoosterUsersView(APIView):
@@ -28,7 +31,8 @@ class BoosterUsersView(APIView):
 
     def get(self, request, booster_id, *args, **kwargs):
         boosters_users = Boosters_users.objects.filter(booster=booster_id)
-        serializer = BoosterUserSerializer(boosters_users, many=True)
+        serializer = BoosterUserSerializer(
+            boosters_users, many=True, context={'request': request})
         return Response(serializer.data)
 
 
@@ -37,15 +41,17 @@ class SpecificUserBoosterView(APIView):
 
     def get(self, request, user_id, booster_id, *args, **kwargs):
         try:
-            booster_user = Boosters_users.objects.get(user=user_id, booster=booster_id)
+            booster_user = Boosters_users.objects.get(
+                user=user_id, booster=booster_id)
             serializer = BoosterUserSerializer(booster_user)
             return Response(serializer.data)
         except Boosters_users.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        
+
     def put(self, request, user_id, booster_id, *args, **kwargs):
         try:
-            booster_user = Boosters_users.objects.get(user=user_id, booster=booster_id)
+            booster_user = Boosters_users.objects.get(
+                user=user_id, booster=booster_id)
             serializer = BoosterUserSerializer(booster_user, data=request.data)
             if serializer.is_valid():
                 serializer.save()
@@ -56,8 +62,11 @@ class SpecificUserBoosterView(APIView):
 
     def patch(self, request, user_id, booster_id, *args, **kwargs):
         try:
-            booster_user = Boosters_users.objects.get(user=user_id, booster=booster_id)
-            serializer = BoosterUserSerializer(booster_user, data=request.data, partial=True)  # set partial=True to update a data partially
+            booster_user = Boosters_users.objects.get(
+                user=user_id, booster=booster_id)
+            # set partial=True to update a data partially
+            serializer = BoosterUserSerializer(
+                booster_user, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
@@ -67,7 +76,8 @@ class SpecificUserBoosterView(APIView):
 
     def delete(self, request, user_id, booster_id, *args, **kwargs):
         try:
-            booster_user = Boosters_users.objects.get(user=user_id, booster=booster_id)
+            booster_user = Boosters_users.objects.get(
+                user=user_id, booster=booster_id)
             booster_user.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Boosters_users.DoesNotExist:
