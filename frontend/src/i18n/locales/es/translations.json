@@ -21,6 +21,7 @@
     "register.Already": "¿Ya tienes una cuenta?",
     "register.Terms": "Al registrarte, aceptas nuestros Términos y Política de privacidad.",
     "register.UsernameTaken": "El nombre de usuario ya está en uso",
+    "register.InvalidUsername": "El nombre de usuario debe tener entre 3 y 20 caracteres, y solo puede contener letras, números, guiones y guiones bajos",
     "register.EmailTaken": "El correo ya está en uso",
     "register.Welcome": "¡Bienvenide a bordo!",
     "register.weakPassword": "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número",
@@ -34,6 +35,22 @@
     "activate.CheckSpam": "Revisa en tu carpeta de spam o ",
     "activate.resend": "reenvía un correo",
     "activate.Sent": "Correo enviado",
+
+    "profile.Title": "Perfil",
+    "profile.Since": "Miembro desde",
+    "profile.Notes": "Notas",
+    "profile.Followers": "Seguidores",
+    "profile.Following": "Siguiendo",
+    "profile.AddFriends": "Agregar amigos",
+    "profile.EditProfile": "Editar perfil",
+    "profile.Logout": "Cerrar sesión",
+    "profile.SeeMore": "Ver más",
+
+    "badge.Title": "Insignias",
+    "badge.Level": "Nivel",
+
+
+    "ratings.AverageRating": "Puntuación media",
 
     "Loading": "Cargando...",
     "emailAccount": "escribly@gmail.com",

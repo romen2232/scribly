@@ -1,7 +1,5 @@
 import { apiClient } from './api';
-import { components } from '../utils/openapi';
-
-type Note = components['schemas']['Note'];
+import { Note } from '../utils/types';
 
 /** Fetches all notes from the API
  * @param token JWT token

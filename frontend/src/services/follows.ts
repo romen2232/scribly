@@ -1,8 +1,8 @@
 import { apiClient } from './api';
 import { components } from '../utils/openapi';
+import { User } from '../utils/types';
 
 type Follow = components['schemas']['Follow'];
-type User = components['schemas']['User'];
 
 /** This request lists all the followers of the user with the given ID.
  * @param userId User ID

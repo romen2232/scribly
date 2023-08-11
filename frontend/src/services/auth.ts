@@ -6,6 +6,11 @@ type Token = components['schemas']['Token'];
 type Activate = {
     detail: string;
 };
+type Register = {
+    email: string;
+    password: string;
+    username: string;
+};
 
 /**
  * Fetches the logged in user from the API using the JWT token
@@ -30,7 +35,7 @@ const retrieveUser = async (token: string): Promise<User> => {
  * @returns Registered user
  * @throws Error if registering user fails
  */
-const registerUser = async (user: User): Promise<Response> => {
+const registerUser = async (user: Register): Promise<Response> => {
     try {
         const response = await apiClient.post<Response>(
             '/api/v1/auth/register/',
@@ -101,9 +106,9 @@ const loginUser = async (email: string, password: string): Promise<Token> => {
  * @returns Refreshed user
  * @throws Error if refreshing user fails
  */
-const refreshToken = async (refresh: string): Promise<User> => {
+const refreshToken = async (refresh: string): Promise<{ access: string }> => {
     try {
-        const response = await apiClient.post<User>(
+        const response = await apiClient.post<{ access: string }>(
             '/api/v1/auth/login/refresh/',
             { refresh },
             {

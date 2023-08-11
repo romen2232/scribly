@@ -225,7 +225,6 @@ export interface components {
         };
         User: {
             id?: number;
-            password: string;
             lastLogin?: string | null;
             isSuperuser?: boolean;
             username?: string | null;
@@ -352,8 +351,8 @@ export interface components {
             rating_date: Date;
         };
         BadgeUser: {
-            badge: number;
-            user: number;
+            badge: Badge;
+            user: User;
             earned_date: Date;
         };
         BoosterUser: {

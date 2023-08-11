@@ -4,7 +4,11 @@ import { destroyCookie, parseCookies, setCookie } from 'nookies';
 import { User, IUserLogin, IUserRegister } from '../../utils/types';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import { AUTH_COOKIE_NAME } from '../../utils/consts';
+import {
+    AUTH_COOKIE_NAME,
+    REFRESH_COOKIE_NAME,
+    USER_COOKIE_NAME,
+} from '../../utils/consts';
 import {
     retrieveUser,
     loginUser,
@@ -12,7 +16,7 @@ import {
     activateUser,
 } from '../../services/auth';
 import { useTranslation } from 'react-i18next';
-import { isStrongPassword } from '../../utils/functions';
+import { isStrongPassword, isValidUsername } from '../../utils/functions';
 
 // Defining the shape of our context
 export interface IAuthContextProps {
@@ -48,20 +52,16 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
     const [emailUser, setEmail] = useState<string | null>(null);
 
     // Login function
-    const login = useCallback(
+    const loginFunction = useCallback(
         async ({ email, password }: IUserLogin) => {
             setLoading(true);
             try {
                 const response = await loginUser(email, password); // Authenticate user
 
                 if (response) {
-                    const { access } = response;
+                    const { access, refresh } = response;
                     const user = await retrieveUser(access);
                     setLoading(false);
-
-                    console.log(user);
-                    console.log(user.username);
-                    console.log(user);
 
                     if (!user) {
                         // Display an error message
@@ -73,7 +73,16 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
                         return;
                     }
                     // Save authorization token in cookies
+                    setCookie(undefined, REFRESH_COOKIE_NAME, refresh, {
+                        sameSite: true,
+                        maxAge: 60 * 60 * 24 * 7, // 1 week
+                    });
                     setCookie(undefined, AUTH_COOKIE_NAME, access, {
+                        sameSite: true,
+                        maxAge: 60 * 60, // 1 hour
+                    });
+                    const userJSON = JSON.stringify(user);
+                    setCookie(undefined, USER_COOKIE_NAME, userJSON, {
                         sameSite: true,
                         maxAge: 60 * 60, // 1 hour
                     });
@@ -88,7 +97,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
                     navigate(t('/'));
 
                     // Update state with user data and token
-                    setUser(user);
+                    setUser(user as User);
                     setToken(token);
                     setActivate(true);
                 }
@@ -107,13 +116,22 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
     );
 
     // Registration function
-    const register = useCallback(
+    const registerFunction = useCallback(
         async ({ email, password, username }: IUserRegister) => {
             setLoading(true);
             if (!isStrongPassword(password)) {
                 setLoading(false);
-                console.log(t('weak password'));
                 toast(t('register.weakPassword'), {
+                    position: 'top-right',
+                    type: 'error',
+                    pauseOnHover: true,
+                    autoClose: 5000,
+                });
+                return;
+            }
+            if (!isValidUsername(username)) {
+                setLoading(false);
+                toast(t('register.InvalidUsername'), {
                     position: 'top-right',
                     type: 'error',
                     pauseOnHover: true,
@@ -158,6 +176,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
     const logout = useCallback(() => {
         // Destroy authentication cookie and update state
         destroyCookie(undefined, AUTH_COOKIE_NAME);
+        destroyCookie(undefined, USER_COOKIE_NAME);
         setUser(null);
         setToken(null);
         setActivate(false);
@@ -220,11 +239,11 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
             value={{
                 isAuthenticated: !!token, // Double-bang operator coerces the value into a boolean
                 user,
-                loginUser: login,
+                loginUser: loginFunction,
                 loading,
                 checkToken: checkToken,
                 logout,
-                registerUser: register,
+                registerUser: registerFunction,
                 activateUser: activateUserReact,
                 activate,
                 email: emailUser,

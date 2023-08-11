@@ -9,7 +9,7 @@ export interface IHeaderProps {
 export function Header(props: IHeaderProps) {
     const navigate = useNavigate();
     return (
-        <header>
+        <header className="flex justify-between">
             <nav>
                 <button
                     onClick={() => navigate(-1)}

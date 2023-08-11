@@ -1,7 +1,8 @@
 import { apiClient } from './api';
 import { components } from '../utils/openapi';
+import { BadgeType } from '../utils/types';
 
-type Badge = components['schemas']['Badge'];
+type Badge = BadgeType;
 type User = components['schemas']['User'];
 type BadgeUser = components['schemas']['BadgeUser'];
 
@@ -186,9 +187,9 @@ const createBadgeUser = async (
 const listUserBadges = async (
     userId: number,
     token: string,
-): Promise<Badge[]> => {
+): Promise<BadgeUser[]> => {
     try {
-        const response = await apiClient.get<Badge[]>(
+        const response = await apiClient.get<BadgeUser[]>(
             `/api/v1/user/${userId}/badges/`,
             {
                 headers: { Authorization: `Bearer ${token}` },
@@ -243,6 +244,7 @@ const destroyBadgeUser = async (
         throw new Error(`Error deleting user badge: ${error}`);
     }
 };
+
 export {
     listBadges,
     createBadge,

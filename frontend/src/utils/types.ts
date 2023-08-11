@@ -25,15 +25,17 @@ export interface IUser {
     dateJoined: Date;
 }
 
-export interface Badge {
+export interface BadgeType {
     id?: number;
     badgeName: string;
     badgeDescription: string;
     badgeImage?: string;
+    badgeLevel: number;
+    badgeColor: string;
+    badgeGoal: number;
 }
 export interface User {
-    id?: number;
-    password: string;
+    id: number;
     lastLogin?: string | null;
     isSuperuser?: boolean;
     username?: string | null;
@@ -43,6 +45,7 @@ export interface User {
     phoneNumber?: string | null;
     experience?: number;
     gems?: number;
+    profilePhoto?: string;
     appearDailyChallenge?: boolean;
     receiveFuturePromotionalEmails?: boolean;
     provideDataToImproveUserExp?: boolean;
@@ -57,13 +60,14 @@ export interface Note {
     noteName: string;
     noteContent: string;
     noteImage?: string;
-    noteLastModified?: string;
+    noteLastModified: string;
     public?: boolean;
     noteAverageRating?: number;
     tags?: string;
     task?: number | null;
-    challenge?: number | null;
-    folder?: number | null;
+    challenge?: Challenge | null;
+    folder?: Folder | null;
+    user: User;
 }
 export interface League {
     id?: number;
@@ -160,9 +164,10 @@ export interface Rating {
     rating_date: Date;
 }
 export interface BadgeUser {
-    badge: number;
-    user: number;
+    badge: BadgeType;
+    user: User;
     earned_date: Date;
+    badgeProgress: number;
 }
 export interface BoosterUser {
     booster: number;

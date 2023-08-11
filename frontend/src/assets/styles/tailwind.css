@@ -8,9 +8,7 @@
 }
 
 body {
-    @apply bg-tiviWhite text-tiviBlack;
     height: 100vh;
-    font-family: 'Nunito', sans-serif;
 }
 #root {
     height: 100vh;
