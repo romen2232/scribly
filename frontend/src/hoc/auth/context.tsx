@@ -86,6 +86,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
                         sameSite: true,
                         maxAge: 60 * 60, // 1 hour
                     });
+                    console.log(userJSON);
 
                     // Display a success message
                     toast(`Bienvenide ${user.username}`, {

@@ -57,17 +57,17 @@ export interface User {
 }
 export interface Note {
     id?: number;
-    noteName: string;
-    noteContent: string;
+    noteName?: string;
+    noteContent?: string;
     noteImage?: string;
-    noteLastModified: string;
+    noteLastModified?: string;
     public?: boolean;
     noteAverageRating?: number;
     tags?: string;
     task?: number | null;
     challenge?: Challenge | null;
-    folder?: Folder | null;
-    user: User;
+    folder: Folder | number;
+    user?: User;
 }
 export interface League {
     id?: number;
@@ -89,6 +89,8 @@ export interface Folder {
     favorite?: boolean;
     folderParent?: number | null;
     depth?: number;
+    subfolders?: Folder[];
+    notes?: Note[];
 }
 export interface Streak {
     id?: number;
@@ -152,8 +154,8 @@ export interface Direct {
     sent_date: Date;
 }
 export interface Follow {
-    follower: number;
-    followed: number;
+    follower: User;
+    followed: User;
     follow_date: Date;
 }
 export interface Rating {

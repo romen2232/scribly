@@ -46,6 +46,7 @@
     "profile.Logout": "Cerrar sesión",
     "profile.SeeMore": "Ver más",
 
+
     "badge.Title": "Insignias",
     "badge.Level": "Nivel",
 
@@ -67,5 +68,7 @@
     "/profile/:username": "/perfil/:username",
     "/new": "/nueva",
     "/new/:folderId": "/nueva/:folderId",
+    "/followers": "/seguidores",
+    "/following": "/siguiendo",
     "/about": "/acerca"
 }

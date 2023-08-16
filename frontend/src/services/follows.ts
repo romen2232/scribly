@@ -1,8 +1,7 @@
 import { apiClient } from './api';
 import { components } from '../utils/openapi';
-import { User } from '../utils/types';
+import { User, Follow } from '../utils/types';
 
-type Follow = components['schemas']['Follow'];
 
 /** This request lists all the followers of the user with the given ID.
  * @param userId User ID
@@ -13,9 +12,9 @@ type Follow = components['schemas']['Follow'];
 const listUserFollowers = async (
     userId: number,
     token: string,
-): Promise<User[]> => {
+): Promise<Follow[]> => {
     try {
-        const response = await apiClient.get<User[]>(
+        const response = await apiClient.get<Follow[]>(
             `/api/v1/follows/${userId}/followers/`,
             {
                 headers: { Authorization: `Bearer ${token}` },
@@ -27,7 +26,7 @@ const listUserFollowers = async (
     }
 };
 
-/** This request lists all the users that the user with the given ID is following.
+/** This request lists all the follows that the user with the given ID is following.
  * @param userId User ID
  * @param token JWT token
  * @returns List of all users that the user with the given ID is following
@@ -36,9 +35,9 @@ const listUserFollowers = async (
 const listUserFollowings = async (
     userId: number,
     token: string,
-): Promise<User[]> => {
+): Promise<Follow[]> => {
     try {
-        const response = await apiClient.get<User[]>(
+        const response = await apiClient.get<Follow[]>(
             `/api/v1/follows/${userId}/following/`,
             {
                 headers: { Authorization: `Bearer ${token}` },

@@ -25,11 +25,16 @@ export function isValidUsername(username: string): boolean {
 
 /**
  * formats date from YYYY-MM-DD to DD/MM/YYYY
- * @param date String in the format YYYY-MM-DD
+ * @param date String in the format YYYY-MM-DD or Date object
  * @returns String in the format DD/MM/YYYY
  */
-export function formatDate(date: string): string {
-    const dateObj = new Date(date);
+export function formatDate(date: string|Date): string {
+    let dateObj: Date;
+    if(typeof date === 'string') {
+        dateObj = new Date(date);
+    } else {
+        dateObj = date;
+    }
     const day = dateObj.getDate();
     const month = dateObj.getMonth() + 1;
     const year = dateObj.getFullYear();

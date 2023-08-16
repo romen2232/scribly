@@ -5,6 +5,8 @@ import './assets/styles/main.css';
 import { BrowserRouter } from 'react-router-dom';
 import './i18n/config';
 import 'react-toastify/dist/ReactToastify.css';
+import {NextUIProvider} from '@nextui-org/react'
+
 
 /** We render the App component into the root element. With React.StrictMode, we
   enable additional checks and warnings for our application.
@@ -15,7 +17,9 @@ import 'react-toastify/dist/ReactToastify.css';
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <React.StrictMode>
         <BrowserRouter>
+        <NextUIProvider>
             <App />
+        </NextUIProvider>
         </BrowserRouter>
     </React.StrictMode>,
 );

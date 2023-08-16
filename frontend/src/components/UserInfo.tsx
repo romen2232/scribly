@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { User } from '../utils/types';
+import { Follow, User } from '../utils/types';
 import { formatDate } from '../utils/functions';
 import {
     listUserFollowers,
@@ -10,6 +10,7 @@ import {
 import { useEffect, useState } from 'react';
 import { parseCookies } from 'nookies';
 import { AUTH_COOKIE_NAME, USER_COOKIE_NAME } from '../utils/consts';
+import Follows from './Follows'
 
 export interface IUserInfoProps {
     user: User;
@@ -18,8 +19,8 @@ export interface IUserInfoProps {
 const UserInfo: React.FC<IUserInfoProps> = ({ user }) => {
     const profilePhoto = user.profilePhoto;
     const { t } = useTranslation();
-    const [followers, setFollowers] = useState<User[]>([]);
-    const [followings, setFollowings] = useState<User[]>([]);
+    const [followers, setFollowers] = useState<Follow[]>([]);
+    const [followings, setFollowings] = useState<Follow[]>([]);
     const [youFollow, setYouFollow] = useState<boolean>(false);
     const [followsYou, setFollowsYou] = useState<boolean>(false);
 
@@ -32,7 +33,7 @@ const UserInfo: React.FC<IUserInfoProps> = ({ user }) => {
                 setFollowers(response);
                 if (
                     response.some(
-                        (follower) => follower.username === loggedUser.username,
+                        (follower) => follower.follower.username === loggedUser.username,
                     )
                 ) {
                     setYouFollow(true);
@@ -50,7 +51,7 @@ const UserInfo: React.FC<IUserInfoProps> = ({ user }) => {
                 if (
                     response.some(
                         (following) =>
-                            following.username === loggedUser.username,
+                            following.followed.username === loggedUser.username,
                     )
                 ) {
                     setFollowsYou(true);
@@ -86,13 +87,8 @@ const UserInfo: React.FC<IUserInfoProps> = ({ user }) => {
                         </h4>
                     </div>
                     <div className="flex justify-around p-5">
-                        {/* TODO: Make this links to se the followers/following list */}
-                        <p>
-                            {followers.length} {t('profile.Followers')}
-                        </p>
-                        <p>
-                            {followings.length} {t('profile.Following')}
-                        </p>
+                        <Follows type='followers' follows={followers}></Follows>
+                        <Follows type='following' follows={followings}></Follows>
                     </div>
                 </div>
                 <div className="mx-20 flex w-40 items-center">
