@@ -1,10 +1,11 @@
 import { useAutosave } from '../hooks/useAutosave';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaFolder } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { Folder, Note as NoteType } from '../utils/types';
 import { t } from 'i18next';
 import { formatDate } from '../utils/functions';
+import { useNoteStore } from '../stores/noteStore';
 
 export interface INoteProps {
     note: NoteType
@@ -12,18 +13,65 @@ export interface INoteProps {
 }
 
 export function Note({note, folder}: INoteProps) {
+    const { currentNote, saveNote, localSaveNote, undo, redo } = useNoteStore();
     const [newNote, setNewNote] = useState(note);
-    const [history, setHistory] = useState(newNote.noteContent);
+
+    useEffect(() => {
+        localSaveNote(note);
+    }, [note, localSaveNote]);
+
+    useEffect(() => {
+        const handleKeyDown = async (e: KeyboardEvent) => {
+            if (e.ctrlKey) {
+                if (e.key === 's') {
+                    e.preventDefault();
+                    await saveNote(newNote);
+                } else if (e.key === 'z') {
+                    e.preventDefault();
+                    undo();
+                    setNewNote(currentNote);  // to reflect the undone changes
+                } else if ((e.key === 'z' && e.shiftKey) || e.key === 'y') {
+                    e.preventDefault();
+                    redo();
+                    setNewNote(currentNote);  // to reflect the redone changes
+                }
+            }
+            };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [newNote, saveNote, undo, redo, currentNote]);
 
 
+    //TODO: change this to not have to call the hook 2 times
     useAutosave({
-        data: newNote.noteContent??'',
-        onSave: (data: string) => {
-            setHistory(data);
-            setNewNote({noteLastModified: formatDate(new Date()), ...newNote})
+        data: newNote.noteContent ?? '',
+        onSave: async (data: string) => {
+            const updatedNote = {
+                ...newNote,
+                noteLastModified: formatDate(new Date()),
+                noteContent: data
+            };
+            await saveNote(updatedNote);
+            setNewNote(updatedNote);
+        },
+        interval: 60000,
+        saveOnUnmount: true
+    });
+    useAutosave({
+        data: newNote.noteName ?? '',
+        onSave: async (data: string) => {
+            const updatedNote = {
+                ...newNote,
+                noteLastModified: formatDate(new Date()),
+                noteName: data
+            };
+            localSaveNote(updatedNote);
+            setNewNote(updatedNote);
         },
         interval: 5000,
+        saveOnUnmount: true
     });
+
     return (
         <div className="h-full">
             <div className="flex justify-between items-center">
@@ -34,7 +82,7 @@ export function Note({note, folder}: INoteProps) {
                         id="title"
                         className="h-16 w-full p-16 text-7xl placeholder-gray-500 focus:outline-none focus:placeholder-gray-600"
                         placeholder="Título"
-                        value={newNote.noteName}
+                        value={newNote.noteName??''}
                         onChange={(e) => setNewNote({
                             ...newNote,
                             noteName: e.target.value,
