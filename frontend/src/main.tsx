@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './app/App';
-import './assets/styles/main.css';
+//Import of dist/main.css
+import '../dist/main.css'
 import { BrowserRouter } from 'react-router-dom';
 import './i18n/config';
 import 'react-toastify/dist/ReactToastify.css';

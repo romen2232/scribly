@@ -1,6 +1,7 @@
 import { Folder, Note } from "../utils/types"
 import { TreeItem } from "./TreeItem"
 
+
 export interface ITreeProps {
     rootFolder?: Folder
 }

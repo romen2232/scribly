@@ -1,49 +1,80 @@
-
+from rest_framework import generics, permissions, status
+from rest_framework.response import Response
 from django.shortcuts import render
 from django.http import Http404
 from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
 
-from .models import Lesson
-from .serializers import Lesson
+from .models import Lessons
+from .serializers import LessonsSerializer
+
+from tasks.views import TaskImportView
+
+class LessonListCreateView(generics.ListCreateAPIView):
+    queryset = Lessons.objects.all()
+    serializer_class = LessonsSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    
+    def create(self, request, *args, **kwargs):
+        serializer = LessonsSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(user=self.request.user)
+        lesson = serializer.save()
+        return Response({"status": "success", "data": LessonsSerializer(lesson).data}, 
+                        status=status.HTTP_201_CREATED)
+
+class LessonRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Lessons.objects.all()
+    serializer_class = LessonsSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        lesson = serializer.save()
+        return Response({"status": "success", "data": LessonsSerializer(lesson).data})
 
 
-class LessonList(APIView):
-    def get(self, request, format=None):
-        lessons = Lesson.objects.all()
-        serializer = Lesson(lessons, many=True)
-        return Response(serializer.data)
+class LessonsList(generics.ListAPIView):
+    serializer_class = LessonsSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request, format=None):
-        serializer = Lesson(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get_queryset(self):
+        return Lessons.objects.filter(user=self.request.user)
+    
+    
+class LessonImportView(generics.CreateAPIView):
+    
+    serializer_class = LessonsSerializer
+
+    def create(self, request, *args, **kwargs):
+        lesson_data = request.data.get('lessons', [])  # Assuming 'lessons' is the key in the JSON
+        created_lessons = []
+
+        
+        serializer = self.get_serializer(data=lesson_data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        
+        id = serializer.data["id"]
+        
+        #Create tasks using TaskImportView
+         
+        
+         
+                             
+        TaskImportView.create(self, request, id, *args, **kwargs)
+        
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+   
+    
+    
+    
+    
+    
+    
 
 
-class LessonDetail(APIView):
-    def get_object(self, pk):
-        try:
-            return Lesson.objects.get(pk=pk)
-        except Lesson.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk, format=None):
-        lesson = self.get_object(pk)
-        serializer = Lesson(lesson)
-        return Response(serializer.data)
-
-    def put(self, request, pk, format=None):
-        lesson = self.get_object(pk)
-        serializer = Lesson(lesson, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        lesson = self.get_object(pk)
-        lesson.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)

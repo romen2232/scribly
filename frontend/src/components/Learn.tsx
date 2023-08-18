@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useForestStore } from '../stores/forestStore';
+import { Phase } from './Phase';
 
 export interface ILearnProps {
     children?: React.ReactNode;
@@ -8,9 +9,8 @@ export interface ILearnProps {
 export function Learn(props: ILearnProps) {
     const { forest } = useForestStore();
     return (
-        <main>
-            <h1>{forest}</h1>
-            {props.children}
+        <main className="h-full">
+            <Phase />
         </main>
     );
 }

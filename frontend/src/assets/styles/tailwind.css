@@ -13,3 +13,7 @@ body {
 #root {
     height: 100vh;
 }
+#root > div[data-overlay-container="true"] {
+    height: 100%;
+}
+

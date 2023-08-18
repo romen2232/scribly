@@ -57,11 +57,21 @@ class ListUserView(ListAPIView):
 
     #     return (list(queryset))[0]
     def get_queryset(self):
-
         queryset = User.objects.all()
 
         return queryset
 
+class UserDetailViewByUsername(RetrieveAPIView):
+    """
+    Retrieve a user by their username
+    """
+    serializer_class = UserDetailSerializer
+    permission_classes = (IsAuthenticated,)
+    lookup_field = 'username'
+
+    def get_queryset(self):
+        username = self.kwargs['username']
+        return User.objects.filter(username=username)
 
 class UserDetailViewByUsername(RetrieveAPIView):
     """
@@ -219,7 +229,6 @@ def delete_user_account(request):
 #                 new_request = request.data.copy()
 #                 new_request['email'] = user.email
 #                 print(email)
-
 #                 return super().post(request, *args, **kwargs)
 #             except User.DoesNotExist:
 #                 return Response({"details": "User does not exist"}, status=status.HTTP_404_NOT_FOUND)

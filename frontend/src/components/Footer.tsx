@@ -13,6 +13,7 @@ export function Footer(props: IFooterProps) {
     return (
         <footer className="h-[6.5rem] w-full">
             <nav className="flex h-full flex-row items-center justify-around">
+                {/* TODO: When the style change, change the footer */}
                 <button onClick={props.onFooterModalClick}>
                     <FaFeatherAlt className="h-12 w-12 transition duration-300 ease-in-out hover:text-tiviElectricViolet" />
                 </button>

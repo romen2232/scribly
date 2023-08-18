@@ -23,6 +23,9 @@
         "nookies": "^2.5.2",
         "openapi-typescript": "^6.4.0",
         "react": "^18.2.0",
+        "react-beautiful-dnd": "^13.1.1",
+        "react-dnd": "^16.0.1",
+        "react-dnd-html5-backend": "^16.0.1",
         "react-dom": "^18.2.0",
         "react-i18next": "^13.0.3",
         "react-icons": "^4.10.1",
@@ -35,7 +38,6 @@
     "devDependencies": {
         "@testing-library/jest-dom": "^5.17.0",
         "@testing-library/react": "^14.0.0",
-        "@testing-library/react-hooks": "^8.0.1",
         "@testing-library/user-event": "^14.4.3",
         "@types/jest": "^29.5.3",
         "@types/loadable__component": "^5.13.4",

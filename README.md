@@ -85,5 +85,5 @@ python3 manage.py migrate
 
 cd ./frontend
 npm install
-npx tailwindcss -i ./src/assets/styles/tailwind.css -o ./src/assets/styles/main.css --watch
+npx tailwindcss -i ./src/assets/styles/tailwind.css -o ./dist/main.css --watch
 npm run dev

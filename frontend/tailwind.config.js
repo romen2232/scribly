@@ -8,7 +8,11 @@ export default {
     content: ['./src/**/*.{html,js,jsx,ts,tsx}',
     './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}'],
     theme: {
-        extend: {},
+        extend: {
+            boxShadow: {
+                'inner-lg': 'inset 0 -6px 0 0 rgba(0, 0, 0, 0.06)',
+            },
+        },
         colors: {
             transparent: 'transparent',
             current: 'currentColor',
