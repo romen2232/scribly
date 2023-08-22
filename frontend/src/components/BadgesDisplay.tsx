@@ -18,7 +18,6 @@ export default function BadgesDisplay(props: IBadgeDisplayProps) {
     const { t } = useTranslation();
 
     useEffect(() => {
-        console.log('listUserBadges');
         listUserBadges(props.user.id, cookies[AUTH_COOKIE_NAME])
             .then((response) => {
                 setBadges(response as BadgeUser[]);

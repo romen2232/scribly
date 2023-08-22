@@ -13,10 +13,7 @@ export function Header(props: IHeaderProps) {
     const { t } = useTranslation();
 
     return (
-        <header
-            className="h-[8.25rem] w-full
-    "
-        >
+        <header className="h-min-[8.25rem] h-[8.25rem] w-full flex-shrink-0">
             <nav
                 className="
           flex
@@ -29,24 +26,24 @@ export function Header(props: IHeaderProps) {
           text-tiviWhite"
             >
                 <button onClick={props.onHeaderModalClick}>
-                    <FaFireAlt className="h-16 w-16 transition duration-300 ease-in-out hover:text-tiviBlack" />
+                    <FaFireAlt className="h-16 w-16 duration-300 ease-in-out transition hover:text-tiviBlack" />
                 </button>
 
                 <Link to={t('/leaderboard')}>
-                    <FaTrophy className="h-16 w-16 transition duration-300 ease-in-out hover:text-tiviBlack" />
+                    <FaTrophy className="h-16 w-16 duration-300 ease-in-out transition hover:text-tiviBlack" />
                 </Link>
 
                 {/* TODO: When the lessons part is done check this out */}
                 <Link to={t('/training')}>
-                    <FaDumbbell className="h-16 w-16 transition duration-300 ease-in-out hover:text-tiviBlack" />
+                    <FaDumbbell className="h-16 w-16 duration-300 ease-in-out transition hover:text-tiviBlack" />
                 </Link>
 
                 <Link to={t('/community')}>
-                    <FaUsers className="h-16 w-16 transition duration-300 ease-in-out hover:text-tiviBlack" />
+                    <FaUsers className="h-16 w-16 duration-300 ease-in-out transition hover:text-tiviBlack" />
                 </Link>
 
                 <Link to={t('/profile')}>
-                    <FaUser className="h-16 w-16 transition duration-300 ease-in-out hover:text-tiviBlack" />
+                    <FaUser className="h-16 w-16 duration-300 ease-in-out transition hover:text-tiviBlack" />
                 </Link>
             </nav>
         </header>

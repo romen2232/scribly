@@ -1,4 +1,4 @@
-export type ForestType = 'poetry' | 'prose' | 'script';
+export type Category = 'POETRY' | 'PROSE' | 'SCRIPT';
 
 export interface IUserLogin {
     email: string;
@@ -187,4 +187,67 @@ export interface LeaderboardUser {
     user: number;
     leaderboard_update_date?: Date;
     leaderboard_score: number;
+}
+
+export interface LessonUser {
+    id: number;
+    percentageCompleted: number;
+    lessonStartDate: Date;
+    taskUser: TaskUser[];
+    lesson: Lesson;
+    user: User;
+}
+
+export interface UnitType {
+    id: number;
+    unitName: string;
+    unitDescription: string;
+    unitStyle: Category;
+    unitColor: string;
+    unitNumber: number;
+    lessons: Lesson[];
+}
+
+export interface Lesson {
+    id: number;
+    lessonName: string;
+    lessonDescription: string;
+    lessonTheory: string;
+    lessonColor: string;
+    difficulty: number;
+    unit?: UnitType;
+    percentageCompleted?: number;
+}
+
+export interface TaskUser {
+    task: Task;
+    user: User | number;
+    taskEndDate: Date;
+    earnedPoints: number;
+    answerNote?: Note;
+    answerText: string;
+    answerBoolean: boolean;
+    responseText?: string;
+    lessonUser: number;
+}
+
+export interface Task {
+    id: number;
+    taskName: string;
+    taskDescription: string;
+    taskPoints: number;
+    type: string;
+    text: string;
+    lesson: number;
+}
+
+export interface TaskProps {
+    task: Task;
+    onSubmit: (answer: AnswerProps) => void;
+    onSkip: () => void;
+}
+
+export interface AnswerProps {
+    answerText: string;
+    type: string;
 }

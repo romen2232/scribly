@@ -1,37 +1,71 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
+import { TaskProps } from '../utils/types';
 
-export interface ITaskChooseProps {
-    task: Task;
-    onCorrect: () => void;
-    onWrong: () => void;
-}
-
-const TaskChoose: React.FC<ITaskChooseProps> = ({ task, onCorrect, onWrong }) => {
-    const [text, setText] = useState<string[]>([]);
+const TaskChoose: React.FC<TaskProps> = ({ task, onSubmit, onSkip }) => {
+    const [text, setText] = useState<string[]>(task.text.split('\n\n'));
+    const [chosenAnswer, setChosenAnswer] = useState<number>(-1);
     useEffect(() => {
-        setText([...task.text].sort(() => Math.random() - 0.5));
+        setText(text.sort(() => Math.random() - 0.5));
     }, [task]);
 
-    const handleChoice = (choice: string) => {
-        if (choice === task.text[0]) {
-            onCorrect();
-        } else {
-            onWrong();
-        }
-    }
+    const handleAnswer = (index: number) => {
+        //Put the chosen answer in the first position, and the others in the rest
+        if (index === -1) return;
+        const answerText = text[index];
+        text.splice(index, 1);
+        text.unshift(answerText);
+        setText(text);
+
+        const answer = {
+            type: task.type,
+            answerText: text.join('\n\n'),
+        };
+        onSubmit(answer);
+    };
 
     return (
         <div className="flex flex-col gap-4">
-            <h2 className=" font-bold text-2xl">{task.description}</h2>
-            <div className="flex gap-4 justify-between">
-                {text.map((choice, index) => (
-                    // As a card
-                    <button key={index} className="p-4 border-2 rounded-xl w-5/12"
-                     onClick={() => handleChoice(choice)}>
-                        {choice}
-                    </button>
-                ))}
+            <h2 className=" text-2xl font-bold">{task.taskDescription}</h2>
+            <div className="flex justify-between gap-4">
+                {text.map((choice, index) => {
+                    return (
+                        <button
+                            key={index}
+                            className={`w-1/2 rounded-xl ${
+                                chosenAnswer === index
+                                    ? 'border-4 border-tiviElectricPurple-100 p-3'
+                                    : 'border-2 p-4'
+                            }`}
+                            onClick={() =>
+                                chosenAnswer === index
+                                    ? setChosenAnswer(-1)
+                                    : setChosenAnswer(index)
+                            }
+                        >
+                            {choice}
+                        </button>
+                    );
+                })}
             </div>
+            <button
+                className={`w-1/2 rounded-xl border-2 p-4 ${
+                    chosenAnswer === -1
+                        ? 'bg-gray-500'
+                        : 'bg-tiviElectricPurple-100'
+                }`}
+                {...(chosenAnswer === -1 && { disabled: true })}
+                onClick={() => handleAnswer(chosenAnswer)}
+            >
+                Submit
+            </button>
+            <button
+                className="w-1/2 rounded-xl border-2 bg-gray-500 p-4"
+                onClick={onSkip}
+            >
+                Skip
+            </button>
         </div>
     );
-}
+};
+
+export default TaskChoose;
