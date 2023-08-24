@@ -6,11 +6,14 @@ from tasks.serializers import TasksSerializer
 from notes.serializers import NoteSerializer
 
 
+
 class RatingsSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     challenge = ChallengesSerializer(read_only=True)
     task = TasksSerializer(read_only=True)
+
     note = NoteSerializer(read_only=True)
+
 
     class Meta:
         model = Ratings

@@ -7,6 +7,7 @@ from .models import Folders
 from .serializers import FoldersSerializer, FoldersRecursiveSerializer
 
 
+
 class FoldersListCreateView(generics.ListCreateAPIView):
     queryset = Folders.objects.all()
     serializer_class = FoldersSerializer
@@ -37,6 +38,7 @@ class FoldersRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
         serializer.is_valid(raise_exception=True)
         folder = serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 
 
@@ -97,3 +99,4 @@ class RootFolder(generics.ListAPIView):
     
     def get_serializer_class(self):
         return FoldersRecursiveSerializer
+

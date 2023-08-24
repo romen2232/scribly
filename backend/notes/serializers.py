@@ -26,6 +26,7 @@ class NoteSerializer(serializers.ModelSerializer):
         queryset=Folders.objects.all(), required=False, allow_null=True)
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False, allow_null=True)
 
+
     class Meta:
         model = Notes
         fields = ['id', 'note_name', 'note_content', 'note_image', 'note_last_modified',

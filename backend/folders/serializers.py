@@ -2,7 +2,9 @@ from rest_framework import serializers
 from .models import Folders
 from users.serializers import UserSerializer
 from users.models import User
+
 from notes.models import Notes
+
 
 
 class ParentFolderSerializer(serializers.ModelSerializer):
@@ -18,8 +20,10 @@ class FoldersSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     user = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(), write_only=True)
+
     folder_parent = serializers.PrimaryKeyRelatedField(
         queryset=Folders.objects.all(), write_only=True)
+
 
     class Meta:
         model = Folders

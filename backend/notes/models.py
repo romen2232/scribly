@@ -21,6 +21,8 @@ class Notes(models.Model):
     folder = models.ForeignKey(
         'folders.Folders', on_delete=models.CASCADE, null=True, blank=True)
     user = models.ForeignKey(
+
         'users.User', on_delete=models.CASCADE, null=True, blank=True)
     
     favorite = models.BooleanField(default=False)
+
