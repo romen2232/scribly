@@ -123,7 +123,7 @@ const retrieveUnitsByCategory = async (
 ): Promise<Unit[]> => {
     try {
         const response = await apiClient.get<Unit[]>(
-            `/api/v1/units/?category=${category}`,
+            `/api/v1/units/${category}/`,
             {
                 headers: { Authorization: `Bearer ${token}` },
             },

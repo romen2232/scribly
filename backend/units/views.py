@@ -54,3 +54,39 @@ class UnitRetrieveCompletedView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Unit.objects.all()
     serializer_class = UnitCompletedSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+
+class UnitRetrievePercentagesView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    get: Return the given unit.
+    update: Update the given unit.
+    delete: Delete the given unit.
+    """
+
+    queryset = Unit.objects.all()
+    serializer_class = UnitPercentageSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request, pk):
+        units = Unit.objects.all()  # Tu lógica para obtener las unidades
+        serializer = UnitPercentageSerializer(units, many=True, context={'request': request})
+        return Response(serializer.data)
+    
+
+
+class UnitRetrieveByCategoryView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    get: Return the given unit.
+    update: Update the given unit.
+    delete: Delete the given unit.
+    """
+    #category is filter by unit_style
+    queryset = Unit.objects.all()
+    serializer_class = UnitPercentageSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request, category):
+        units = Unit.objects.filter(unit_style=category)
+        serializer = UnitPercentageSerializer(units, many=True, context={'request': request})
+        return Response(serializer.data)
+

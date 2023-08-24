@@ -31,8 +31,7 @@ const useLessonUser = (lessonId: string) => {
             .finally(() => {
                 setLoading(false);
             });
-    }, [lessonId, navigate, t, cookies]);
-
+    }, [lessonId, navigate, t]);
     return { lessonUser, loading };
 };
 

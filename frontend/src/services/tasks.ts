@@ -9,7 +9,7 @@ import { Task, TaskUser } from '../utils/types';
  */
 const listTasks = async (token: string): Promise<Task[]> => {
     try {
-        const response = await apiClient.get<Task[]>('/api/v1/task/', {
+        const response = await apiClient.get<Task[]>('/api/v1/tasks/', {
             headers: { Authorization: `Bearer ${token}` },
         });
         return response.data;
@@ -43,7 +43,7 @@ const retrieveTask = async (taskId: number, token: string): Promise<Task> => {
  * */
 const createTask = async (task: Task, token: string): Promise<Task> => {
     try {
-        const response = await apiClient.post<Task>(`/api/v1/task/`, task, {
+        const response = await apiClient.post<Task>(`/api/v1/tasks/`, task, {
             headers: { Authorization: `Bearer ${token}` },
         });
         return response.data;
@@ -144,9 +144,11 @@ const retrieveTaskUser = async (
 
 /** Creates a TaskUser relationship for the logged in user
  * @param taskId Task ID
+ * @param lessonUserId LessonUser ID
  * @param token JWT token
  * @returns TaskUser
  * @throws Error if creating the TaskUser relationship fails
+ * TODO: This is not used anywhere and does not work as intended but is kept for future use
  * */
 const createTaskUser = async (
     taskId: number,
@@ -182,7 +184,7 @@ const updateTaskUser = async (
 ): Promise<TaskUser> => {
     try {
         const response = await apiClient.put<TaskUser>(
-            `/api/v1/task/${taskUser.task}/user/`,
+            `/api/v1/task/${taskUser.task.id}/user/`,
             taskUser,
             {
                 headers: { Authorization: `Bearer ${token}` },

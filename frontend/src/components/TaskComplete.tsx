@@ -1,95 +1,111 @@
 import { useState, useEffect } from 'react';
+import { TaskProps } from '../utils/types';
 
-type Task = {
-  taskName: string;
-  taskDescription: string;
-  taskPoints: number;
-  text: string;
-};
+//this will be the task and [this the correct option] having other options\n\n [this is other option][this is other option 1][this is other option 2]
 
-type TaskCompleteProps = {
-  task: Task;
-  onCorrect?: () => void;
-  onIncorrect?: () => void;
-};
+const TaskComplete = ({ task, onSubmit, onSkip }: TaskProps) => {
+    const [sentenceParts, setSentenceParts] = useState<(string | null)[]>([]);
+    const [options, setOptions] = useState<string[]>([]);
+    const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
-const TaskComplete: React.FC<TaskCompleteProps> = ({ task, onCorrect, onIncorrect }) => {
-  const [sentences, setSentences] = useState<string[]>([]);
-  const [words, setWords] = useState<string[]>([]);
-  const [selectedSentenceIndex, setSelectedSentenceIndex] = useState<number | null>(null);
-  const [filledWords, setFilledWords] = useState<(string | null)[]>(new Array(words.length).fill(null));
+    useEffect(() => {
+        const regex = /\[(.*?)\]/g;
+        const extractedOptions = task.text.match(regex) || [];
+        setOptions(extractedOptions.map((opt) => opt.replace(/\[|\]/g, '')));
+        const parts = task.text.split('\n\n')[0].split(regex);
+        const processedParts = parts.map((part, index) => {
+            if (index % 2 !== 0) {
+                return null;
+            }
+            return part;
+        });
+        setSentenceParts(processedParts);
+    }, [task.text]);
 
+    const handleOptionChoice = (option: string) => {
+        setSelectedOption(option);
+        const newSentenceParts = sentenceParts.map((part) => {
+            if (typeof part !== 'string') {
+                return option;
+            }
+            return part;
+        });
+        setSentenceParts(newSentenceParts);
+    };
 
-  useEffect(() => {
-    const regex = /\[(.*?)\]/g;
-    const extractedWords: string[] = [];
-    const strippedText = task.text.replace(regex, (_) => {
-      extractedWords.push(_);
-      return '___';  // This will be used as a placeholder for the missing word
-    });
-    setSentences(strippedText.split('\n\n'));
-    setWords(extractedWords.sort(() => Math.random() - 0.5));
-    setFilledWords(new Array(extractedWords.length).fill(null));
-  }, [task.text]);
+    const handleAnswer = () => {
+        const answer = {
+            type: task.type,
+            answerText: sentenceParts.join(''),
+        };
+        onSubmit(answer);
+    };
 
-  const handleWordChoice = (word: string, wordIndex: number) => {
-    if (selectedSentenceIndex !== null) {
-        const filledWordsCopy = [...filledWords];
-        if (filledWordsCopy[wordIndex]) {
-            filledWordsCopy[wordIndex] = null;
-          } else {
-            filledWordsCopy[wordIndex] = word;
-          }
-          setFilledWords(filledWordsCopy);
+    return (
+        <>
+            <div className="space-y-4">
+                <h2 className="text-2xl font-bold">{task.taskName}</h2>
+                <p className="text-lg">{task.taskDescription}</p>
 
-      const originalWord = words[selectedSentenceIndex];
-      if (word === originalWord) {
-        onCorrect && onCorrect();
-      } else {
-        onIncorrect && onIncorrect();
-      }
-    }
-  };
+                <div className="border p-2">
+                    {sentenceParts.map((part, index) => {
+                        if (!part) {
+                            return (
+                                <span
+                                    className="underline-space mx-2 inline-block w-40 border-b-2 border-dotted border-gray-800"
+                                    key={index}
+                                ></span>
+                            );
+                        }
+                        return part;
+                    })}
+                </div>
 
-  return (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-bold">{task.taskName}</h2>
-      <p className="text-lg">{task.taskDescription}</p>
-      <div className="space-y-2">
-        {sentences.map((sentence, sIndex) => (
-          <div
-            key={sIndex}
-            className={`p-2 border cursor-pointer ${sIndex === selectedSentenceIndex ? 'bg-gray-200' : 'bg-white'}`}
-            onClick={() => setSelectedSentenceIndex(sIndex)}
-          >
-            {sentence.split('___').map((part, idx) => (
-              <span key={idx}>
-                {part}
-                {idx !== sentence.split('___').length - 1 && (
-                  <span className="bg-yellow-300 p-1 mx-1">
-                    {filledWords[sIndex] || '...'}
-                  </span>
-                )}
-              </span>
-            ))}
-          </div>
-        ))}
-      </div>
-
-      <div className="flex space-x-2">
-        {words.map((word, index) => (
-          <button
-            key={index}
-            className={`p-2 border rounded hover:bg-blue-200 ${filledWords[index] ? 'opacity-50' : ''}`}
-            onClick={() => handleWordChoice(word, index)}
-            disabled={!!filledWords[index]}
-          >
-            {word}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
+                <div className="flex space-x-2">
+                    {options.map((option, index) => (
+                        <button
+                            key={index}
+                            className={`rounded border p-2 hover:bg-blue-200 ${
+                                selectedOption === option ? 'opacity-50' : ''
+                            }`}
+                            onClick={() => {
+                                selectedOption === option
+                                    ? (setSelectedOption(null),
+                                      setSentenceParts(
+                                          sentenceParts.map((part) => {
+                                              if (part === option) {
+                                                  return null;
+                                              }
+                                              return part;
+                                          }),
+                                      ))
+                                    : handleOptionChoice(option);
+                            }}
+                        >
+                            {option}
+                        </button>
+                    ))}
+                </div>
+                <button
+                    className={`w-1/2 rounded-xl border-2 p-4 ${
+                        selectedOption === null
+                            ? 'cursor-not-allowed bg-gray-500'
+                            : 'bg-tiviElectricPurple-100'
+                    }`}
+                    {...(selectedOption === null && { disabled: true })}
+                    onClick={handleAnswer}
+                >
+                    Submit
+                </button>
+                <button
+                    className="w-1/2 rounded-xl border-2 bg-gray-500 p-4"
+                    onClick={onSkip}
+                >
+                    Skip
+                </button>
+            </div>
+        </>
+    );
 };
 
 export default TaskComplete;

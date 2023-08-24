@@ -8,7 +8,7 @@ import { Lesson, LessonUser } from '../utils/types';
  */
 const listLessons = async (token: string): Promise<Lesson[]> => {
     try {
-        const response = await apiClient.get<Lesson[]>('/api/v1/lesson/', {
+        const response = await apiClient.get<Lesson[]>('/api/v1/lessons/', {
             headers: { Authorization: `Bearer ${token}` },
         });
         return response.data;
@@ -49,7 +49,7 @@ const retrieveLesson = async (
 const createLesson = async (lesson: Lesson, token: string): Promise<Lesson> => {
     try {
         const response = await apiClient.post<Lesson>(
-            `/api/v1/lesson/`,
+            `/api/v1/lessons/`,
             lesson,
             {
                 headers: { Authorization: `Bearer ${token}` },
@@ -153,12 +153,14 @@ const retrieveCurrentLessonUser = async (
     token: string,
 ): Promise<LessonUser> => {
     try {
-        const response = await apiClient.get<LessonUser>(
-            `/api/v1/user/${lessonId}/lesson/`,
+        const response = await apiClient.post<LessonUser>(
+            `/api/v1/lesson/start/${lessonId}/`,
+            {},
             {
                 headers: { Authorization: `Bearer ${token}` },
             },
         );
+
         return response.data;
     } catch (error) {
         throw new Error(`Error retrieving lessonUser: ${error}`);

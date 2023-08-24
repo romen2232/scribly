@@ -63,7 +63,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     gems = models.IntegerField("Gems", default=100)
     appear_daily_challenge = models.BooleanField(
         "Appear daily challenge", default=True)
-    profile_picture = models.ImageField( "Profile picture", upload_to='profile_pictures/', blank=True, null=True)
+    profile_photo = models.ImageField( "Profile picture", upload_to='profile_pictures/', blank=True, null=True)
     receive_future_promotional_emails = models.BooleanField("Receive future promotional emails", default=False,
                                                             help_text='If false, do not send emails to the user')
     provide_data_to_improve_user_exp = models.BooleanField("Provide data to improve the user experience", default=False,

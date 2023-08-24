@@ -6,12 +6,14 @@ export interface IUnitHeaderProps {
     unitNumber: number;
     description: string;
     backgroundColor: string;
+    currentLesson?: number;
 }
 
 export function UnitHeader({
     unitNumber,
     description,
     backgroundColor,
+    currentLesson,
 }: IUnitHeaderProps) {
     return (
         <article
@@ -29,7 +31,7 @@ export function UnitHeader({
                 </div>
                 {/* TODO: link to the current lesson */}
                 <Link
-                    to=""
+                    to={t('/lesson' + '/' + currentLesson)}
                     className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black"
                 >
                     <MdOutlinePlayLesson size={32} />

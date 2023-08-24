@@ -26,3 +26,9 @@ body {
 }
 
 
+.underline-space {
+    display: inline-block;
+    width: 150px;
+    border-bottom: 2px dotted black;
+    margin: 0 5px;
+}

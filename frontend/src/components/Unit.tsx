@@ -9,6 +9,7 @@ export interface IUnitProps {
 
 export function Unit({ unit }: IUnitProps) {
     const { lessons, unitColor, unitDescription, unitNumber } = unit;
+    const [currentLesson, setCurrentLesson] = useState<number>();
 
     const [areLessonsVisible, setAreLessonsVisible] = useState(false);
     return (
@@ -18,20 +19,29 @@ export function Unit({ unit }: IUnitProps) {
                     unitNumber={unitNumber}
                     description={unitDescription}
                     backgroundColor={unitColor}
+                    currentLesson={currentLesson}
                 />
             </div>
             <div className="flex flex-col items-center justify-center">
                 {areLessonsVisible &&
                     lessons.map((lesson, index) => {
-                        let margin = 'ml-16';
+                        let margin = 'ml-16',
+                            disabled = false;
                         if (index % 2 === 0) margin = 'mr-16';
 
-                        const disabled = lesson.percentageCompleted === 0;
-
+                        if (index > 0) {
+                            if (
+                                lesson.percentage === 0 &&
+                                lessons[index - 1].percentage !== 0
+                            ) {
+                                disabled = true;
+                                setCurrentLesson(lessons[index - 1].id);
+                            }
+                        }
                         return (
                             <LessonIcon
                                 key={lesson.id}
-                                bgColor={lesson.lessonColor}
+                                bgColor={lesson.bgColor}
                                 lesson={lesson}
                                 extraClasses={margin}
                                 disabled={disabled}

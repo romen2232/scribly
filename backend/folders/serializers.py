@@ -19,7 +19,7 @@ class FoldersSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(), write_only=True)
     folder_parent = serializers.PrimaryKeyRelatedField(
-        queryset=Folders.objects.all(), write_only=True)
+        queryset=Folders.objects.all(), write_only=True, required=False)
 
     class Meta:
         model = Folders
@@ -39,7 +39,7 @@ class FoldersSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         
         folder_parent = validated_data.pop('folder_parent', None)
-        depth = 0
+        depth = -1
         
         
         

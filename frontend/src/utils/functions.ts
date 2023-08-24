@@ -28,9 +28,9 @@ export function isValidUsername(username: string): boolean {
  * @param date String in the format YYYY-MM-DD or Date object
  * @returns String in the format DD/MM/YYYY
  */
-export function formatDate(date: string|Date): string {
+export function formatDate(date: string | Date): string {
     let dateObj: Date;
-    if(typeof date === 'string') {
+    if (typeof date === 'string') {
         dateObj = new Date(date);
     } else {
         dateObj = date;
@@ -97,4 +97,28 @@ export function keysToCamel(obj: any): any {
     return Object.fromEntries(
         Object.entries(obj).map(([k, v]) => [snakeToCamel(k), keysToCamel(v)]),
     );
+}
+
+/**
+ * Shuffles array using Fisher-Yates algorithm (https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle)
+ * @param array Array to be shuffled
+ * @returns shuffled array
+ */
+export function shuffleArray<T>(array: T[]): T[] {
+    let currentIndex = array.length;
+    let randomIndex: number;
+    let tempValue: T;
+
+    // While there remain elements to shuffle
+    while (currentIndex !== 0) {
+        // Pick a remaining element
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+        // And swap it with the current element
+        tempValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = tempValue;
+    }
+
+    return array;
 }

@@ -42,23 +42,41 @@ class TasksList(generics.ListAPIView):
     def get_queryset(self):
         return Tasks.objects.filter(user=self.request.user)
     
-    
+def import_tasks(request, id, tasks_data):
+    created_tasks = []
+    for task_data in tasks_data:
+        task_data_edited = {
+            "task_name": task_data["task_name"],
+            "task_description": task_data["task_description"],
+            "task_points": task_data["task_points"],
+            "text": task_data["text"],
+            "type": task_data["type"],
+            "lesson": id
+        }
+        
+        serializer = TasksSerializer(data=task_data_edited)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        created_tasks.append(serializer.data)
+
+    return created_tasks 
     
 class TaskImportView(generics.CreateAPIView):
     
     serializer_class = TasksSerializer
 
-    def create(self, request,id=1, *args, **kwargs):
+    def create(self, request, *args, **kwargs):
         tasks_data = request.data.get('tasks', [])  # Assuming 'tasks' is the key in the JSON
         created_tasks = []
-
+        print('tasks')
         for task_data in tasks_data:
             #edit lesson_data["lesson"] = id
             
-            task_data_edited = {"lesson": id, "task_name": task_data["task_name"], "task_description": task_data["task_description"],"task_points":task_data["task_points"] ,"text": task_data["text"], "type": task_data["type"]}
-            
+            task_data_edited = {"task_name": task_data["task_name"], "task_description": task_data["task_description"],"task_points":task_data["task_points"] ,"text": task_data["text"], "type": task_data["type"], "lesson": 1}
+            print(task_data_edited)
             
             serializer = self.get_serializer(data=task_data_edited)
+            print(serializer)
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
             created_tasks.append(serializer.data)

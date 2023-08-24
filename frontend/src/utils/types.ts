@@ -66,8 +66,9 @@ export interface Note {
     tags?: string;
     task?: number | null;
     challenge?: Challenge | null;
-    folder: Folder | number;
+    folder?: Folder | number;
     user?: User;
+    favorite?: boolean;
 }
 export interface League {
     id?: number;
@@ -91,6 +92,7 @@ export interface Folder {
     depth?: number;
     subfolders?: Folder[];
     notes?: Note[];
+    user?: User;
 }
 export interface Streak {
     id?: number;
@@ -213,22 +215,23 @@ export interface Lesson {
     lessonName: string;
     lessonDescription: string;
     lessonTheory: string;
-    lessonColor: string;
+    bgColor: string;
     difficulty: number;
     unit?: UnitType;
-    percentageCompleted?: number;
+    percentage?: number;
 }
 
 export interface TaskUser {
     task: Task;
     user: User | number;
-    taskEndDate: Date;
+    taskDate: Date;
     earnedPoints: number;
-    answerNote?: Note;
+    answerNote?: Note | number;
     answerText: string;
     answerBoolean: boolean;
     responseText?: string;
     lessonUser: number;
+    isCompleted: boolean;
 }
 
 export interface Task {
@@ -250,4 +253,5 @@ export interface TaskProps {
 export interface AnswerProps {
     answerText: string;
     type: string;
+    answerNote?: number;
 }

@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { TaskProps } from '../utils/types';
+import { shuffleArray } from '../utils/functions';
 
 const TaskChoose: React.FC<TaskProps> = ({ task, onSubmit, onSkip }) => {
     const [text, setText] = useState<string[]>(task.text.split('\n\n'));
     const [chosenAnswer, setChosenAnswer] = useState<number>(-1);
     useEffect(() => {
-        setText(text.sort(() => Math.random() - 0.5));
+        setText(shuffleArray(text));
     }, [task]);
 
     const handleAnswer = (index: number) => {

@@ -86,12 +86,15 @@ class RootFolder(generics.ListAPIView):
     def get_queryset(self):
         
         root = Folders.objects.filter(user=self.request.user, depth=0)
-        if root.count() == 0:
-            return AssertionError ("Root folder not found")
-        elif root.count() > 1:
-            return AssertionError ("More than one root folder found")
+        #count the object in the queryset
+        number = root.count()
+        
+        if number == 0:
+            return Response("Root folder not found")
+        elif number > 1:
+            return Response("More than one root folder found")
         else:
-            print(root)
+            #print(root)
             return root
         
     
