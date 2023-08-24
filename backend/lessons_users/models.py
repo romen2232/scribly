@@ -8,3 +8,5 @@ class Lessons_users(models.Model):
     lesson_start_date = models.DateTimeField(auto_now_add=True)
     percentage_completed = models.IntegerField(default=0)
     
+    
+    

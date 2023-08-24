@@ -3,6 +3,7 @@
         "consts",
         "corsheaders",
         "escribly",
+        "nextui",
         "openapi",
         "titivillus",
         "tivi",

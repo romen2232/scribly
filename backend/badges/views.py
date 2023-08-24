@@ -16,7 +16,9 @@ class BadgeListCreateView(generics.ListCreateAPIView):
 
     def create(self, request, *args, **kwargs):
 
-        serializer = self.get_Serializer(
+
+        serializer = BadgeSerializer(
+
             data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         badge = serializer.save()

@@ -3,15 +3,14 @@ import { Link } from 'react-router-dom';
 
 import { FaDumbbell, FaFireAlt } from 'react-icons/fa';
 import { FaUsers, FaTrophy, FaUser } from 'react-icons/fa6';
-import { AuthContext } from '../hoc/auth/context';
-import { useContext } from 'react';
+import { useTranslation } from 'react-i18next';
 export interface IHeaderProps {
     children?: React.ReactNode;
     onHeaderModalClick: () => void;
 }
 
 export function Header(props: IHeaderProps) {
-    const { logout } = useContext(AuthContext);
+    const { t } = useTranslation();
 
     return (
         <header
@@ -33,22 +32,22 @@ export function Header(props: IHeaderProps) {
                     <FaFireAlt className="h-16 w-16 transition duration-300 ease-in-out hover:text-tiviBlack" />
                 </button>
 
-                <Link to="/leaderboard">
+                <Link to={t('/leaderboard')}>
                     <FaTrophy className="h-16 w-16 transition duration-300 ease-in-out hover:text-tiviBlack" />
                 </Link>
 
                 {/* TODO: When the lessons part is done check this out */}
-                <Link to="/training">
+                <Link to={t('/training')}>
                     <FaDumbbell className="h-16 w-16 transition duration-300 ease-in-out hover:text-tiviBlack" />
                 </Link>
 
-                <Link to="/community">
+                <Link to={t('/community')}>
                     <FaUsers className="h-16 w-16 transition duration-300 ease-in-out hover:text-tiviBlack" />
                 </Link>
 
-                <button onClick={logout}>
+                <Link to={t('/profile')}>
                     <FaUser className="h-16 w-16 transition duration-300 ease-in-out hover:text-tiviBlack" />
-                </button>
+                </Link>
             </nav>
         </header>
     );

@@ -1,16 +1,16 @@
-import * as React from 'react';
+
 import { useRef } from 'react';
 import useOnClickOutsideAndEsc from '../hooks/useOnClickOutsideAndEsc';
 
-export interface IModalProps {
-    isModalOpen: boolean;
+export interface ILargeModalProps {
+    isLargeModalOpen: boolean;
     type?: string;
     onClose: () => void;
     children: React.ReactNode;
 }
 
-export function Modal({ isModalOpen, onClose, type, children }: IModalProps) {
-    if (!isModalOpen) return null;
+export function LargeModal({ isLargeModalOpen, onClose, type, children }: ILargeModalProps) {
+    if (!isLargeModalOpen) return null;
 
     const ref = useRef<HTMLDivElement>(null);
     useOnClickOutsideAndEsc(ref, onClose);

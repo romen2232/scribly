@@ -83,7 +83,8 @@ INSTALLED_APPS = [
     'clubs',
     'clubs_users',
     'tivi',
-    'resources'
+    'resources',
+    'units'
 
 ]
 
@@ -117,6 +118,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'escribly_api.wsgi.application'
+
 
 
 # Database

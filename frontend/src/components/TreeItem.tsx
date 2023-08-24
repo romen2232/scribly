@@ -4,33 +4,34 @@ import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
 import { IoIosAddCircleOutline } from 'react-icons/io';
 import useHover from '../hooks/useHover';
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Folder, Note } from '../utils/types';
 
 export interface ITreeItem {
-    folder: boolean;
+    folder?: boolean;
     name?: string;
     description?: string;
     index: number;
-    children?: ITreeItem[];
     favorite?: boolean;
-    isOpen?: boolean;
+    // TODO: This any is ugly, it only can be rather a Folder or a Note
+    data: any;
 }
 
-export function TreeItem(props: ITreeItem) {
-    const folder = props.folder;
+//TODO: Implement logic of favorite
+//TODO: Drag elemnts to reorder
+
+export function TreeItem({folder, name, description, index, favorite, data}: ITreeItem) {
     const { ref: hoverRef, isHovered: isHovered } = useHover();
     const { ref: hoverRefStar, isHovered: isHoveredStar } = useHover();
 
-    const name = 'Folder';
-    const description = 'Lorem ipsum dolor sit,...';
+    const [isOpen, setIsOpen] = useState(false);
+    const toggleOpen = () => setIsOpen(!isOpen);
 
     const mlIndex = [
         'ml-0',
         'ml-16',
         'ml-32',
         'ml-48',
-        'ml-64',
-        'ml-80',
-        'ml-96',
     ];
 
     return (
@@ -38,13 +39,14 @@ export function TreeItem(props: ITreeItem) {
             <div className="w-full px-4 pb-3">
                 <div
                     ref={hoverRef}
+                    onClick={toggleOpen}
                     className={`hover:bg-hover:shadow flex cursor-pointer items-center  justify-between rounded-md p-3 transition duration-300 ease-in-out hover:bg-tiviElectricPurple-50 hover:shadow-lg ${
-                        mlIndex[props.index]
+                        mlIndex[index]
                     }`}
                 >
                     <div className="flex items-center">
                         {folder ? (
-                            props.isOpen ? (
+                            isOpen ? (
                                 <FaFolder className="h-8 w-8" />
                             ) : (
                                 <FaFolder className="h-8 w-8" />
@@ -59,7 +61,8 @@ export function TreeItem(props: ITreeItem) {
                     </div>
 
                     <div className="flex items-center gap-10">
-                        {isHovered && props.folder && (
+                        {isHovered && folder && (
+                            // TODO: Add onClick to create new folder
                             <Link to="/new">
                                 <IoIosAddCircleOutline className="h-7 w-7 hover:h-10 hover:w-10 hover:translate-x-1.5" />
                             </Link>
@@ -68,8 +71,8 @@ export function TreeItem(props: ITreeItem) {
                             {
                                 //If its hovered and it is not a favorite or is a favorite, then show the filled star
                                 //If its not hovered and it is a favorite or is not a favorite, then show the filled star
-                                !isHoveredStar === props.favorite ||
-                                isHoveredStar === !props.favorite ? (
+                                !isHoveredStar === favorite ||
+                                isHoveredStar === !favorite ? (
                                     <AiFillStar className="h-7 w-7" />
                                 ) : (
                                     <AiOutlineStar className="h-7 w-7" />
@@ -79,6 +82,29 @@ export function TreeItem(props: ITreeItem) {
                     </div>
                 </div>
             </div>
+            {isOpen && (
+                <>
+                        {data.subfolders.map((item: Folder) => (
+                            <TreeItem
+                                key={item.id}
+                                folder={true}
+                                name={item.folderName}
+                                description={item.folderDescription}
+                                index={index + 1}
+                                data={item}
+                            />
+                        ))}
+                    {data.notes.map((item: Note) => (
+                        <TreeItem
+                            key={item.id}
+                            folder={false}
+                            name={item.noteName}
+                            index={index + 1}
+                            data={item}
+                        />
+                    ))}
+                </>
+            )}
         </>
     );
 }

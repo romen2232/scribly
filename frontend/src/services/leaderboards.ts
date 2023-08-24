@@ -257,7 +257,8 @@ const createLeaderboard = async (
 const listLeaderboardUsers = async (
     leaderboardId: number,
     token: string,
-): Promise<User[]> => {
+): Promise<
+User[]> => {
     try {
         const response = await apiClient.get<User[]>(
             `/api/v1/leaderboard/${leaderboardId}/users/`,
@@ -395,6 +396,7 @@ const createLeaderboardUser = async (
     }
 };
 
+//TODO: Implement in backend 
 /** This endpoint is used to retrieve all leaderboards for a given user.
  * @param userId User ID
  * @param token JWT token
@@ -412,7 +414,8 @@ const listUserLeaderboards = async (
                 headers: { Authorization: `Bearer ${token}` },
             },
         );
-        return response.data;
+
+       return response.data;
     } catch (error) {
         throw new Error(`Error listing user leaderboards: ${error}`);
     }

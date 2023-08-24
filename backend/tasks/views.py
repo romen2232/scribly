@@ -1,49 +1,71 @@
-
+from rest_framework import generics, permissions, status
+from rest_framework.response import Response
 from django.shortcuts import render
 from django.http import Http404
 from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
 
-from .models import Task
-from .serializers import Task
+from .models import Tasks
+from .serializers import TasksSerializer
+
+class TaskListCreateView(generics.ListCreateAPIView):
+    queryset = Tasks.objects.all()
+    serializer_class = TasksSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(user=self.request.user)
+        task = serializer.save()
+        return Response({"status": "success", "data": TasksSerializer(task).data}, 
+                        status=status.HTTP_201_CREATED)
+
+class TaskRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Tasks.objects.all()
+    serializer_class = TasksSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        task = serializer.save()
+        return Response({"status": "success", "data": TasksSerializer(task).data})
 
 
-class TaskList(APIView):
-    def get(self, request, format=None):
-        tasks = Task.objects.all()
-        serializer = Task(tasks, many=True)
-        return Response(serializer.data)
+class TasksList(generics.ListAPIView):
+    serializer_class = TasksSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request, format=None):
-        serializer = Task(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get_queryset(self):
+        return Tasks.objects.filter(user=self.request.user)
+    
+    
+    
+class TaskImportView(generics.CreateAPIView):
+    
+    serializer_class = TasksSerializer
+
+    def create(self, request,id=1, *args, **kwargs):
+        tasks_data = request.data.get('tasks', [])  # Assuming 'tasks' is the key in the JSON
+        created_tasks = []
+
+        for task_data in tasks_data:
+            #edit lesson_data["lesson"] = id
+            
+            task_data_edited = {"lesson": id, "task_name": task_data["task_name"], "task_description": task_data["task_description"],"task_points":task_data["task_points"] ,"text": task_data["text"], "type": task_data["type"]}
+            
+            
+            serializer = self.get_serializer(data=task_data_edited)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            created_tasks.append(serializer.data)
+
+        return Response(created_tasks, status=status.HTTP_201_CREATED)
 
 
-class TaskDetail(APIView):
-    def get_object(self, pk):
-        try:
-            return Task.objects.get(pk=pk)
-        except Task.DoesNotExist:
-            raise Http404
 
-    def get(self, request, pk, format=None):
-        task = self.get_object(pk)
-        serializer = Task(task)
-        return Response(serializer.data)
 
-    def put(self, request, pk, format=None):
-        task = self.get_object(pk)
-        serializer = Task(task, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk, format=None):
-        task = self.get_object(pk)
-        task.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)

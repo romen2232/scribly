@@ -1,49 +1,58 @@
-
-from django.shortcuts import render
-from django.http import Http404
+from rest_framework import generics, permissions, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
-
-from .models import TaskUser
-from .serializers import TaskUser
+from .models import Tasks_users
+from .serializers import TasksUserSerializer
 
 
-class TaskUserList(APIView):
-    def get(self, request, format=None):
-        taskusers = TaskUser.objects.all()
-        serializer = TaskUser(taskusers, many=True)
-        return Response(serializer.data)
+class TaskUserCreateView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request, format=None):
-        serializer = TaskUser(data=request.data)
+    def post(self, request, *args, **kwargs):
+        serializer = TasksUserSerializer(
+            data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class TaskUserDetail(APIView):
-    def get_object(self, pk):
-        try:
-            return TaskUser.objects.get(pk=pk)
-        except TaskUser.DoesNotExist:
-            raise Http404
+class UserTasksView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request, pk, format=None):
-        taskuser = self.get_object(pk)
-        serializer = TaskUser(taskuser)
+    def get(self, request, user_id, *args, **kwargs):
+        tasks_users = Tasks_users.objects.filter(user=user_id)
+        serializer = TasksUserSerializer(
+            tasks_users, many=True, context={'request': request})
         return Response(serializer.data)
 
-    def put(self, request, pk, format=None):
-        taskuser = self.get_object(pk)
-        serializer = TaskUser(taskuser, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk, format=None):
-        taskuser = self.get_object(pk)
-        taskuser.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+class TaskUsersView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, task_id, *args, **kwargs):
+        tasks_users = Tasks_users.objects.filter(task=task_id)
+        serializer = TasksUserSerializer(
+            tasks_users, many=True, context={'request': request})
+        return Response(serializer.data)
+
+
+class SpecificUserTaskView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, user_id, task_id, *args, **kwargs):
+        try:
+            task_user = Tasks_users.objects.get(user=user_id, task=task_id)
+            serializer = TasksUserSerializer(
+                task_user, context={'request': request})
+            return Response(serializer.data)
+        except Tasks_users.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def delete(self, request, user_id, task_id, *args, **kwargs):
+        try:
+            task_user = Tasks_users.objects.get(user=user_id, task=task_id)
+            task_user.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Tasks_users.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)

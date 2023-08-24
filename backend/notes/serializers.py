@@ -24,7 +24,8 @@ class NoteSerializer(serializers.ModelSerializer):
         queryset=Challenges.objects.all(), required=False, allow_null=True)
     folder = serializers.PrimaryKeyRelatedField(
         queryset=Folders.objects.all(), required=False, allow_null=True)
-    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False, allow_null=True)
+
 
     class Meta:
         model = Notes
@@ -41,6 +42,18 @@ class NoteSerializer(serializers.ModelSerializer):
         return representation
 
     def create(self, validated_data):
+        
+        
+        folder = validated_data['folder'] if 'folder' in validated_data else None
+        user = self.context['request'].user
+        
+        #check if folder was provided in the request
+        if folder is  None:
+            folder = Folders.objects.filter(user=user, depth=0).first()
+            print('o')
+            validated_data['folder'] = folder
+            
+        
         note = Notes.objects.create(**validated_data)
         note.save()
         return note

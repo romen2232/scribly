@@ -25,15 +25,17 @@ export interface IUser {
     dateJoined: Date;
 }
 
-export interface Badge {
+export interface BadgeType {
     id?: number;
     badgeName: string;
     badgeDescription: string;
     badgeImage?: string;
+    badgeLevel: number;
+    badgeColor: string;
+    badgeGoal: number;
 }
 export interface User {
-    id?: number;
-    password: string;
+    id: number;
     lastLogin?: string | null;
     isSuperuser?: boolean;
     username?: string | null;
@@ -43,6 +45,7 @@ export interface User {
     phoneNumber?: string | null;
     experience?: number;
     gems?: number;
+    profilePhoto?: string;
     appearDailyChallenge?: boolean;
     receiveFuturePromotionalEmails?: boolean;
     provideDataToImproveUserExp?: boolean;
@@ -54,16 +57,17 @@ export interface User {
 }
 export interface Note {
     id?: number;
-    noteName: string;
-    noteContent: string;
+    noteName?: string;
+    noteContent?: string;
     noteImage?: string;
     noteLastModified?: string;
     public?: boolean;
     noteAverageRating?: number;
     tags?: string;
     task?: number | null;
-    challenge?: number | null;
-    folder?: number | null;
+    challenge?: Challenge | null;
+    folder: Folder | number;
+    user?: User;
 }
 export interface League {
     id?: number;
@@ -85,6 +89,8 @@ export interface Folder {
     favorite?: boolean;
     folderParent?: number | null;
     depth?: number;
+    subfolders?: Folder[];
+    notes?: Note[];
 }
 export interface Streak {
     id?: number;
@@ -148,8 +154,8 @@ export interface Direct {
     sent_date: Date;
 }
 export interface Follow {
-    follower: number;
-    followed: number;
+    follower: User;
+    followed: User;
     follow_date: Date;
 }
 export interface Rating {
@@ -160,9 +166,10 @@ export interface Rating {
     rating_date: Date;
 }
 export interface BadgeUser {
-    badge: number;
-    user: number;
+    badge: BadgeType;
+    user: User;
     earned_date: Date;
+    badgeProgress: number;
 }
 export interface BoosterUser {
     booster: number;

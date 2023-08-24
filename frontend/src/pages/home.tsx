@@ -1,7 +1,7 @@
 import { Header } from '../components/HeaderHome';
 import { Learn } from '../components/Learn';
 import { Footer } from '../components/Footer';
-import { Modal } from '../components/Modal';
+import { LargeModal } from '../components/LargeModal';
 import { useState } from 'react';
 import { Streak } from '../components/Streak';
 import { Forest } from '../components/Forest';
@@ -9,36 +9,36 @@ import { Forest } from '../components/Forest';
 interface IHomeProps {}
 
 const Home: React.FunctionComponent<IHomeProps> = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [modalType, setModalType] = useState('');
+    const [isLargeModalOpen, setIsLargeModalOpen] = useState(false);
+    const [LargeModalType, setLargeModalType] = useState('');
 
-    const handleModalClick = (type: string) => {
-        setIsModalOpen(!isModalOpen);
-        setModalType(type);
+    const handleLargeModalClick = (type: string) => {
+        setIsLargeModalOpen(!isLargeModalOpen);
+        setLargeModalType(type);
     };
 
     return (
         <div className="flex h-full w-full flex-col items-center justify-between">
-            <Header onHeaderModalClick={() => handleModalClick('streak')} />
+            <Header onHeaderModalClick={() => handleLargeModalClick('streak')} />
             <Learn />
-            <Footer onFooterModalClick={() => handleModalClick('forest')} />
-            <Modal
-                isModalOpen={isModalOpen}
-                type={modalType}
+            <Footer onFooterModalClick={() => handleLargeModalClick('forest')} />
+            <LargeModal
+                isLargeModalOpen={isLargeModalOpen}
+                type={LargeModalType}
                 onClose={() => {
-                    setIsModalOpen(false);
+                    setIsLargeModalOpen(false);
                 }}
             >
-                {modalType === 'streak' ? (
+                {LargeModalType === 'streak' ? (
                     <Streak />
                 ) : (
                     <Forest
                         onClose={() => {
-                            setIsModalOpen(false);
+                            setIsLargeModalOpen(false);
                         }}
                     />
                 )}
-            </Modal>
+            </LargeModal>
         </div>
     );
 };

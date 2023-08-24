@@ -47,5 +47,4 @@ urlpatterns = [
 
     # List all users
     path('users/', ListUserView.as_view(), name='list-users'),
-
 ]

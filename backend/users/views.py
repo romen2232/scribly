@@ -75,6 +75,18 @@ class UserDetailViewByUsername(RetrieveAPIView):
         username = self.kwargs['username']
         return User.objects.filter(username=username)
 
+class UserDetailViewByUsername(RetrieveAPIView):
+    """
+    Retrieve a user by their username
+    """
+    serializer_class = UserDetailSerializer
+    permission_classes = (IsAuthenticated,)
+    lookup_field = 'username'
+
+    def get_queryset(self):
+        username = self.kwargs['username']
+        return User.objects.filter(username=username)
+
 
 @api_view(['POST'])
 def activate_user_account(request):

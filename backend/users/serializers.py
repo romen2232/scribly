@@ -12,6 +12,8 @@ from rest_framework.exceptions import ValidationError
 from users.models import User, VerifyEmailToken
 from users import tasks
 
+from folders.models import Folders
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -61,6 +63,15 @@ class UserCreateSerializer(serializers.ModelSerializer):
         tasks.send_mail_to_verify_account(
             user_email=user.email, username=user.username, token=token)
         print("Email sent!")
+        
+        
+        # Create a folder for the user
+        user_folder = Folders.objects.create(
+            folder_name=f"User_{user.username}_Root",
+            user=user,
+            folder_parent=None,
+            depth=0
+        )
 
         return user
 

@@ -45,6 +45,7 @@ api_urlpatterns = [
     path('', include('boosters_users.urls')),
     path('', include('challenges.urls')),
     path('', include('follows.urls')),
+    path('', include('units.urls')),
     path('schema', schema_view),
 ]
 
