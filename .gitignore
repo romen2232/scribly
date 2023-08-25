@@ -31,4 +31,5 @@ backend/tasks/migrations/
 backend/tasks_users/migrations/
 backend/tivi/migrations/
 backend/users/migrations/
+backend/units/migrations/
 backend/media/

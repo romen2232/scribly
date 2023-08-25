@@ -4,7 +4,7 @@ import { Footer } from '../components/Footer';
 import { LargeModal } from '../components/LargeModal';
 import { useState } from 'react';
 import { Streak } from '../components/Streak';
-import { Forest } from '../components/Forest';
+import { Category } from '../components/Category';
 
 interface IHomeProps {}
 
@@ -19,9 +19,15 @@ const Home: React.FunctionComponent<IHomeProps> = () => {
 
     return (
         <div className="flex h-full w-full flex-col items-center justify-between">
-            <Header onHeaderModalClick={() => handleLargeModalClick('streak')} />
-            <Learn />
-            <Footer onFooterModalClick={() => handleLargeModalClick('forest')} />
+            <Header
+                onHeaderModalClick={() => handleLargeModalClick('streak')}
+            />
+            <div className="h-full pb-16">
+                <Learn />
+            </div>
+            <Footer
+                onFooterModalClick={() => handleLargeModalClick('category')}
+            />
             <LargeModal
                 isLargeModalOpen={isLargeModalOpen}
                 type={LargeModalType}
@@ -32,7 +38,7 @@ const Home: React.FunctionComponent<IHomeProps> = () => {
                 {LargeModalType === 'streak' ? (
                     <Streak />
                 ) : (
-                    <Forest
+                    <Category
                         onClose={() => {
                             setIsLargeModalOpen(false);
                         }}

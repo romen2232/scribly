@@ -25,7 +25,8 @@ class TasksUserSerializer(serializers.ModelSerializer):
   
     class Meta:
         model = Tasks_users
-        fields = ['task', 'user', 'task_end_date', 'earned_points', 'answerNote', 'answerText', 'answerBoolean', 'lesson_user' ]
+
+        fields = ['task', 'user', 'task_date', 'earned_points', 'answer_note', 'answer_text', 'answer_boolean', 'lesson_user', 'is_completed', 'response_text' ]
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -44,11 +45,11 @@ class TasksUserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         # task = validated_data['task']
         # user = validated_data['user']
-        # #task_end_date = validated_data['task_end_date']
+        # #task_date = validated_data['task_date']
         # earned_points = validated_data['earned_points']
-        # answerNote = validated_data['answerNote']
-        # answerText = validated_data['answerText']
-        # answerBoolean = validated_data['answerBoolean']
+        # answer_note = validated_data['answer_note']
+        # answer_text = validated_data['answer_text']
+        # answer_boolean = validated_data['answer_boolean']
         
         
 

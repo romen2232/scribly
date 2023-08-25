@@ -1,16 +1,37 @@
-const { nextui } = require("@nextui-org/react");
-
-
+const { nextui } = require('@nextui-org/react');
 
 /** @type {import('tailwindcss').Config} */
 import colors from 'tailwindcss/colors';
 export default {
-    content: ['./src/**/*.{html,js,jsx,ts,tsx}',
-    './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}'],
+    content: [
+        './src/**/*.{html,js,jsx,ts,tsx}',
+        './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
+    ],
+    safelist: [
+        'bg-red-400',
+        'bg-green-400',
+        'bg-sky-400',
+        'bg-tiviElectricPurple-50',
+        'bg-tiviElectricPurple-100',
+    ],
     theme: {
         extend: {
             boxShadow: {
                 'inner-lg': 'inset 0 -6px 0 0 rgba(0, 0, 0, 0.06)',
+            },
+            keyframes: {
+                slideIn: {
+                    '0%': { transform: 'translateY(-100%)', opacity: 0 },
+                    '100%': { transform: 'translateY(0)', opacity: 1 },
+                },
+                slideOut: {
+                    '0%': { transform: 'translateY(0)', opacity: 1 },
+                    '100%': { transform: 'translateY(-100%)', opacity: 0 },
+                },
+            },
+            animation: {
+                slideIn: 'slideIn 0.5s forwards',
+                slideOut: 'slideOut 0.5s forwards',
             },
         },
         colors: {
@@ -34,6 +55,6 @@ export default {
             ...colors,
         },
     },
-    darkMode: "class",
-    plugins: [nextui()]
+    darkMode: 'class',
+    plugins: [nextui()],
 };

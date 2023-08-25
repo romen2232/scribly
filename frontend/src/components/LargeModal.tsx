@@ -1,4 +1,3 @@
-
 import { useRef } from 'react';
 import useOnClickOutsideAndEsc from '../hooks/useOnClickOutsideAndEsc';
 
@@ -9,7 +8,12 @@ export interface ILargeModalProps {
     children: React.ReactNode;
 }
 
-export function LargeModal({ isLargeModalOpen, onClose, type, children }: ILargeModalProps) {
+export function LargeModal({
+    isLargeModalOpen,
+    onClose,
+    type,
+    children,
+}: ILargeModalProps) {
     if (!isLargeModalOpen) return null;
 
     const ref = useRef<HTMLDivElement>(null);
@@ -19,7 +23,7 @@ export function LargeModal({ isLargeModalOpen, onClose, type, children }: ILarge
         <div className="absolute bottom-0 left-0 z-10 h-full w-full backdrop-blur-sm">
             <div
                 className={`relative h-3/4 bg-tiviBlack text-black dark:bg-tiviWhite ${
-                    type === 'forest' ? 'top-[25%]' : ''
+                    type === 'category' ? 'top-[25%]' : ''
                 }`}
                 ref={ref}
             >

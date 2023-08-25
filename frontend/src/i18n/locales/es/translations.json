@@ -46,10 +46,23 @@
     "profile.Logout": "Cerrar sesión",
     "profile.SeeMore": "Ver más",
 
-
     "badge.Title": "Insignias",
     "badge.Level": "Nivel",
 
+    "lessons.Unit": "Unidad",
+
+    "task.Title": "Tarea",
+    "task.Description": "Descripción",
+    "task.Correct": "Correcto",
+    "task.Incorrect": "Incorrecto",
+    "task.Submit": "Enviar",
+    "task.Next": "Siguiente",
+    "task.Skip": "Saltar tarea",
+    "task.SkipText": "¿Estás seguro de que quieres saltar esta tarea?",
+    "task.NoPoints": "No obtendrás puntos por esta tarea",
+    "task.SkipNext": "Saltar y continuar",
+    "task.Review": "Revisar",
+    "task.Retry": "Reintentar",
 
     "ratings.AverageRating": "Puntuación media",
 

@@ -8,11 +8,12 @@ import { formatDate } from '../utils/functions';
 import { useNoteStore } from '../stores/noteStore';
 
 export interface INoteProps {
-    note: NoteType
-    folder: Folder
+    note: NoteType;
+    folder?: Folder;
+    onNoteChange?: (note: NoteType) => void;
 }
 
-export function Note({note, folder}: INoteProps) {
+export function Note({ note, folder, onNoteChange }: INoteProps) {
     const { currentNote, saveNote, localSaveNote, undo, redo } = useNoteStore();
     const [newNote, setNewNote] = useState(note);
 
@@ -26,21 +27,23 @@ export function Note({note, folder}: INoteProps) {
                 if (e.key === 's') {
                     e.preventDefault();
                     await saveNote(newNote);
+                    if (onNoteChange) {
+                        onNoteChange(newNote);
+                    }
                 } else if (e.key === 'z') {
                     e.preventDefault();
                     undo();
-                    setNewNote(currentNote);  // to reflect the undone changes
+                    setNewNote(currentNote); // to reflect the undone changes
                 } else if ((e.key === 'z' && e.shiftKey) || e.key === 'y') {
                     e.preventDefault();
                     redo();
-                    setNewNote(currentNote);  // to reflect the redone changes
+                    setNewNote(currentNote); // to reflect the redone changes
                 }
             }
-            };
+        };
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [newNote, saveNote, undo, redo, currentNote]);
-
 
     //TODO: change this to not have to call the hook 2 times
     useAutosave({
@@ -49,13 +52,13 @@ export function Note({note, folder}: INoteProps) {
             const updatedNote = {
                 ...newNote,
                 noteLastModified: formatDate(new Date()),
-                noteContent: data
+                noteContent: data,
             };
             await saveNote(updatedNote);
             setNewNote(updatedNote);
         },
         interval: 60000,
-        saveOnUnmount: true
+        saveOnUnmount: true,
     });
     useAutosave({
         data: newNote.noteName ?? '',
@@ -63,30 +66,32 @@ export function Note({note, folder}: INoteProps) {
             const updatedNote = {
                 ...newNote,
                 noteLastModified: formatDate(new Date()),
-                noteName: data
+                noteName: data,
             };
             localSaveNote(updatedNote);
             setNewNote(updatedNote);
         },
         interval: 5000,
-        saveOnUnmount: true
+        saveOnUnmount: true,
     });
 
     return (
         <div className="h-full">
-            <div className="flex justify-between items-center">
-                <div className='w-full'>
+            <div className="flex items-center justify-between">
+                <div className="w-full">
                     <input
                         type="text"
                         name="title"
                         id="title"
-                        className="h-16 w-full p-16 text-7xl placeholder-gray-500 focus:outline-none focus:placeholder-gray-600"
+                        className="h-16 w-full p-16 text-7xl placeholder-gray-500 focus:placeholder-gray-600 focus:outline-none"
                         placeholder="Título"
-                        value={newNote.noteName??''}
-                        onChange={(e) => setNewNote({
-                            ...newNote,
-                            noteName: e.target.value,
-                        })}
+                        value={newNote.noteName ?? ''}
+                        onChange={(e) =>
+                            setNewNote({
+                                ...newNote,
+                                noteName: e.target.value,
+                            })
+                        }
                     />
                     {/* Date */}
                     <div className="pointer-events-none flex justify-between px-16">
@@ -95,33 +100,37 @@ export function Note({note, folder}: INoteProps) {
                         </p>
                     </div>
                 </div>
-                <div
-                    className={`hover:bg-hover:shadow m-16 flex h-min cursor-pointer items-center justify-between rounded-md p-3 transition duration-300 ease-in-out hover:text-tiviElectricPurple-100 hover:shadow-lg`}
-                >
-                    {/* TODO: Do this inside a modal */}
-                    <Link to={t(`/folders`)}>
-                        <div className="flex items-center">
-                            <FaFolder className="h-10 w-10" />
-                        {(folder?.depth??0) > 0 && (
-                            <div className="px-3 text-lg">
-                                <h4 className="font-bold">
-                                    {folder?.folderName}
-                                </h4>
+                {folder?.id && (
+                    <div
+                        className={`hover:bg-hover:shadow m-16 flex h-min cursor-pointer items-center justify-between rounded-md p-3 duration-300 ease-in-out transition hover:text-tiviElectricPurple-100 hover:shadow-lg`}
+                    >
+                        {/* TODO: Do this inside a modal */}
+                        <Link to={t(`/folders`)}>
+                            <div className="flex items-center">
+                                <FaFolder className="h-10 w-10" />
+                                {(folder?.depth ?? 0) > 0 && (
+                                    <div className="px-3 text-lg">
+                                        <h4 className="font-bold">
+                                            {folder?.folderName}
+                                        </h4>
+                                    </div>
+                                )}
                             </div>
-                        )}
-                        </div>
-                    </Link>
-                </div>
+                        </Link>
+                    </div>
+                )}
             </div>
             {/* Content */}
             <textarea
                 name="text"
                 id="text"
-                value={newNote.noteContent??''}
-                onChange={(e) => setNewNote({
-                    ...newNote,
-                    noteContent: e.target.value,
-                })}
+                value={newNote.noteContent ?? ''}
+                onChange={(e) =>
+                    setNewNote({
+                        ...newNote,
+                        noteContent: e.target.value,
+                    })
+                }
                 className="h-full w-full  p-16 font-sans text-2xl focus:placeholder-gray-500 focus:outline-none"
                 placeholder="En algún lugar de la Mancha, de cuyo nombre no quiero acordarme..."
             ></textarea>

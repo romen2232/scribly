@@ -8,7 +8,7 @@ from users.models import User
 
 class Notes(models.Model):
     note_name = models.CharField(max_length=100, default='name')
-    note_content = models.TextField(max_length=10000,default='content')
+    note_content = models.TextField(max_length=10000, blank=True, default='')
     note_image = models.ImageField(upload_to='note_images', blank=True)
     note_last_modified = models.DateTimeField(auto_now=True)
     public = models.BooleanField(default=False)
@@ -23,6 +23,6 @@ class Notes(models.Model):
     user = models.ForeignKey(
 
         'users.User', on_delete=models.CASCADE, null=True, blank=True)
-    
+
     favorite = models.BooleanField(default=False)
 

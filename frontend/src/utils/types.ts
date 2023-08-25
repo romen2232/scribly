@@ -1,4 +1,4 @@
-export type ForestType = 'poetry' | 'prose' | 'script';
+export type Category = 'POETRY' | 'PROSE' | 'SCRIPT';
 
 export interface IUserLogin {
     email: string;
@@ -66,8 +66,9 @@ export interface Note {
     tags?: string;
     task?: number | null;
     challenge?: Challenge | null;
-    folder: Folder | number;
+    folder?: Folder | number;
     user?: User;
+    favorite?: boolean;
 }
 export interface League {
     id?: number;
@@ -91,6 +92,7 @@ export interface Folder {
     depth?: number;
     subfolders?: Folder[];
     notes?: Note[];
+    user?: User;
 }
 export interface Streak {
     id?: number;
@@ -187,4 +189,68 @@ export interface LeaderboardUser {
     user: number;
     leaderboard_update_date?: Date;
     leaderboard_score: number;
+}
+
+export interface LessonUser {
+    id: number;
+    percentageCompleted: number;
+    lessonStartDate: Date;
+    taskUser: TaskUser[];
+    lesson: Lesson;
+    user: User;
+}
+
+export interface UnitType {
+    id: number;
+    unitName: string;
+    unitDescription: string;
+    unitStyle: Category;
+    unitColor: string;
+    unitNumber: number;
+    lessons: Lesson[];
+}
+
+export interface Lesson {
+    id: number;
+    lessonName: string;
+    lessonDescription: string;
+    lessonTheory: string;
+    bgColor: string;
+    difficulty: number;
+    unit?: UnitType;
+    percentage?: number;
+}
+
+export interface TaskUser {
+    task: Task;
+    user: User | number;
+    taskDate: Date;
+    earnedPoints: number;
+    answerNote?: Note | number;
+    answerText: string;
+    answerBoolean: boolean;
+    responseText?: string;
+    lessonUser: number;
+    isCompleted: boolean;
+}
+
+export interface Task {
+    id: number;
+    taskName: string;
+    taskDescription: string;
+    taskPoints: number;
+    type: string;
+    text: string;
+    lesson: number;
+}
+
+export interface TaskProps {
+    task: Task;
+    onSubmit: (answer: AnswerProps) => void;
+    onSkip: () => void;
+}
+
+export interface AnswerProps {
+    answerText: string;
+    answerNote?: number;
 }
