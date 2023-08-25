@@ -12,5 +12,5 @@ for app in "${apps[@]}"; do
 done
 
 # Run migrate to apply the migrations
-python manage.py makemigrations
-python manage.py migrate
+python3 manage.py makemigrations
+python3 manage.py migrate

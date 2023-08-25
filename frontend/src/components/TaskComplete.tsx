@@ -42,7 +42,6 @@ const TaskComplete = ({ task, onSubmit, onSkip }: TaskProps) => {
 
     const handleAnswer = () => {
         const answer = {
-            type: task.type,
             answerText: sentenceParts.join(''),
         };
         onSubmit(answer);
