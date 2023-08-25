@@ -148,8 +148,10 @@ class UpdateReponse(APIView):
                 task_user.save()
 
             task_user.response_text = reponse
+
             # task_user.response_text = reponse
-            task_user.is_completed = correction
+
+            task_user.answer_boolean = correction
             task_user.save()
 
             # upate percentage_completed in lesson_user
@@ -250,6 +252,7 @@ class EvaluateText(APIView):
         except Tasks_users.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+
 # The next class first call TaskUsersView.patch() to get the task_user object, then it calls the function UpdateReponse to update the response_text and is_completed fields and return the task_user object.
 
 
@@ -258,15 +261,22 @@ class CompleteAnswerView(APIView):
 
     def patch(self, request, task_id, *args, **kwargs):
         try:
-            user_id = request.user.id
             task_user = Tasks_users.objects.filter(
-                user=user_id, task=task_id).last()
+                task=task_id, user=request.user).order_by('task_date').first()
+            user_id = request.user.id
+            if not task_user:
+                raise Tasks_users.DoesNotExist
 
+            serializer = TasksUserSerializer(
+                task_user, data=request.data, partial=True, context={'request': request})
+
+            if serializer.is_valid():
+                serializer.save()
             # Call the function UpdateReponse to update the response_text and is_completed fields
             UpdateReponse().put(request, user_id, task_id)
 
-            # task_user.is_completed = True
-            # task_user.save()
+            task_user.is_completed = True
+
             serializer = TasksUserSerializer(task_user)
 
             return Response(serializer.data, status=status.HTTP_200_OK)

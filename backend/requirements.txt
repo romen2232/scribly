@@ -28,4 +28,6 @@ wcwidth==0.2.6
 django-cors-headers==4.2.0
 psycopg==3.1.9
 Pillow==10.0.0
-openapi
+openapi-core==0.18.0
+openapi-core==0.18.0
+python-dotenv==1.0.0

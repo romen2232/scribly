@@ -132,31 +132,7 @@ Asegúrate de configurar tu aplicación con las tareas que deseas ejecutar utili
 ---
 
 ```bash
-python manage.py makemigrations badges
-python manage.py makemigrations badges_users
-python manage.py makemigrations boosters
-python manage.py makemigrations boosters_users
-python manage.py makemigrations challenges
-python manage.py makemigrations challenges_users
-python manage.py makemigrations clubs
-python manage.py makemigrations clubs_users
-python manage.py makemigrations directs
-python manage.py makemigrations follows
-python manage.py makemigrations folders
-python manage.py makemigrations leagues
-python manage.py makemigrations leaderboards
-python manage.py makemigrations leaderboards_users
-python manage.py makemigrations lessons
-python manage.py makemigrations lessons_users
-python manage.py makemigrations notes
-python manage.py makemigrations ratings
-python manage.py makemigrations resources
-python manage.py makemigrations streaks
-python manage.py makemigrations tasks
-python manage.py makemigrations tasks_users
-python manage.py makemigrations tivi
-python manage.py makemigrations users
-python3 manage.py migrate
+sudo ./migrations.sh
 ```
 
 ---

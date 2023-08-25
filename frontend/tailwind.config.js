@@ -7,7 +7,13 @@ export default {
         './src/**/*.{html,js,jsx,ts,tsx}',
         './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
     ],
-    safelist: ['bg-red-400', 'bg-green-400'],
+    safelist: [
+        'bg-red-400',
+        'bg-green-400',
+        'bg-sky-400',
+        'bg-tiviElectricPurple-50',
+        'bg-tiviElectricPurple-100',
+    ],
     theme: {
         extend: {
             boxShadow: {

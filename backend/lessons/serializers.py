@@ -48,16 +48,17 @@ class LessonsSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lessons
         fields = ['id', 'lesson_name', 'lesson_description',
-                  'lesson_theory', 'difficulty']
+                  'lesson_theory', 'difficulty', 'bg_color']
 
     def create(self, validated_data):
         lesson_name = validated_data['lesson_name']
         lesson_description = validated_data['lesson_description']
         lesson_theory = validated_data['lesson_theory']
         difficulty = validated_data['difficulty']
+        bg_color = validated_data['bg_color']
 
         lesson = Lessons.objects.create(
-            lesson_name=lesson_name, lesson_description=lesson_description, lesson_theory=lesson_theory,  difficulty=difficulty)
+            lesson_name=lesson_name, lesson_description=lesson_description, lesson_theory=lesson_theory,  difficulty=difficulty, bg_color=bg_color)
 
         lesson.save()
 
