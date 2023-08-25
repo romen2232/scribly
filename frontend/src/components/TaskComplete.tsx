@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { TaskProps } from '../utils/types';
+import { shuffleArray } from '../utils/functions';
 
 //this will be the task and [this the correct option] having other options\n\n [this is other option][this is other option 1][this is other option 2]
 
@@ -8,10 +9,16 @@ const TaskComplete = ({ task, onSubmit, onSkip }: TaskProps) => {
     const [options, setOptions] = useState<string[]>([]);
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
+    //This useEffect extracts the options from the task text and sets them in the options state. It also extracts the sentence parts and sets them in the sentenceParts state.
     useEffect(() => {
+        //this regex extracts the options from the task text. It matches anything between square brackets [].
         const regex = /\[(.*?)\]/g;
         const extractedOptions = task.text.match(regex) || [];
-        setOptions(extractedOptions.map((opt) => opt.replace(/\[|\]/g, '')));
+        //this removes the square brackets from the options and shuffles them
+        const opt: string[] = shuffleArray(
+            extractedOptions.map((opt) => opt.replace(/\[|\]/g, '')),
+        );
+        setOptions(opt);
         const parts = task.text.split('\n\n')[0].split(regex);
         const processedParts = parts.map((part, index) => {
             if (index % 2 !== 0) {

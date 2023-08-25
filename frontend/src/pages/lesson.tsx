@@ -16,7 +16,7 @@ import {
     useDisclosure,
 } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
-import { partialUpdateTaskUser } from '../services/tasks';
+import { partialUpdateTaskUserAnswer } from '../services/tasks';
 import { parseCookies } from 'nookies';
 import { AUTH_COOKIE_NAME } from '../utils/consts';
 import { createNote } from '../services/notes';
@@ -51,6 +51,36 @@ const Lesson = () => {
             setCurrentTask(tasks[0]);
         }
     }, [tasks]);
+    // useEffect for updating currentTask
+    useEffect(() => {
+        if (!tasks) return;
+        setCurrentTask(tasks[currentIndex]);
+    }, [currentIndex, tasks]);
+
+    // useEffect for creating a note
+    //The isMounted variable is used to prevent a memory leak
+    useEffect(() => {
+        let isMounted = true;
+
+        if (currentTask?.type === 'WRITE') {
+            createNote(
+                {
+                    noteName: currentTask.taskName,
+                    noteContent: '',
+                },
+                cookies[AUTH_COOKIE_NAME],
+            ).then((note) => {
+                if (isMounted) {
+                    setWritingNote(note);
+                }
+            });
+        }
+
+        return () => {
+            isMounted = false;
+        };
+    }, [currentTask]);
+
     // When the theory ends, the first task is shown
     const handleTheoryEnd = () => {
         setIsTheoryEnd(!isTheoryEnd);
@@ -61,13 +91,10 @@ const Lesson = () => {
         if (currentTask && lessonUser) {
             try {
                 // Update the backend to reflect that the task was skipped
-                await partialUpdateTaskUser(
+                await partialUpdateTaskUserAnswer(
                     currentTask.id,
                     {
-                        isCompleted: true, // Task was attempted
-                        earnedPoints: 0, // No points for skipping
                         answerText: 'skipped',
-                        responseText: 'You skipped this task.',
                     },
                     cookies[AUTH_COOKIE_NAME],
                 );
@@ -93,41 +120,12 @@ const Lesson = () => {
         }
     };
 
-    // useEffect for updating currentTask
-    useEffect(() => {
-        if (!tasks) return;
-        setCurrentTask(tasks[currentIndex]);
-    }, [currentIndex, tasks]);
-
-    // useEffect for creating a note
-    useEffect(() => {
-        let isMounted = true;
-
-        if (currentTask?.type === 'WRITE') {
-            createNote(
-                {
-                    noteName: currentTask.taskName,
-                    noteContent: '',
-                },
-                cookies[AUTH_COOKIE_NAME],
-            ).then((note) => {
-                if (isMounted) {
-                    setWritingNote(note);
-                }
-            });
-        }
-
-        return () => {
-            isMounted = false;
-        };
-    }, [currentTask]);
-
     const handleSubmitTask = async (answer: AnswerProps) => {
         if (currentTask && lessonUser) {
             setSkippedTask(false);
             try {
                 // Update the backend with the user's answer and get the result
-                const response = await partialUpdateTaskUser(
+                const response = await partialUpdateTaskUserAnswer(
                     currentTask.id,
                     answer,
                     cookies[AUTH_COOKIE_NAME],
@@ -173,7 +171,7 @@ const Lesson = () => {
                                     onSkip={handleSkipTask}
                                 />
                             )}
-                            {currentTask.type === 'WRITE' && (
+                            {currentTask.type === 'WRITE' && writingNote && (
                                 <TaskWrite
                                     task={currentTask}
                                     onSubmit={handleSubmitTask}

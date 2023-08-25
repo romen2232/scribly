@@ -12,6 +12,8 @@ export function Unit({ unit }: IUnitProps) {
     const [currentLesson, setCurrentLesson] = useState<number>();
 
     const [areLessonsVisible, setAreLessonsVisible] = useState(false);
+
+    const [firstTime, setFirstTime] = useState(false);
     return (
         <div className="py-6">
             <div onClick={() => setAreLessonsVisible(!areLessonsVisible)}>
@@ -34,8 +36,17 @@ export function Unit({ unit }: IUnitProps) {
                                 lesson.percentage === 0 &&
                                 lessons[index - 1].percentage !== 0
                             ) {
+                                if (firstTime) {
+                                    setCurrentLesson(lessons[index - 1].id);
+                                    setFirstTime(false);
+                                } else {
+                                    disabled = true;
+                                }
+                            } else if (
+                                lesson.percentage === 0 &&
+                                lessons[index - 1].percentage === 0
+                            ) {
                                 disabled = true;
-                                setCurrentLesson(lessons[index - 1].id);
                             }
                         }
                         return (

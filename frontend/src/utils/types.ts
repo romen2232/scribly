@@ -252,6 +252,5 @@ export interface TaskProps {
 
 export interface AnswerProps {
     answerText: string;
-    type: string;
     answerNote?: number;
 }

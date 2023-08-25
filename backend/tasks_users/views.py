@@ -148,6 +148,7 @@ class UpdateReponse(APIView):
                 task_user.save()
 
             task_user.response_text = reponse
+            # task_user.response_text = reponse
             task_user.is_completed = correction
             task_user.save()
 
@@ -246,5 +247,28 @@ class EvaluateText(APIView):
 
             # print(mark)
             return Response({"message": message, "mark": mark})
+        except Tasks_users.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+# The next class first call TaskUsersView.patch() to get the task_user object, then it calls the function UpdateReponse to update the response_text and is_completed fields and return the task_user object.
+
+
+class CompleteAnswerView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def patch(self, request, task_id, *args, **kwargs):
+        try:
+            user_id = request.user.id
+            task_user = Tasks_users.objects.filter(
+                user=user_id, task=task_id).last()
+
+            # Call the function UpdateReponse to update the response_text and is_completed fields
+            UpdateReponse().put(request, user_id, task_id)
+
+            # task_user.is_completed = True
+            # task_user.save()
+            serializer = TasksUserSerializer(task_user)
+
+            return Response(serializer.data, status=status.HTTP_200_OK)
         except Tasks_users.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)

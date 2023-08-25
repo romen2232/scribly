@@ -3,19 +3,11 @@ import { TaskProps } from '../utils/types';
 import { Note } from './Note';
 import { Note as NoteType } from '../utils/types';
 interface TaskWriteProps extends TaskProps {
-    initialNote?: NoteType;
+    initialNote: NoteType;
 }
 
 const TaskWrite = ({ task, onSubmit, onSkip, initialNote }: TaskWriteProps) => {
-    const mockNote: NoteType = {
-        noteName: '',
-        noteContent: '',
-        noteLastModified: '',
-        folder: 0,
-    };
-    const [currentNote, setCurrentNote] = useState<NoteType>(
-        initialNote || mockNote,
-    );
+    const [currentNote, setCurrentNote] = useState<NoteType>(initialNote);
 
     const handleNoteChange = (updatedNote: NoteType) => {
         setCurrentNote(updatedNote);
@@ -25,7 +17,6 @@ const TaskWrite = ({ task, onSubmit, onSkip, initialNote }: TaskWriteProps) => {
         // Save the note first
 
         const answer = {
-            type: task.type,
             answerText: currentNote.noteContent ?? '',
             answerNote: currentNote.id,
         };
@@ -39,10 +30,7 @@ const TaskWrite = ({ task, onSubmit, onSkip, initialNote }: TaskWriteProps) => {
             <p className="text-lg">{task.taskDescription}</p>
 
             {/* Render the Note component for writing the task */}
-            <Note
-                note={initialNote || mockNote}
-                onNoteChange={handleNoteChange}
-            />
+            <Note note={initialNote} onNoteChange={handleNoteChange} />
 
             <div className="flex justify-between">
                 <button

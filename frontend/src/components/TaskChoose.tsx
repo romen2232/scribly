@@ -18,7 +18,6 @@ const TaskChoose: React.FC<TaskProps> = ({ task, onSubmit, onSkip }) => {
         setText(text);
 
         const answer = {
-            type: task.type,
             answerText: text.join('\n\n'),
         };
         onSubmit(answer);

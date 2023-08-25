@@ -222,6 +222,32 @@ const partialUpdateTaskUser = async (
     }
 };
 
+/** Function to partial update a TaskUser relationship for the logged in user with the answer updated
+ * @param taskId Task ID
+ * @param answer Answer
+ * @param token JWT token
+ * @returns TaskUser
+ * @throws Error if partially updating the TaskUser relationship fails
+ *  */
+const partialUpdateTaskUserAnswer = async (
+    taskId: number,
+    answer: Partial<TaskUser>,
+    token: string,
+): Promise<TaskUser> => {
+    try {
+        const response = await apiClient.patch<TaskUser>(
+            `/api/v1/task/answer/${taskId}/user/`,
+            answer,
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            },
+        );
+        return response.data;
+    } catch (error) {
+        throw new Error(`Error partially updating task user: ${error}`);
+    }
+};
+
 /** Deletes a TaskUser relationship for the logged in user
  * @param taskId Task ID
  * @param token JWT token
@@ -251,6 +277,7 @@ export {
     createTask,
     updateTask,
     partialUpdateTask,
+    partialUpdateTaskUserAnswer,
     deleteTask,
     retrieveTaskUser,
     createTaskUser,
