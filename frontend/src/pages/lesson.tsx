@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Loader from './loader';
 import LessonTheory from '../components/LessonTheory';
-import { AnswerProps, Note, Task, TaskUser } from '../utils/types';
 import TaskChoose from '../components/TaskChoose';
 import TaskComplete from '../components/TaskComplete';
 import TaskWrite from '../components/TaskWrite';
@@ -16,36 +15,68 @@ import {
     useDisclosure,
 } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
-import { partialUpdateTaskUserAnswer } from '../services/tasks';
 import { parseCookies } from 'nookies';
 import { AUTH_COOKIE_NAME } from '../utils/consts';
 import { createNote } from '../services/notes';
+import { useLessonStore } from '../stores/lessonStore';
 
 //TODO: Is completed and the update of the task user
 
 //TODO: Somehow figure out how to check if the task user is completed
 
 const Lesson = () => {
+    const {
+        isTheoryEnd,
+        setIsTheoryEnd,
+        currentIndex,
+        setCurrentIndex,
+        currentTask,
+        setCurrentTask,
+        writingNote,
+        setWritingNote,
+        skippedTask,
+        setSkippedTask,
+        currentTaskUser,
+        tasks,
+        setTasks,
+        isModalOpen,
+        setIsModalOpen,
+        handleSkipTask,
+        handleSubmitTask,
+    } = useLessonStore();
+
     const { lessonId } = useParams();
 
     const { lessonUser, loading } = useLessonUser(lessonId ?? '');
 
-    const tasks = lessonUser?.taskUser.map((taskUser) => taskUser.task);
-
     const { t } = useTranslation();
 
-    const [isTheoryEnd, setIsTheoryEnd] = useState<boolean>(false);
-    const [currentIndex, setCurrentIndex] = useState<number>(0);
-    const [currentTask, setCurrentTask] = useState<Task | null>(
-        tasks ? tasks[0] : null,
-    );
-    const [writingNote, setWritingNote] = useState<Note>();
-    const [skippedTask, setSkippedTask] = useState<boolean>(false);
-    const [currentTaskUser, setCurrentTaskUser] = useState<TaskUser | null>();
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const cookies = parseCookies();
     const navigate = useNavigate();
 
+    // useEffect for opening the modal
+    useEffect(() => {
+        if (isModalOpen) {
+            onOpen();
+        }
+    }, [isModalOpen]);
+
+    useEffect(() => {
+        if (!isOpen) {
+            setIsModalOpen(false);
+        }
+    }, [isOpen]);
+
+    // useEffect for updating the tasks array
+    useEffect(() => {
+        if (lessonUser) {
+            const tasks = lessonUser.taskUser.map((taskUser) => taskUser.task);
+            setTasks(tasks);
+        }
+    }, [lessonUser]);
+
+    // useEffect for updating the currentTask
     useEffect(() => {
         if (tasks) {
             setCurrentTask(tasks[0]);
@@ -86,28 +117,6 @@ const Lesson = () => {
         setIsTheoryEnd(!isTheoryEnd);
     };
 
-    // When the user skips a task, the next one is shown and the task user is updated with the skipped task
-    const handleSkipTask = async () => {
-        if (currentTask && lessonUser) {
-            try {
-                // Update the backend to reflect that the task was skipped
-                await partialUpdateTaskUserAnswer(
-                    currentTask.id,
-                    {
-                        answerText: 'skipped',
-                    },
-                    cookies[AUTH_COOKIE_NAME],
-                );
-
-                // Update the UI
-                setSkippedTask(true);
-                onOpen();
-            } catch (error) {
-                console.error('Error skipping the task:', error);
-            }
-        }
-    };
-
     const goToNextTask = async () => {
         if (!tasks) return;
         const nextIndex = currentIndex + 1;
@@ -117,28 +126,6 @@ const Lesson = () => {
         } else {
             // TODO: Make page for when the lesson is completed
             navigate(t('/'));
-        }
-    };
-
-    const handleSubmitTask = async (answer: AnswerProps) => {
-        if (currentTask && lessonUser) {
-            setSkippedTask(false);
-            try {
-                // Update the backend with the user's answer and get the result
-                const response = await partialUpdateTaskUserAnswer(
-                    currentTask.id,
-                    answer,
-                    cookies[AUTH_COOKIE_NAME],
-                );
-
-                // Update `currentTaskUser` state with the response data
-                setCurrentTaskUser(response);
-
-                // Open the feedback modal
-                onOpen();
-            } catch (error) {
-                console.error('Error submitting the task:', error);
-            }
         }
     };
 

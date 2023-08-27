@@ -44,7 +44,11 @@ const TaskComplete = ({ task, onSubmit, onSkip }: TaskProps) => {
         const answer = {
             answerText: sentenceParts.join(''),
         };
-        onSubmit(answer);
+        onSubmit(answer, task);
+    };
+
+    const handleSkip = () => {
+        onSkip(task);
     };
 
     return (
@@ -105,7 +109,7 @@ const TaskComplete = ({ task, onSubmit, onSkip }: TaskProps) => {
                 </button>
                 <button
                     className="w-1/2 rounded-xl border-2 bg-gray-500 p-4"
-                    onClick={onSkip}
+                    onClick={handleSkip}
                 >
                     Skip
                 </button>

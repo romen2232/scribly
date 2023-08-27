@@ -246,8 +246,8 @@ export interface Task {
 
 export interface TaskProps {
     task: Task;
-    onSubmit: (answer: AnswerProps) => void;
-    onSkip: () => void;
+    onSubmit: (answer: AnswerProps, task: Task) => void;
+    onSkip: (task: Task) => void;
 }
 
 export interface AnswerProps {
