@@ -9,7 +9,6 @@ type LessonTheoryProps = {
 const LessonTheory: React.FC<LessonTheoryProps> = ({ theory, onEnd }) => {
     // Split the theory into sections
     const sections = theory.split('\n\n');
-    console.log(sections);
     const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
     const [accumulatedDeltaY, setAccumulatedDeltaY] = useState(0); // Used for scrolling
     const navigate = useNavigate();

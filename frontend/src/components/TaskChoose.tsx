@@ -3,26 +3,24 @@ import { TaskProps } from '../utils/types';
 import { shuffleArray } from '../utils/functions';
 
 const TaskChoose: React.FC<TaskProps> = ({ task, onSubmit, onSkip }) => {
-    const [text, setText] = useState<string[]>(task.text.split('\n\n'));
+    const [text] = useState<string[]>(shuffleArray(task.text.split('\n\n')));
     const [chosenAnswer, setChosenAnswer] = useState<number>(-1);
+
     useEffect(() => {
-        setText((prevText) => shuffleArray(prevText));
-    }, []);
+        setChosenAnswer(-1);
+    }, [task]);
+
     const handleAnswer = (index: number) => {
         //Put the chosen answer in the first position, and the others in the rest
         if (index === -1) return;
-        setText((prevText) => {
-            const newText = [...prevText];
-            const answerText = newText[index];
-            newText.splice(index, 1);
-            newText.unshift(answerText);
-            return newText;
-        });
+        const newText = [...text];
+        const answerText = newText[index];
+        newText.splice(index, 1);
+        newText.unshift(answerText);
 
         const answer = {
-            answerText: text.join('\n\n'),
+            answerText: newText.join('\n\n'),
         };
-        console.log(answer.answerText.split('\n\n')[0]);
         onSubmit(answer, task);
     };
 
