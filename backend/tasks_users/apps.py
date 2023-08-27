@@ -44,6 +44,7 @@ def evaluation(input, statement, difficulty=1):
     }
     response = requests.post(URL, headers=headers, json=payload)
     response = response.json()
+    print(response)
     message = response['choices'][0]['message']['content']
 
     # Extraer la puntuación final del mensaje

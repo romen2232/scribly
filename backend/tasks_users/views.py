@@ -263,22 +263,45 @@ class CompleteAnswerView(APIView):
         try:
             task_user = Tasks_users.objects.filter(
                 task=task_id, user=request.user).order_by('task_date').first()
-            user_id = request.user.id
             if not task_user:
                 raise Tasks_users.DoesNotExist
+            
+            answer_text = request.data.get('answer_text', None)
+            if answer_text:
+                task_user.answer_text = answer_text
+                task_user.save()
 
-            serializer = TasksUserSerializer(
-                task_user, data=request.data, partial=True, context={'request': request})
-
+            serializer = TasksUserSerializer(task_user, data=request.data, partial=True, context={'request': request})
             if serializer.is_valid():
                 serializer.save()
-            # Call the function UpdateReponse to update the response_text and is_completed fields
-            UpdateReponse().put(request, user_id, task_id)
 
+            update_response(task_user, request.data)
             task_user.is_completed = True
-
+            task_user.save()
+            
             serializer = TasksUserSerializer(task_user)
-
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Tasks_users.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+def update_response(task_user, request_data):
+    """
+    Updates the response_text and is_completed fields for a given task_user.
+    This method contains logic extracted from the UpdateReponse view.
+    """
+
+    note = task_user.answer_note
+    correct_text = task_user.task.text
+    text_user = task_user.answer_text
+    task_type = task_user.task.type
+    statement = task_user.task.task_description
+
+    correction, response = Correction(note, text_user, correct_text, task_type, statement)
+    
+    if correction and task_type != "WRITTE":
+        task_user.earned_points = task_user.task.task_points
+
+    task_user.response_text = response
+    task_user.answer_boolean = correction
+    task_user.save()

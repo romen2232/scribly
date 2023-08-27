@@ -31,28 +31,9 @@ type LessonStore = {
 
 /**
  * Zustand store for the lesson page.
- * @returns {LessonStore} The lesson store.
  * LessonStore is a Zustand store that contains the state and actions for the lesson page.
  * The state contains the following:
- * - isTheoryEnd: boolean - Whether the theory part of the lesson is over.
- * - currentIndex: number - The index of the current task.
- * - currentTask: Task | null - The current task.
- * - writingNote: Note | null - The note that the user is currently writing.
- * - skippedTask: boolean - Whether the user has skipped the current task.
- * - currentTaskUser: TaskUser | null - The current task user.
- * - tasks: Task[] | null - The tasks of the lesson.
- * - isModalOpen: boolean - Whether the modal is open.
- * The actions are the following:
- * - setIsTheoryEnd: (value: boolean) => void - Sets the isTheoryEnd state.
- * - setCurrentIndex: (value: number) => void - Sets the currentIndex state.
- * - setCurrentTask: (task: Task | null) => void - Sets the currentTask state.
- * - setWritingNote: (note: Note | null) => void - Sets the writingNote state.
- * - setSkippedTask: (value: boolean) => void - Sets the skippedTask state.
- * - setCurrentTaskUser: (taskUser: TaskUser | null) => void - Sets the currentTaskUser state.
- * - setTasks: (tasks: Task[] | null) => void - Sets the tasks state.
- * - setIsModalOpen: (value: boolean) => void - Sets the isModalOpen state.
- * - handleSkipTask: (currentTask: Task) => Promise<void> - Handles skipping the current task.
- * - handleSubmitTask: (answer: AnswerProps, currentTask: Task) => Promise<void> - Handles submitting the current task.
+ * @returns {LessonStore} The state and actions for the lesson page.
  */
 export const useLessonStore = create<LessonStore>((set) => ({
     // State
@@ -78,11 +59,12 @@ export const useLessonStore = create<LessonStore>((set) => ({
     // Actions
     handleSkipTask: async (currentTask) => {
         try {
-            await partialUpdateTaskUserAnswer(
+            const response = await partialUpdateTaskUserAnswer(
                 currentTask.id,
                 { answerText: 'skipped' },
                 cookies[AUTH_COOKIE_NAME],
             );
+            set({ currentTaskUser: response });
             set({ skippedTask: true });
             set({ isModalOpen: true });
         } catch (error) {

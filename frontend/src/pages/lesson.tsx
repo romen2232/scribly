@@ -36,32 +36,30 @@ const Lesson = () => {
         setWritingNote,
         skippedTask,
         setSkippedTask,
-        currentTaskUser,
         tasks,
         setTasks,
+        currentTaskUser,
         isModalOpen,
         setIsModalOpen,
         handleSkipTask,
         handleSubmitTask,
     } = useLessonStore();
-
     const { lessonId } = useParams();
-
-    const { lessonUser, loading } = useLessonUser(lessonId ?? '');
-
+    const { lessonUser, loading } = useLessonUser(lessonId || '');
     const { t } = useTranslation();
-
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const cookies = parseCookies();
     const navigate = useNavigate();
 
     // useEffect for opening the modal
     useEffect(() => {
+        console.log(currentTaskUser);
         if (isModalOpen) {
             onOpen();
         }
     }, [isModalOpen]);
 
+    // useEffect for closing the modal in the store
     useEffect(() => {
         if (!isOpen) {
             setIsModalOpen(false);
@@ -71,22 +69,16 @@ const Lesson = () => {
     // useEffect for updating the tasks array
     useEffect(() => {
         if (lessonUser) {
-            const tasks = lessonUser.taskUser.map((taskUser) => taskUser.task);
-            setTasks(tasks);
+            setTasks(lessonUser.taskUser.map((tu) => tu.task));
         }
     }, [lessonUser]);
 
-    // useEffect for updating the currentTask
+    // useEffect for updating the current task
     useEffect(() => {
         if (tasks) {
-            setCurrentTask(tasks[0]);
+            setCurrentTask(tasks[currentIndex]);
         }
-    }, [tasks]);
-    // useEffect for updating currentTask
-    useEffect(() => {
-        if (!tasks) return;
-        setCurrentTask(tasks[currentIndex]);
-    }, [currentIndex, tasks]);
+    }, [tasks, currentIndex]);
 
     // useEffect for creating a note
     //The isMounted variable is used to prevent a memory leak
@@ -113,9 +105,7 @@ const Lesson = () => {
     }, [currentTask]);
 
     // When the theory ends, the first task is shown
-    const handleTheoryEnd = () => {
-        setIsTheoryEnd(!isTheoryEnd);
-    };
+    const handleTheoryEnd = () => setIsTheoryEnd(!isTheoryEnd);
 
     const goToNextTask = async () => {
         if (!tasks) return;
@@ -133,6 +123,29 @@ const Lesson = () => {
         return <Loader />;
     }
 
+    const renderTask = () => {
+        if (!currentTask) return null;
+        const taskProps = {
+            task: currentTask,
+            onSubmit: handleSubmitTask,
+            onSkip: handleSkipTask,
+        };
+        switch (currentTask.type) {
+            case 'CHOOSE':
+                return <TaskChoose {...taskProps} />;
+            case 'COMPLETE':
+                return <TaskComplete {...taskProps} />;
+            case 'WRITE':
+                return (
+                    writingNote && (
+                        <TaskWrite {...taskProps} initialNote={writingNote} />
+                    )
+                );
+            default:
+                return null;
+        }
+    };
+
     return (
         <div>
             {!isTheoryEnd ? (
@@ -141,40 +154,8 @@ const Lesson = () => {
                     onEnd={handleTheoryEnd}
                 />
             ) : (
-                <div className="tasks">
-                    {currentTask && (
-                        <>
-                            {currentTask.type === 'CHOOSE' && (
-                                <TaskChoose
-                                    task={currentTask}
-                                    onSubmit={handleSubmitTask}
-                                    onSkip={handleSkipTask}
-                                />
-                            )}
-                            {currentTask.type === 'COMPLETE' && (
-                                <TaskComplete
-                                    task={currentTask}
-                                    onSubmit={handleSubmitTask}
-                                    onSkip={handleSkipTask}
-                                />
-                            )}
-                            {currentTask.type === 'WRITE' && writingNote && (
-                                <TaskWrite
-                                    task={currentTask}
-                                    onSubmit={handleSubmitTask}
-                                    onSkip={handleSkipTask}
-                                    initialNote={writingNote}
-                                />
-                            )}
-                            {/* {currentTask.type === 'REORDER' && (
-                                <TaskReorder
-                                    task={currentTask}
-                                    onSubmit={handleSubmitTask}
-                                    onSkip={handleSkipTask}
-                                />
-                            )}*/}
-                        </>
-                    )}
+                <div className="tasks" key={currentTask?.id}>
+                    {renderTask()}
                 </div>
             )}
             <Modal
