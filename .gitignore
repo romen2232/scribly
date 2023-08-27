@@ -6,6 +6,7 @@ backend/venv
 *.pyc
 *.pyo
 *.pyd
+backend/users/models/__pycache__/
 __pycache__/
 backend/badges/migrations/
 backend/badges_users/migrations/

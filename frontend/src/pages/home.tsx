@@ -20,7 +20,7 @@ const Home: React.FunctionComponent<IHomeProps> = () => {
     return (
         <div className="flex h-full w-full flex-col items-center justify-between">
             <Header
-                onHeaderModalClick={() => handleLargeModalClick('streak')}
+            // onHeaderModalClick={() => handleLargeModalClick('streak')}
             />
             <div className="h-full pb-16">
                 <Learn />
