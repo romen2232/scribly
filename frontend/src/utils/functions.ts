@@ -104,7 +104,8 @@ export function keysToCamel(obj: any): any {
  * @param array Array to be shuffled
  * @returns shuffled array
  */
-export function shuffleArray<T>(array: T[]): T[] {
+export function shuffleArray<T>(originalArray: T[]): T[] {
+    const array = [...originalArray];
     let currentIndex = array.length;
     let randomIndex: number;
     let tempValue: T;

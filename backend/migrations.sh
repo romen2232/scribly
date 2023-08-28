@@ -8,6 +8,7 @@ for app in "${apps[@]}"; do
     rm -r "$app/migrations/"
     mkdir "$app/migrations/"
     touch "$app/migrations/__init__.py"
+    #Change the ownership of the migrations folder if you are in other environment
     sudo chown -R romenmb:romenmb "$app/migrations/"
 done
 

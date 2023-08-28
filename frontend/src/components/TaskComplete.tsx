@@ -29,9 +29,12 @@ const TaskComplete = ({ task, onSubmit, onSkip }: TaskProps) => {
         setSentenceParts(processedParts);
     }, [task.text]);
 
-    const handleOptionChoice = (option: string) => {
+    const handleOptionChoice = (
+        option: string,
+        updatedParts: (string | null)[],
+    ) => {
         setSelectedOption(option);
-        const newSentenceParts = sentenceParts.map((part) => {
+        const newSentenceParts = updatedParts.map((part) => {
             if (typeof part !== 'string') {
                 return option;
             }
@@ -40,11 +43,28 @@ const TaskComplete = ({ task, onSubmit, onSkip }: TaskProps) => {
         setSentenceParts(newSentenceParts);
     };
 
+    //Reconstruct the sentence in the same format and submit it
     const handleAnswer = () => {
+        const sentence = sentenceParts
+            .map((part) => {
+                if (part === selectedOption) {
+                    return `[${part}]`;
+                } else return part;
+            })
+            .join('');
+
+        const answerText = `${sentence}\n\n${options
+            .map((option) => `[${option}]`)
+            .join('')}`;
         const answer = {
-            answerText: sentenceParts.join(''),
+            answerText,
         };
-        onSubmit(answer);
+
+        onSubmit(answer, task);
+    };
+
+    const handleSkip = () => {
+        onSkip(task);
     };
 
     return (
@@ -75,17 +95,24 @@ const TaskComplete = ({ task, onSubmit, onSkip }: TaskProps) => {
                                 selectedOption === option ? 'opacity-50' : ''
                             }`}
                             onClick={() => {
-                                selectedOption === option
-                                    ? (setSelectedOption(null),
-                                      setSentenceParts(
-                                          sentenceParts.map((part) => {
-                                              if (part === option) {
-                                                  return null;
-                                              }
-                                              return part;
-                                          }),
-                                      ))
-                                    : handleOptionChoice(option);
+                                // If the clicked option is the currently selected option
+                                if (selectedOption === option) {
+                                    setSelectedOption(null);
+                                    setSentenceParts((parts) =>
+                                        parts.map((part) =>
+                                            part === option ? null : part,
+                                        ),
+                                    );
+                                } // If the clicked option is different from the currently selected option
+                                else {
+                                    const updatedParts = sentenceParts.map(
+                                        (part) =>
+                                            part === selectedOption
+                                                ? null
+                                                : part,
+                                    );
+                                    handleOptionChoice(option, updatedParts);
+                                }
                             }}
                         >
                             {option}
@@ -105,7 +132,7 @@ const TaskComplete = ({ task, onSubmit, onSkip }: TaskProps) => {
                 </button>
                 <button
                     className="w-1/2 rounded-xl border-2 bg-gray-500 p-4"
-                    onClick={onSkip}
+                    onClick={handleSkip}
                 >
                     Skip
                 </button>

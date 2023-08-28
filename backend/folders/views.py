@@ -98,8 +98,7 @@ class RootFolder(generics.ListAPIView):
         else:
             #print(root)
             return root
-        
-    
+
     def get_serializer_class(self):
         return FoldersRecursiveSerializer
 
