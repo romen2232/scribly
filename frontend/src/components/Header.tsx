@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IoIosArrowRoundBack } from 'react-icons/io';
+import { BackIcon } from '../assets/icons/Icons';
 import { useNavigate } from 'react-router';
 
 export interface IHeaderProps {
@@ -13,9 +13,9 @@ export function Header(props: IHeaderProps) {
             <nav>
                 <button
                     onClick={() => navigate(-1)}
-                    className="transition duration-150 ease-in-out hover:text-tiviElectricPurple-100"
+                    className="duration-150 ease-in-out transition hover:text-tiviElectricPurple-100"
                 >
-                    <IoIosArrowRoundBack className="h-16 w-16 " />
+                    <BackIcon className="h-16 w-16 " />
                 </button>
             </nav>
 

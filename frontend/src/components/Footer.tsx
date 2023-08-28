@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
-import { FaFeatherAlt, FaFolder } from 'react-icons/fa';
-import { IoIosAddCircle } from 'react-icons/io';
+import { CategoryIcon, AddIcon, FolderIcon } from '../assets/icons/Icons';
 import { useTranslation } from 'react-i18next';
 
 export interface IFooterProps {
@@ -17,13 +16,13 @@ export function Footer(props: IFooterProps) {
                 <nav className="footerMask relative z-10 flex h-full flex-row items-center justify-around">
                     {/* TODO: When the style change, change the footer */}
                     <button onClick={props.onFooterModalClick}>
-                        <FaFeatherAlt className="h-12 w-12 duration-300 ease-in-out transition hover:text-tiviElectricViolet" />
+                        <CategoryIcon className="h-12 w-12 duration-300 ease-in-out transition hover:text-tiviElectricViolet" />
                     </button>
                     <Link to={t('/new')}>
-                        <IoIosAddCircle className="h-12 w-12 duration-300 ease-in-out transition hover:text-tiviElectricViolet" />
+                        <AddIcon className="h-12 w-12 duration-300 ease-in-out transition hover:text-tiviElectricViolet" />
                     </Link>
                     <Link to={t('/folders')}>
-                        <FaFolder className="h-12 w-12 duration-300 ease-in-out transition hover:text-tiviElectricViolet" />
+                        <FolderIcon className="h-12 w-12 duration-300 ease-in-out transition hover:text-tiviElectricViolet" />
                     </Link>
                 </nav>
             </div>

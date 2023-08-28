@@ -2,7 +2,7 @@ export interface ISearchBarProps {}
 
 export function SearchBar() {
     return (
-        <div className="mx-auto my-5 px-8">
+        <div className="my-5 w-full ">
             <div className="relative flex h-12 w-full items-center overflow-hidden rounded-lg bg-white focus-within:shadow-lg">
                 <div className="grid h-full w-12 place-items-center text-gray-300">
                     <svg

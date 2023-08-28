@@ -1,6 +1,6 @@
 import { useAutosave } from '../hooks/useAutosave';
 import { useEffect, useState } from 'react';
-import { FaFolder } from 'react-icons/fa';
+import { FolderIcon } from '../assets/icons/Icons';
 import { Link } from 'react-router-dom';
 import { Folder, Note as NoteType } from '../utils/types';
 import { t } from 'i18next';
@@ -107,7 +107,7 @@ export function Note({ note, folder, onNoteChange }: INoteProps) {
                         {/* TODO: Do this inside a modal */}
                         <Link to={t(`/folders`)}>
                             <div className="flex items-center">
-                                <FaFolder className="h-10 w-10" />
+                                <FolderIcon className="h-10 w-10" />
                                 {(folder?.depth ?? 0) > 0 && (
                                     <div className="px-3 text-lg">
                                         <h4 className="font-bold">
