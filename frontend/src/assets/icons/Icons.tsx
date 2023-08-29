@@ -2,6 +2,7 @@ import {
     FaFeatherAlt,
     FaFolder,
     FaFolderOpen,
+    FaFolderPlus,
     FaUsers,
     FaUser,
 } from 'react-icons/fa';
@@ -15,12 +16,18 @@ import {
     AiFillFlag,
     AiFillSetting,
 } from 'react-icons/ai';
-import { BsFileEarmarkText } from 'react-icons/bs';
+import { BsFileEarmarkText, BsFillFileEarmarkPlusFill } from 'react-icons/bs';
 import { IconBaseProps } from 'react-icons/lib';
 import { JSX } from 'react/jsx-runtime';
 
 export const FolderIcon = (props: JSX.IntrinsicAttributes & IconBaseProps) => {
     return <FaFolder {...props} />;
+};
+
+export const AddFolderIcon = (
+    props: JSX.IntrinsicAttributes & IconBaseProps,
+) => {
+    return <FaFolderPlus {...props} />;
 };
 
 export const FolderOpenIcon = (
@@ -31,6 +38,10 @@ export const FolderOpenIcon = (
 
 export const FileIcon = (props: JSX.IntrinsicAttributes & IconBaseProps) => {
     return <BsFileEarmarkText {...props} />;
+};
+
+export const AddFileIcon = (props: JSX.IntrinsicAttributes & IconBaseProps) => {
+    return <BsFillFileEarmarkPlusFill {...props} />;
 };
 
 export const StarIcon = (props: JSX.IntrinsicAttributes & IconBaseProps) => {

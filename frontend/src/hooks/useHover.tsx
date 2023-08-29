@@ -18,7 +18,7 @@ const useHover = () => {
                 node.removeEventListener('mouseout', handleMouseOut);
             };
         }
-    }, []); // Empty array ensures effect is only run on mount and unmount
+    }, [ref, handleMouseOver, handleMouseOut]);
 
     return { ref, isHovered };
 };

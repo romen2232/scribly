@@ -43,13 +43,13 @@ export default function App() {
                 draggable
                 pauseOnHover
                 theme="light"
-                />
+            />
             <AuthProvider>
                 <Suspense fallback={<Loader />}>
                     <Routes>
                         <Route path={t('/')} element={<ProtectedHome />} />
                         <Route path={t('/about')} element={<h1>About</h1>} />
-                        <Route path={t('/new')} element={<ProtectedNew />} />
+                        <Route path={t('/note')} element={<ProtectedNew />} />
                         <Route
                             path={t('/folders')}
                             element={<ProtectedFolders />}
@@ -59,22 +59,22 @@ export default function App() {
                         <Route
                             path={t('/activate') + '/:token'}
                             element={<Activate />}
-                            />
+                        />
                         <Route path={t('/activate')} element={<Activate />} />
 
                         <Route
                             path={t('/profile') + '/:username'}
                             element={<ProtectedProfile />}
-                            />
+                        />
 
-<Route
+                        <Route
                             path={t('/profile')}
                             element={<ProtectedProfile />}
-                            />
-                                                    <Route
+                        />
+                        <Route
                             path={t('/lesson') + '/:lessonId'}
                             element={<ProtectedLesson />}
-                            />
+                        />
                         <Route path="*" element={<h1>Not Found</h1>} />
                     </Routes>
                 </Suspense>

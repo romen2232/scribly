@@ -28,7 +28,8 @@ export function isValidUsername(username: string): boolean {
  * @param date String in the format YYYY-MM-DD or Date object
  * @returns String in the format DD/MM/YYYY
  */
-export function formatDate(date: string | Date): string {
+export function formatDate(date?: string | Date): string {
+    date = date || new Date();
     let dateObj: Date;
     if (typeof date === 'string') {
         dateObj = new Date(date);

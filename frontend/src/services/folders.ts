@@ -1,5 +1,4 @@
 import { apiClient } from './api';
-import { components } from '../utils/openapi';
 import { Folder } from '../utils/types';
 
 /** Fetches all folders from the API
@@ -137,15 +136,16 @@ const destroyFolder = async (id: number, token: string): Promise<void> => {
  * @param token JWT token
  * @returns Root folder
  * @throws Error if fetching root folder fails
- * TODO: Change in the back the way is sent the root folder, instead of sending an array of 1 element, send the object
  * */
 const rootFolder = async (token: string): Promise<Folder> => {
     try {
-        const response = await apiClient.get<Folder>('/api/v1/user/folder/root', {
-            headers: { Authorization: `Bearer ${token}` },
-        });
-        console.log(response)
-        return response.data[0];
+        const response = await apiClient.get<Folder>(
+            '/api/v1/user/folder/root',
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            },
+        );
+        return response.data;
     } catch (error) {
         throw new Error(`Error retrieving root folder: ${error}`);
     }

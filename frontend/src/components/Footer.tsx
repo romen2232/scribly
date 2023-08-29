@@ -18,7 +18,7 @@ export function Footer(props: IFooterProps) {
                     <button onClick={props.onFooterModalClick}>
                         <CategoryIcon className="h-12 w-12 duration-300 ease-in-out transition hover:text-tiviElectricViolet" />
                     </button>
-                    <Link to={t('/new')}>
+                    <Link to={t('/note')}>
                         <AddIcon className="h-12 w-12 duration-300 ease-in-out transition hover:text-tiviElectricViolet" />
                     </Link>
                     <Link to={t('/folders')}>

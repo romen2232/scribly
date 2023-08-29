@@ -12,7 +12,7 @@ class ParentFolderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Folders
         fields = ['id', 'folder_name', 'folder_description', 'folder_image', 
-                  'folder_created', 'favorite', 'folder_parent', 'depth', 'user']
+                  'folder_created', 'favorite', 'folder_parent', 'depth', 'user', ]
 
 
 class FoldersSerializer(serializers.ModelSerializer):
@@ -66,7 +66,7 @@ class NotesFolderSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Notes
-        fields = ['id', 'note_name']
+        fields = ['id', 'note_name', 'folder', 'favorite']
 
 class FoldersRecursiveSerializer(serializers.ModelSerializer):
     
@@ -76,7 +76,7 @@ class FoldersRecursiveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Folders
         fields = ['id', 'folder_name', 'folder_description', 'folder_image',
-                  'folder_created', 'favorite', 'depth', 'subfolders', 'notes'  ]
+                  'folder_created', 'favorite', 'depth', 'subfolders', 'notes', 'folder_parent'  ]
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)

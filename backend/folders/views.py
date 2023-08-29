@@ -29,6 +29,16 @@ class FoldersRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Folders.objects.all()
     serializer_class = FoldersSerializer
     permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request, *args, **kwargs):
+        try:
+            folder = self.queryset.get(pk=kwargs['pk'])
+            if folder.user != request.user:
+                return Response({'detail': 'Not authorized.'}, status=status.HTTP_403_FORBIDDEN)
+            serializer = self.get_serializer(folder)
+            return Response(serializer.data)
+        except Folders.DoesNotExist:
+            return Response({'detail': 'Folder not found.'}, status=status.HTTP_404_NOT_FOUND)
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
@@ -80,25 +90,16 @@ class FolderListByDepth(generics.ListAPIView): # Using RetrieveAPIView since we'
         return FoldersSerializer
     
     
-class RootFolder(generics.ListAPIView):
-    #queryset = Folders.objects.all()
-    #serializer_class = FoldersRecursiveSerializer
+class RootFolder(generics.RetrieveAPIView):
     permission_classes = [permissions.IsAuthenticated]
+    serializer_class = FoldersRecursiveSerializer
 
-    def get_queryset(self):
-        
-        root = Folders.objects.filter(user=self.request.user, depth=0)
-        #count the object in the queryset
-        number = root.count()
-        
-        if number == 0:
-            return Response("Root folder not found")
-        elif number > 1:
-            return Response("More than one root folder found")
-        else:
-            #print(root)
-            return root
+    def get_object(self):
+        try:
+            return Folders.objects.get(user=self.request.user, depth=0)
+        except Folders.DoesNotExist:
+            raise generics.PermissionDenied("Root folder not found")
+        except Folders.MultipleObjectsReturned:
+            raise generics.PermissionDenied("More than one root folder found")
 
-    def get_serializer_class(self):
-        return FoldersRecursiveSerializer
 

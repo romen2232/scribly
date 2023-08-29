@@ -1,5 +1,5 @@
 // Import the necessary React hooks
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 // Import the useDebounce hook
 import useDebounce from './useDebounce';
 
@@ -24,22 +24,25 @@ export function useAutosave<TData, TReturn>({
     // Reference to keep track of the last data
     const valueOnCleanup = useRef(data);
 
-    // Reference to determine if it's the initial render
-    const initialRender = useRef(true);
-
     // Reference to the saving function
     const handleSave = useRef(onSave);
+
+    // State to track if the hook has been initialized
+    const [isInitialized, setInitialized] = useState(false);
 
     // Debounce the data to avoid unnecessary saves
     const debouncedValueToSave = useDebounce(data, interval);
 
     // UseEffect to handle the saving of debounced data
     useEffect(() => {
-        if (initialRender.current) {
-            initialRender.current = false;
-        } else {
-            handleSave.current(debouncedValueToSave);
+        if (typeof debouncedValueToSave === 'undefined') return;
+
+        if (!isInitialized) {
+            setInitialized(true);
+            return;
         }
+
+        handleSave.current(debouncedValueToSave);
     }, [debouncedValueToSave]);
 
     // UseEffect to keep the valueOnCleanup up to date
