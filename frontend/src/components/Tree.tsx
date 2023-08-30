@@ -4,8 +4,9 @@ import { TreeItem } from './TreeItem';
 export interface ITreeProps {
     rootFolder?: Folder;
     openModal?: (parentFolderId: number) => void;
+    updateRoot?: () => void;
 }
-export function Tree({ rootFolder, openModal }: ITreeProps) {
+export function Tree({ rootFolder, openModal, updateRoot }: ITreeProps) {
     return (
         <div className="ml- flex w-full flex-col px-12 text-xl">
             {rootFolder?.subfolders?.map((folder: Folder) => {
@@ -19,6 +20,7 @@ export function Tree({ rootFolder, openModal }: ITreeProps) {
                         description={folder.folderDescription}
                         favorite={folder.favorite}
                         openModal={openModal}
+                        updateRoot={updateRoot}
                     />
                 );
             })}
@@ -31,6 +33,7 @@ export function Tree({ rootFolder, openModal }: ITreeProps) {
                         data={note}
                         name={note.noteName}
                         favorite={note.favorite}
+                        updateRoot={updateRoot}
                     />
                 );
             })}

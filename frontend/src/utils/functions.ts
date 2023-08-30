@@ -139,7 +139,6 @@ export function searchFolders(
     query: string,
     favorites: boolean,
 ): Folder | null {
-    console.log(folder, query, favorites);
     // If query is empty and favorites is true, we're just looking for favorites.
     const lookingForFavsOnly = query === '' && favorites;
 

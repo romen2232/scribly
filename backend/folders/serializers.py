@@ -18,8 +18,6 @@ class ParentFolderSerializer(serializers.ModelSerializer):
 class FoldersSerializer(serializers.ModelSerializer):
     folder_parent = ParentFolderSerializer(read_only=True)
     user = UserSerializer(read_only=True)
-    user = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.all(), write_only=True)
 
     folder_parent = serializers.PrimaryKeyRelatedField(
         queryset=Folders.objects.all(), write_only=True, required=False)
@@ -55,6 +53,7 @@ class FoldersSerializer(serializers.ModelSerializer):
             validated_data['depth'] = depth
             
         user = self.context['request'].user
+        validated_data['user'] = user
         
         
         folder = Folders.objects.create(**validated_data)
