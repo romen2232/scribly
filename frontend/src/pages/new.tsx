@@ -68,7 +68,7 @@ const New: React.FunctionComponent<INewProps> = () => {
             }
             const note = await createNote(
                 {
-                    folder: folder.id,
+                    folder: folderId,
                 },
                 cookies[AUTH_COOKIE_NAME],
             );

@@ -9,6 +9,7 @@ import { useNoteStore } from '../stores/noteStore';
 import { destroyNote } from '../services/notes';
 import { parseCookies } from 'nookies';
 import { AUTH_COOKIE_NAME } from '../utils/consts';
+import useKeyboardShortcuts from '../hooks/useKeyboardShortcuts';
 
 export interface INoteProps {
     note: NoteType;
@@ -17,48 +18,42 @@ export interface INoteProps {
 }
 
 export function Note({ note, folder, onNoteChange }: INoteProps) {
-    const { currentNote, saveNote, localSaveNote, undo, redo } = useNoteStore();
+    const { currentNote, saveNote, undo, redo } = useNoteStore();
     const [newNote, setNewNote] = useState({} as NoteType);
     const cookies = parseCookies();
 
-    useEffect(() => {
-        localSaveNote(note);
-    }, [note, localSaveNote]);
-
-    useEffect(() => {
-        const handleKeyDown = async (e: KeyboardEvent) => {
-            if (e.ctrlKey) {
-                if (e.key === 's') {
-                    e.preventDefault();
-                    await saveNote(newNote);
-                    if (onNoteChange) {
-                        onNoteChange(newNote);
-                    }
-                } else if (e.key === 'z') {
-                    e.preventDefault();
-                    undo();
-                    setNewNote(currentNote); // to reflect the undone changes
-                } else if ((e.key === 'z' && e.shiftKey) || e.key === 'y') {
-                    e.preventDefault();
-                    redo();
-                    setNewNote(currentNote); // to reflect the redone changes
-                }
-            }
-        };
-        window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [newNote, saveNote, undo, redo, currentNote]);
-
-    useEffect(() => {
-        window.addEventListener('beforeunload', handleBeforeUnload);
-        return () =>
-            window.removeEventListener('beforeunload', handleBeforeUnload);
-    }, []);
-
+    // Update note as soon as it's passed as prop
     useEffect(() => {
         setNewNote(note);
     }, [note]);
 
+    // Save note on unmount
+    useEffect(() => {
+        return () => {
+            console.log(newNote);
+            handleUnmount(newNote);
+        };
+    }, []);
+
+    // Keyboard shortcuts for saving, undo and redo
+    useKeyboardShortcuts({
+        save: async () => {
+            await saveNote(newNote);
+            if (onNoteChange) {
+                onNoteChange(newNote);
+            }
+        },
+        undo: () => {
+            undo();
+            setNewNote(currentNote);
+        },
+        redo: () => {
+            redo();
+            setNewNote(currentNote);
+        },
+    });
+
+    // Autosave note every minute
     useAutosave({
         data: newNote.noteContent ?? '',
         onSave: async (data: string) => {
@@ -71,19 +66,18 @@ export function Note({ note, folder, onNoteChange }: INoteProps) {
             setNewNote(updatedNote);
         },
         interval: 60000,
-        saveOnUnmount: true,
     });
 
-    const handleBeforeUnload = async () => {
-        if (
-            newNote.noteContent === '' &&
-            newNote.noteName === '' &&
-            newNote.id
-        ) {
-            await destroyNote(newNote.id, cookies[AUTH_COOKIE_NAME]);
+    /**
+     * Save note on beforeunload
+     * Destroy note if it's empty
+     */
+    const handleUnmount = async (note: NoteType) => {
+        if (note.noteContent === '' && note.noteName === '' && note.id) {
+            await destroyNote(note.id, cookies[AUTH_COOKIE_NAME]);
         } else {
             await saveNote({
-                ...newNote,
+                ...note,
                 noteLastModified: formatDate(new Date()),
             });
         }
@@ -91,14 +85,15 @@ export function Note({ note, folder, onNoteChange }: INoteProps) {
 
     return (
         <div className="h-full">
-            <div className="flex items-center justify-between">
+            <header className="flex items-center justify-between">
                 <div className="w-full">
                     <input
                         type="text"
                         name="title"
                         id="title"
-                        className="focus:placehoflder-gray-600 h-16 w-full p-16 text-7xl placeholder-gray-500 focus:outline-none"
+                        className="h-16 w-full p-16 text-7xl placeholder-gray-500 focus:placeholder-gray-600 focus:outline-none"
                         placeholder="Título"
+                        autoFocus
                         value={newNote.noteName ?? ''}
                         onChange={(e) =>
                             setNewNote({
@@ -122,7 +117,7 @@ export function Note({ note, folder, onNoteChange }: INoteProps) {
                         className={`hover:bg-hover:shadow m-16 flex h-min cursor-pointer items-center justify-between rounded-md p-3 duration-300 ease-in-out transition hover:text-tiviElectricPurple-100 hover:shadow-lg`}
                     >
                         {/* TODO: Do this inside a modal */}
-                        <Link to={t(`/folders`)}>
+                        <Link to={t(`/folders`)} tabIndex={2}>
                             <div className="flex items-center">
                                 <FolderIcon className="h-10 w-10" />
                                 {(folder?.depth ?? 0) > 0 && (
@@ -136,7 +131,7 @@ export function Note({ note, folder, onNoteChange }: INoteProps) {
                         </Link>
                     </div>
                 )}
-            </div>
+            </header>
             {/* Content */}
             <textarea
                 name="text"
@@ -148,6 +143,7 @@ export function Note({ note, folder, onNoteChange }: INoteProps) {
                         noteContent: e.target.value,
                     })
                 }
+                tabIndex={1}
                 className="h-full w-full  p-16 font-sans text-2xl focus:placeholder-gray-500 focus:outline-none"
                 placeholder="En algún lugar de la Mancha, de cuyo nombre no quiero acordarme..."
             ></textarea>
