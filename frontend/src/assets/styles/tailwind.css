@@ -2,13 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+    font-family: 'HandyCasualCondensed';
+    src: url('src/assets/fonts/TTF/HandyCasualCondensed-Oblique.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
 
-body {
-    height: 100vh;
-    font-family: 'Montserrat', sans-serif;
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 #root {
-    height: 100vh;
+    height: 100%;
+    width: 100%;
 }
 #root > div[data-overlay-container="true"] {
     height: 100%;
@@ -32,3 +41,57 @@ body {
     border-bottom: 2px dotted black;
     margin: 0 5px;
 }
+
+
+.pop {
+    animation-duration: 1s;
+    animation-name: animate-pop;
+    animation-timing-function: cubic-bezier(.26, .53, .74, 1.48);
+    animation-delay: 0.5s;
+
+  }
+
+
+  @keyframes animate-pop {
+    0% {
+      opacity: 0;
+      transform: scale(0.5, 0.5);
+    }
+  
+    100% {
+      opacity: 1;
+      transform: scale(1, 1);
+    }
+  }
+
+  .fadeIn {
+    animation-duration: 1s;
+    animation-name: animate-fade;
+    animation-fill-mode: backwards;
+    animation-delay: 0.5s;
+  }
+      
+  @keyframes animate-fade {
+      0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  .titleMove {
+    animation-duration: 1s;
+    animation-name: triangle-move;
+    animation-fill-mode: forwards;
+    animation-delay: 0.7s;
+
+  }
+
+  @keyframes title-move {
+    0% {
+      transform: translate(0, 0);
+    }
+    50% {
+      transform: translate(0, 10px);
+    }
+    100% {
+      transform: translate(0, 0);
+    }
+  }

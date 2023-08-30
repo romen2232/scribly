@@ -2,10 +2,11 @@ import React, { useContext } from 'react';
 import { AuthContext } from '../hoc/auth/context';
 import { FormLogin } from '../components/FormLogin';
 import { PageContainer } from '../components/PageContainer';
-import { Splash } from '../components/Splash';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Loader from './loader';
+import HeadFoot from '../components/HeadFoot';
+import Scribly from '../components/Scribly';
 
 const Login: React.FC = () => {
     const { t } = useTranslation();
@@ -18,9 +19,10 @@ const Login: React.FC = () => {
     return loading ? (
         <Loader />
     ) : (
-        <PageContainer>
-            <Splash>
-                <h2 className="my-4 text-center text-2xl font-bold">
+        <HeadFoot>
+            <PageContainer>
+                <Scribly />
+                <h2 className="py-4 text-center text-2xl font-bold">
                     {t('login.Title')}
                 </h2>
 
@@ -36,8 +38,8 @@ const Login: React.FC = () => {
                 </p>
 
                 <FormLogin onSubmit={handleLogin} />
-            </Splash>
-        </PageContainer>
+            </PageContainer>
+        </HeadFoot>
     );
 };
 
