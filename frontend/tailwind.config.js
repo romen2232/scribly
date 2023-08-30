@@ -33,6 +33,9 @@ export default {
                 slideIn: 'slideIn 0.5s forwards',
                 slideOut: 'slideOut 0.5s forwards',
             },
+            fontFamily: {
+                casualHandy: ['HandyCasualCondensed', 'sans-serif'],
+            },
         },
         colors: {
             transparent: 'transparent',
@@ -53,6 +56,10 @@ export default {
             },
             tiviPhlox: '#DD0CFC',
             ...colors,
+            mainBackground: '#fffdf6',
+            primaryPink: '#e26890',
+            primaryBlue: '#4b9b9d',
+            secondaryYellow: '#f2bc2a',
         },
     },
     darkMode: 'class',

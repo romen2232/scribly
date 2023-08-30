@@ -17,7 +17,7 @@ export const FormLogin: FC<FormProps> = ({ onSubmit }) => {
     };
 
     return (
-        <form className="mt-8 space-y-6" onSubmit={handleLogin}>
+        <form className="space-y-6 pt-8" onSubmit={handleLogin}>
             <InputField
                 label={t('login.Email')}
                 inputType="email"
@@ -38,7 +38,7 @@ export const FormLogin: FC<FormProps> = ({ onSubmit }) => {
             />
             <button
                 type="submit"
-                className="mt-4 w-full rounded bg-tiviElectricPurple-100 px-3 py-2 transition duration-200 ease-in-out hover:bg-tiviElectricViolet"
+                className="mt-4 w-full rounded bg-tiviElectricPurple-100 px-3 py-2 duration-200 ease-in-out transition hover:bg-tiviElectricViolet"
             >
                 {t('login.Login')}
             </button>
