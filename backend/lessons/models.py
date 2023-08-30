@@ -11,4 +11,4 @@ class Lessons(models.Model):
     difficulty = models.IntegerField(default=0)
     unit = models.ForeignKey(
         "units.Unit", on_delete=models.CASCADE, null=True, blank=True)
-    bg_color = models.CharField(max_length=100, default="bg-white")
+    bg_color = models.CharField(max_length=100, default="bg-tiviElectricPurple-50")

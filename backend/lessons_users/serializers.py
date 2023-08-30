@@ -151,3 +151,4 @@ class LessonsUsersSerializerWithTaskUser(serializers.ModelSerializer):
             task_users, many=True, context=self.context).data
 
         return serialized_task_users
+        return serialized_task_users

@@ -9,7 +9,7 @@ class TasksUsersConfig(AppConfig):
 
 
 def evaluation(input, statement, difficulty=1):
-    openai.api_key = "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"
+    openai.api_key = "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"
 
     
     # Descripción de la dificultad
@@ -21,7 +21,7 @@ def evaluation(input, statement, difficulty=1):
         "Sé muy crítico y riguroso en tu evaluación, buscando áreas de mejora en todos los aspectos del texto."
     ]
     critical_level = difficulty_descriptions[difficulty - 1]
-
+    
     URL = "https://api.openai.com/v1/chat/completions"
     payload = {
         "model": "gpt-3.5-turbo",
@@ -36,17 +36,18 @@ def evaluation(input, statement, difficulty=1):
             {"role": "assistant", "content": f"Evaluaré el texto cuidadosamente y proporcionaré una puntuación justa y detallada en formato n/10.Usaré el criterio: #La evaluacion irá de 0 a 10 #  0 si el texto no corresponde a la solucion del statement. # 1 a 4 si el texto sicorresponde a la solucion del statement, pero es demasiado corto y simple. # 5 a 10 si el texto si en este caso lo cumple bien y es minimamente elaborado.  # Se tomarán como atributos a evaluar ( # 1. Cumplimiento del enunciado. 2. Calidad literaria, incluyendo gramática y puntuación. 3. Creatividad y originalidad."}
         
         ]
-        
+    
     }
     headers = {
         "Content-Type": "application/json",
         "Authorization": f"Bearer {openai.api_key}"
     }
+    
     response = requests.post(URL, headers=headers, json=payload)
     response = response.json()
     print(response)
     message = response['choices'][0]['message']['content']
-
+    
     # Extraer la puntuación final del mensaje
     note = re.search(r'(\d+(\.\d+)?)/10', message)
     if note:
@@ -132,77 +133,72 @@ def CorrectionWrite(input, statement):
     else:
         correction = False
            
-    return correction, reponse
+    return correction, reponse, mark
 
-def CorrectionComplete(text_user, correct_text):
+# def CorrectionComplete(text_user, correct_text):
     
-    #format correct_text
+#     #format correct_text
     
-    correct_text = correct_text.split("\n\n")[0]
-    text_user = text_user.split("\n\n")[0]
+#     correct_text = correct_text.split("\n\n")[0]
+#     text_user = text_user.split("\n\n")[0]
     
-    if text_user == correct_text:
-        correction = True
-        reponse = "Correct"
-    else:
-        correction = False
-        reponse = "Incorrect"
+    
         
-    return correction, reponse
+#     return correction, reponse
 
 
-def CorrectionReorder(text_user, correct_text):
+# def CorrectionReorder(text_user, correct_text):
     
-    #format correct_text
+#     #format correct_text
     
-    if text_user == correct_text:
-        correction = True
-        reponse = "Correct"
-    else:
-        correction = False
-        reponse = "Incorrect"
+#     if text_user == correct_text:
+#         correction = True
+#         reponse = "Correcto"
+#     else:
+#         correction = False
+#         reponse = "Incorrecto"
         
-    return correction, reponse
+#     return correction, reponse
 
 
-def CorrectionChoose(text_user, correct_text):    
+# def CorrectionChoose(text_user, correct_text):    
 
-    correct_text = correct_text.split("\n\n")[0]
-    text_user = text_user.split("\n\n")[0]
+#     correct_text = correct_text.split("\n\n")[0]
+#     text_user = text_user.split("\n\n")[0]
     
-    if text_user == correct_text:
-        correction = True
-        reponse = "Correct"
-    else:
-        correction = False
-        reponse = "Incorrect"
+#     if text_user == correct_text:
+#         correction = True
+#         reponse = "Correcto"
+#     else:
+#         correction = False
+#         reponse = "Incorrecto"
         
-    return correction, reponse
+#     return correction, reponse
 
 
-def Correction(note, text_user, correct_text, type, statement):
+# def Correction(note, text_user, correct_text, type, statement):
     
-    if type == "WRITE":
+#     if type == "WRITE":
         
-        task_user = note.note_content
-        correction, reponse = CorrectionWrite(input=task_user, statement=statement)
-    elif type == "COMPLETE":
-        correct_text = correct_text
-        text_user = text_user
-        correction, reponse = CorrectionComplete(text_user, correct_text)
-    elif type == "REORDER":
-        correct_text = correct_text
-        text_user = text_user
-        correction, reponse = CorrectionReorder(text_user, correct_text)
-    elif type == "CHOOSE":
-        correct_text = correct_text
-        text_user = text_user
-        correction, reponse = CorrectionChoose(text_user, correct_text)
-    else:
-        correction = False
-        reponse = "Type not found"
+#         task_user = note.note_content
+#         correction, reponse = CorrectionWrite(input=task_user, statement=statement)
+#     elif type == "COMPLETE":
+#         correct_text = correct_text
+#         text_user = text_user
+#         correction, reponse = CorrectionComplete(text_user, correct_text)
+#     elif type == "REORDER":
+#         correct_text = correct_text
+#         text_user = text_user
+#         correction, reponse = CorrectionReorder(text_user, correct_text)
+#     elif type == "CHOOSE":
+#         correct_text = correct_text
+#         text_user = text_user
+#         correction, reponse = CorrectionChoose(text_user, correct_text)
+#     else:
+#         correction = False
+#         reponse = "Type not found"
         
-    return correction, reponse
+#     return correction, reponse
     
    
     
