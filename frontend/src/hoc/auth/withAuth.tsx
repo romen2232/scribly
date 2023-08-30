@@ -5,6 +5,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { AuthContext } from './context';
+import Loader from '../../pages/loader';
 
 /**
  * The withAuth HOC (Higher Order Component) is used to protect routes from being accessed by unauthenticated users.
@@ -58,6 +59,9 @@ export const withAuth = (WrappedComponent: React.FC<any>) => {
 
         // If authentication is still loading, or token checking is in progress, display a loading message
         if (loading || checking) {
+            <div className="flex h-screen items-center justify-center">
+                <p>Loading...</p>
+            </div>;
             return (
                 <div className="flex h-screen items-center justify-center">
                     <p>Loading...</p>
@@ -76,6 +80,39 @@ export const withAuth = (WrappedComponent: React.FC<any>) => {
 
     // Return the WithAuthComponent
     return WithAuthComponent;
+};
+
+export const withNoAuth = (WrappedComponent: React.FC<any>) => {
+    const WithNoAuthComponent: React.FC<any> = (
+        props: React.PropsWithChildren<any>,
+    ) => {
+        // Get necessary values from the AuthContext and useNavigate hook
+        const navigate = useNavigate();
+        const context = useContext(AuthContext);
+        const { isAuthenticated, loading } = context;
+
+        useEffect(() => {
+            // If authenticated, navigate to the home page
+            if (!loading && isAuthenticated) {
+                navigate('/');
+            }
+        }, [isAuthenticated, loading]);
+
+        // If authentication is still loading, display a loading message
+        if (loading) {
+            return <Loader />;
+        }
+
+        // If not authenticated, render the login page by passing props to the WrappedComponent
+        return <WrappedComponent {...props} />;
+    };
+
+    // Set the display name for the WithNoAuthComponent
+    WithNoAuthComponent.displayName = `WithNoAuth(${getDisplayName(
+        WrappedComponent,
+    )})`;
+
+    return WithNoAuthComponent;
 };
 
 // Helper function to get the display name of a component

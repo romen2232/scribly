@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router';
 import { Suspense, lazy } from 'react';
-import { withAuth } from '../hoc/auth/withAuth';
+import { withAuth, withNoAuth } from '../hoc/auth/withAuth';
 import { AuthProvider } from '../hoc/auth/context';
 import Loader from '../pages/loader';
 import { ToastContainer } from 'react-toastify';
@@ -21,6 +21,8 @@ const ProtectedNew = withAuth(New);
 const ProtectedFolders = withAuth(Folders);
 const ProtectedProfile = withAuth(Profile);
 const ProtectedLesson = withAuth(Lesson);
+const ProtectedLogin = withNoAuth(Login);
+const ProtectedRegister = withNoAuth(Register);
 
 /**
  * Component App is the root component of our application. It renders the different
@@ -54,8 +56,14 @@ export default function App() {
                             path={t('/folders')}
                             element={<ProtectedFolders />}
                         />
-                        <Route path={t('/login')} element={<Login />} />
-                        <Route path={t('/register')} element={<Register />} />
+                        <Route
+                            path={t('/login')}
+                            element={<ProtectedLogin />}
+                        />
+                        <Route
+                            path={t('/register')}
+                            element={<ProtectedRegister />}
+                        />
                         <Route
                             path={t('/activate') + '/:token'}
                             element={<Activate />}
