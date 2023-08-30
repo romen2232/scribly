@@ -1,3 +1,5 @@
+import { Folder } from './types';
+
 /**
  * Checks if password is strong
  * Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter and one digit
@@ -123,4 +125,58 @@ export function shuffleArray<T>(originalArray: T[]): T[] {
     }
 
     return array;
+}
+
+/**
+ * Searches through folders and notes for a query
+ * @param folder Folder to be searched
+ * @param query Query to be searched for
+ * @param favorites If true, only searches through favorites
+ * @returns Folder with matched notes and subfolders
+ */
+export function searchFolders(
+    folder: Folder,
+    query: string,
+    favorites: boolean,
+): Folder | null {
+    console.log(folder, query, favorites);
+    // If query is empty and favorites is true, we're just looking for favorites.
+    const lookingForFavsOnly = query === '' && favorites;
+
+    // Check if folder name matches the query and if it's favorite (if favorites filter is enabled)
+    const doesFolderMatch = lookingForFavsOnly
+        ? folder.favorite
+        : folder.folderName.toLowerCase().includes(query.toLowerCase()) &&
+          (!favorites || folder.favorite);
+
+    // Filter notes based on the query and favorites criteria
+    const matchedNotes =
+        folder.notes?.filter((note) =>
+            lookingForFavsOnly
+                ? note.favorite
+                : note.noteName?.toLowerCase().includes(query.toLowerCase()) &&
+                  (!favorites || note.favorite),
+        ) || [];
+
+    // Use recursion to search through subfolders
+    const matchedSubfolders =
+        (folder.subfolders
+            ?.map((sf) => searchFolders(sf, query, favorites))
+            .filter((f) => f !== null) as Folder[]) || [];
+
+    // Determine if the folder or its sub-content matches the criteria
+    const hasMatchingContent =
+        doesFolderMatch ||
+        matchedNotes.length > 0 ||
+        matchedSubfolders.length > 0;
+
+    if (hasMatchingContent) {
+        return {
+            ...folder,
+            notes: matchedNotes,
+            subfolders: matchedSubfolders,
+        };
+    }
+
+    return null;
 }

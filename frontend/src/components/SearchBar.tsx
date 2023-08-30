@@ -1,6 +1,8 @@
-export interface ISearchBarProps {}
+export interface ISearchBarProps {
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
 
-export function SearchBar() {
+export function SearchBar({ onChange }: ISearchBarProps) {
     return (
         <div className="my-5 mr-10 w-full">
             <div className="relative flex h-12 w-full items-center overflow-hidden rounded-lg bg-white shadow-lg">
@@ -26,6 +28,8 @@ export function SearchBar() {
                     type="text"
                     id="search"
                     placeholder="Carpetas, notas..."
+                    autoComplete="off"
+                    onChange={onChange}
                 />
             </div>
         </div>
