@@ -23,11 +23,12 @@ export interface ITreeItem {
     index: number;
     favorite?: boolean;
     data: Folder | Note;
+    onlyFolders?: boolean;
     openModal?: (parentFolderId: number) => void;
+    changeFolder?: (folder: Folder) => void;
     updateRoot?: () => void;
 }
 
-//TODO: Implement logic of favorite
 //TODO: Drag elemnts to reorder
 
 export function TreeItem({
@@ -37,19 +38,27 @@ export function TreeItem({
     index,
     favorite,
     data,
+    onlyFolders,
     openModal,
     updateRoot,
+    changeFolder,
 }: ITreeItem) {
     const { ref: hoverRef, isHovered: isHovered } = useHover();
     const [isFavorite, setIsFavorite] = useState(favorite);
     const { t } = useTranslation();
 
-    const [isOpen, setIsOpen] = useState(false);
-    const toggleOpen = () => setIsOpen(!isOpen);
+    const [isOpen, setIsOpen] = useState(onlyFolders ?? false);
     const cookies = parseCookies();
 
     const mlIndex = ['ml-0', 'ml-16', 'ml-32', 'ml-48'];
 
+    const handleItemClick = () => {
+        if (onlyFolders) {
+            changeFolder && changeFolder(data as Folder);
+            return;
+        }
+        setIsOpen(!isOpen);
+    };
     const handleFavorite = (e: React.MouseEvent) => {
         e.stopPropagation();
         // The stopPropagation() method prevents propagation of the same event from being called.
@@ -57,7 +66,6 @@ export function TreeItem({
         // Whereas The preventDefault() method cancels the event if it is cancelable, meaning that the default action that belongs to the event will not occur.
         e.preventDefault();
         if (folder) {
-            console.log(isFavorite);
             partialUpdateFolder(
                 data.id as number,
                 {
@@ -108,13 +116,17 @@ export function TreeItem({
         return children;
     };
 
+    if (onlyFolders && !folder) {
+        return null;
+    }
+
     return (
         <>
             <div className="w-full px-4 pb-3">
                 <ConditionalLink>
                     <div
                         ref={hoverRef}
-                        onClick={toggleOpen}
+                        onClick={handleItemClick}
                         className={`hover:bg-hover:shadow flex cursor-pointer items-center  justify-between rounded-md p-3 duration-300 ease-in-out transition hover:bg-tiviElectricPurple-50 hover:shadow-lg ${mlIndex[index]}`}
                     >
                         <div className="flex items-center">
@@ -134,7 +146,8 @@ export function TreeItem({
                         </div>
 
                         <div className="flex items-center gap-10">
-                            {isHovered &&
+                            {!onlyFolders &&
+                                isHovered &&
                                 folder &&
                                 'depth' in data &&
                                 data.depth &&
@@ -146,17 +159,18 @@ export function TreeItem({
                                 )}
 
                             <div>
-                                {isFavorite ? (
-                                    <StarIcon
-                                        className="h-7 w-7"
-                                        onClick={handleFavorite}
-                                    />
-                                ) : (
-                                    <StarOutlineIcon
-                                        className="h-7 w-7"
-                                        onClick={handleFavorite}
-                                    />
-                                )}
+                                {!onlyFolders &&
+                                    (isFavorite ? (
+                                        <StarIcon
+                                            className="h-7 w-7"
+                                            onClick={handleFavorite}
+                                        />
+                                    ) : (
+                                        <StarOutlineIcon
+                                            className="h-7 w-7"
+                                            onClick={handleFavorite}
+                                        />
+                                    ))}
                             </div>
                         </div>
                     </div>
@@ -172,12 +186,14 @@ export function TreeItem({
                             description={item.folderDescription}
                             index={index + 1}
                             data={item}
+                            onlyFolders={onlyFolders}
+                            changeFolder={changeFolder}
                             openModal={openModal}
                         />
                     ))}
                 </>
             )}
-            {isOpen && 'notes' in data && (
+            {isOpen && !onlyFolders && 'notes' in data && (
                 <>
                     {data.notes?.map((item: Note) => (
                         <TreeItem
