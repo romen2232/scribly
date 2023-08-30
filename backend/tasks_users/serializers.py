@@ -43,15 +43,7 @@ class TasksUserSerializer(serializers.ModelSerializer):
         return representation
 
     def create(self, validated_data):
-        # task = validated_data['task']
-        # user = validated_data['user']
-        # #task_date = validated_data['task_date']
-        # earned_points = validated_data['earned_points']
-        # answer_note = validated_data['answer_note']
-        # answer_text = validated_data['answer_text']
-        # answer_boolean = validated_data['answer_boolean']
-        
-        
+
 
         task_user = Tasks_users.objects.create(
             **validated_data)
