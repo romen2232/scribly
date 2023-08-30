@@ -10,7 +10,7 @@ class LeagueListCreateView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_Serializer(
+        serializer = self.get_serializer(
             data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         league = serializer.save()

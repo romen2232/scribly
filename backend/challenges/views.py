@@ -10,8 +10,10 @@ class ChallengesListCreateView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_Serializer(
-            data=request.data, context={'request': request})
+        
+        serializer = self.get_serializer(
+            data=request.data)
+        print("lol")
         serializer.is_valid(raise_exception=True)
         challenge = serializer.save(user=request.user)
         return Response({"status": "success", "data": ChallengesSerializer(challenge).data}, status=status.HTTP_201_CREATED)
@@ -30,3 +32,19 @@ class ChallengesRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
         serializer.is_valid(raise_exception=True)
         challenge = serializer.save()
         return Response({"status": "success", "data": ChallengesSerializer(challenge).data})
+
+
+
+class ImportChallengeView(generics.CreateAPIView):
+    queryset = Challenges.objects.all()
+    serializer_class = ChallengesSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_Serializer(
+            data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        challenge = serializer.save(user=request.user)
+        return Response({"status": "success", "data": ChallengesSerializer(challenge).data}, status=status.HTTP_201_CREATED)
+    
+

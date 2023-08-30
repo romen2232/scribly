@@ -128,3 +128,4 @@ class UnitPercentageSerializer(serializers.ModelSerializer):
 
         lessons = obj.lessons_set.all()
         return LessonsPercentageSerializer(lessons, many=True, context={'request': self.context['request']}).data
+        return LessonsPercentageSerializer(lessons, many=True, context={'request': self.context['request']}).data
