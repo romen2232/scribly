@@ -246,6 +246,7 @@ class EvaluateText(APIView):
         except Tasks_users.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+# The next class first call TaskUsersView.patch() to get the task_user object, then it calls the function UpdateReponse to update the response_text and is_completed fields and return the tmoz-extension://b3af4641-e2d4-4034-b768-f342c01f0c5a/document-blocked.html?details=%7B%22url%22%3A%22https%3A%2F%2F1.envato.market%2Fc%2F399164%2F431866%2F4662%22%2C%22hn%22%3A%221.envato.market%22%2C%22dn%22%3A%22envato.market%22%2C%22fs%22%3A%22%7C%7Cenvato.market%5E%22%7Dk_user object.
 
 
 class CompleteAnswerView(APIView):

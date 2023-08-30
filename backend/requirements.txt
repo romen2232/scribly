@@ -6,6 +6,7 @@ click-didyoumean==0.3.0
 click-plugins==1.1.1
 click-repl==0.3.0
 click==8.1.6
+dj_database_url==0.4.1
 django-localflavor==4.0
 Django==4.2.3
 djangorestframework-simplejwt==5.2.2
@@ -14,6 +15,7 @@ dnspython==2.4.1
 drf-yasg==1.21.7
 eventlet==0.33.3
 greenlet==2.0.2
+gunicorn==21.2.0
 kombu==5.3.1
 prompt-toolkit==3.0.39
 PyJWT==2.8.0
@@ -28,6 +30,6 @@ wcwidth==0.2.6
 django-cors-headers==4.2.0
 psycopg==3.1.9
 Pillow==10.0.0
-openapi-core==0.18.0
-openapi-core==0.18.0
+whitenoise==6.5.0
+openai==0.27.8
 python-dotenv==1.0.0
