@@ -55,7 +55,7 @@ class FolderList(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        print(self.request.user)
+        #print(self.request.user)
         return Folders.objects.filter(user=self.request.user)
 
 class FolderListRecursive(generics.RetrieveAPIView): # Using RetrieveAPIView since we're fetching one object
