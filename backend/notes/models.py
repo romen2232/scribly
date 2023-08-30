@@ -7,7 +7,7 @@ from users.models import User
 
 
 class Notes(models.Model):
-    note_name = models.CharField(max_length=100, default='name')
+    note_name = models.CharField(max_length=100, blank=True, default='')
     note_content = models.TextField(max_length=10000, blank=True, default='')
     note_image = models.ImageField(upload_to='note_images', blank=True)
     note_last_modified = models.DateTimeField(auto_now=True)

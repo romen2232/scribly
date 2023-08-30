@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 /**
  * Debounce hook
@@ -9,10 +9,19 @@ import { useState, useEffect } from 'react';
  */
 function useDebounce<TData>(data: TData, interval: number) {
     //State variable to store the debounced data
-    const [liveData, setLiveData] = useState<TData>(data);
+    const [liveData, setLiveData] = useState<TData | undefined>();
+    const isInitialRender = useRef(true);
 
     //Debounce logic
     useEffect(() => {
+        if (isInitialRender.current) {
+            isInitialRender.current = false;
+            return;
+        }
+        if (typeof liveData === 'undefined') {
+            setLiveData(data);
+            return;
+        }
         // Using setTimeout to set up a delay before updating 'liveData'.
         // The provided 'interval' defines the time (in milliseconds) to wait before updating.
         const handler = setTimeout(() => {

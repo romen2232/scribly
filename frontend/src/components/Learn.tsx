@@ -19,7 +19,6 @@ export function Learn() {
         retrieveUnitsByCategory(category, cookies[AUTH_COOKIE_NAME])
             .then((res) => {
                 setUnits(res);
-                console.log(units);
                 setLoading(false);
             })
             .catch((err) => {

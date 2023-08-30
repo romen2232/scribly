@@ -1,11 +1,14 @@
 import { useAutosave } from '../hooks/useAutosave';
 import { useEffect, useState } from 'react';
-import { FaFolder } from 'react-icons/fa';
+import { FolderIcon } from '../assets/icons/Icons';
 import { Link } from 'react-router-dom';
 import { Folder, Note as NoteType } from '../utils/types';
 import { t } from 'i18next';
 import { formatDate } from '../utils/functions';
 import { useNoteStore } from '../stores/noteStore';
+import { destroyNote } from '../services/notes';
+import { parseCookies } from 'nookies';
+import { AUTH_COOKIE_NAME } from '../utils/consts';
 
 export interface INoteProps {
     note: NoteType;
@@ -15,7 +18,8 @@ export interface INoteProps {
 
 export function Note({ note, folder, onNoteChange }: INoteProps) {
     const { currentNote, saveNote, localSaveNote, undo, redo } = useNoteStore();
-    const [newNote, setNewNote] = useState(note);
+    const [newNote, setNewNote] = useState({} as NoteType);
+    const cookies = parseCookies();
 
     useEffect(() => {
         localSaveNote(note);
@@ -45,13 +49,22 @@ export function Note({ note, folder, onNoteChange }: INoteProps) {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [newNote, saveNote, undo, redo, currentNote]);
 
-    //TODO: change this to not have to call the hook 2 times
+    useEffect(() => {
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        return () =>
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+    }, []);
+
+    useEffect(() => {
+        setNewNote(note);
+    }, [note]);
+
     useAutosave({
         data: newNote.noteContent ?? '',
         onSave: async (data: string) => {
             const updatedNote = {
                 ...newNote,
-                noteLastModified: formatDate(new Date()),
+                noteLastModified: new Date().toISOString(),
                 noteContent: data,
             };
             await saveNote(updatedNote);
@@ -60,20 +73,21 @@ export function Note({ note, folder, onNoteChange }: INoteProps) {
         interval: 60000,
         saveOnUnmount: true,
     });
-    useAutosave({
-        data: newNote.noteName ?? '',
-        onSave: async (data: string) => {
-            const updatedNote = {
+
+    const handleBeforeUnload = async () => {
+        if (
+            newNote.noteContent === '' &&
+            newNote.noteName === '' &&
+            newNote.id
+        ) {
+            await destroyNote(newNote.id, cookies[AUTH_COOKIE_NAME]);
+        } else {
+            await saveNote({
                 ...newNote,
                 noteLastModified: formatDate(new Date()),
-                noteName: data,
-            };
-            localSaveNote(updatedNote);
-            setNewNote(updatedNote);
-        },
-        interval: 5000,
-        saveOnUnmount: true,
-    });
+            });
+        }
+    };
 
     return (
         <div className="h-full">
@@ -83,7 +97,7 @@ export function Note({ note, folder, onNoteChange }: INoteProps) {
                         type="text"
                         name="title"
                         id="title"
-                        className="h-16 w-full p-16 text-7xl placeholder-gray-500 focus:placeholder-gray-600 focus:outline-none"
+                        className="focus:placehoflder-gray-600 h-16 w-full p-16 text-7xl placeholder-gray-500 focus:outline-none"
                         placeholder="Título"
                         value={newNote.noteName ?? ''}
                         onChange={(e) =>
@@ -96,7 +110,10 @@ export function Note({ note, folder, onNoteChange }: INoteProps) {
                     {/* Date */}
                     <div className="pointer-events-none flex justify-between px-16">
                         <p className="text-2xl text-gray-500">
-                            {newNote.noteLastModified}
+                            {' '}
+                            {formatDate(
+                                new Date(newNote.noteLastModified ?? ''),
+                            )}
                         </p>
                     </div>
                 </div>
@@ -107,7 +124,7 @@ export function Note({ note, folder, onNoteChange }: INoteProps) {
                         {/* TODO: Do this inside a modal */}
                         <Link to={t(`/folders`)}>
                             <div className="flex items-center">
-                                <FaFolder className="h-10 w-10" />
+                                <FolderIcon className="h-10 w-10" />
                                 {(folder?.depth ?? 0) > 0 && (
                                     <div className="px-3 text-lg">
                                         <h4 className="font-bold">

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 // import { FaFireAlt } from 'react-icons/fa';
-import { FaUsers, FaUser } from 'react-icons/fa6';
+import { CommunityIcon, ProfileIcon } from '../assets/icons/Icons';
 import { useTranslation } from 'react-i18next';
 export interface IHeaderProps {
     children?: React.ReactNode;
@@ -35,11 +35,11 @@ export function Header() {
                 </Link> */}
 
                 <Link to={t('/community')}>
-                    <FaUsers className="h-16 w-16 duration-300 ease-in-out transition hover:text-tiviBlack" />
+                    <CommunityIcon className="h-16 w-16 duration-300 ease-in-out transition hover:text-tiviBlack" />
                 </Link>
 
                 <Link to={t('/profile')}>
-                    <FaUser className="h-16 w-16 duration-300 ease-in-out transition hover:text-tiviBlack" />
+                    <ProfileIcon className="h-16 w-16 duration-300 ease-in-out transition hover:text-tiviBlack" />
                 </Link>
             </nav>
         </header>

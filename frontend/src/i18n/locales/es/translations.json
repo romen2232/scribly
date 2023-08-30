@@ -79,9 +79,12 @@
     "/folders/:folderId/:noteId": "/carpetas/:folderId/:noteId",
     "/profile": "/perfil",
     "/profile/:username": "/perfil/:username",
-    "/new": "/nueva",
+    "/note": "/nota",
     "/new/:folderId": "/nueva/:folderId",
     "/followers": "/seguidores",
     "/following": "/siguiendo",
-    "/about": "/acerca"
+    "/about": "/acerca",
+
+    "folderId": "idCarpeta",
+    "noteId": "idNota"
 }

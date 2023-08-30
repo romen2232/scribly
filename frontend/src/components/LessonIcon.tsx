@@ -1,5 +1,5 @@
 import { t } from 'i18next';
-import { SiKnowledgebase } from 'react-icons/si';
+import { KnowledgeIcon } from '../assets/icons/Icons';
 import { Link } from 'react-router-dom';
 import { Lesson } from '../utils/types';
 
@@ -40,7 +40,7 @@ export function LessonIcon({
                     .join(' ')
                     .replace('active:translate-y-1.5 active:shadow-none', '')}
             >
-                <SiKnowledgebase />
+                <KnowledgeIcon />
             </div>
         );
     }
@@ -50,7 +50,7 @@ export function LessonIcon({
             to={t('/lesson') + '/' + lesson.id}
             className={finalClasses.join(' ')}
         >
-            <SiKnowledgebase />
+            <KnowledgeIcon />
         </Link>
     );
 }

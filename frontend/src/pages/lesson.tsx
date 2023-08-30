@@ -53,7 +53,6 @@ const Lesson = () => {
 
     // useEffect for opening the modal
     useEffect(() => {
-        console.log(currentTaskUser);
         if (isModalOpen) {
             onOpen();
         }

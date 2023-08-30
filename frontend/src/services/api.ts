@@ -15,8 +15,8 @@ const apiClient = axios.create({
     baseURL: BASE_URL,
 });
 
-let retries=0;
-const MAX_RETRIES=2
+let retries = 0;
+const MAX_RETRIES = 2;
 apiClient.interceptors.response.use(
     (response) => {
         if (response.data) {
@@ -28,14 +28,19 @@ apiClient.interceptors.response.use(
         const originalRequest = error.config;
 
         // Check if the error is a 401 and the request is not already trying to refresh the token
-        if (error.response.status === 401 && !originalRequest._retry && retries <= MAX_RETRIES) {
+        console.log(error.response, "What's the error?");
+        if (
+            error.response.status === 401 &&
+            !originalRequest._retry &&
+            retries <= MAX_RETRIES
+        ) {
             originalRequest._retry = true;
-            retries++
+            retries++;
 
             // Get refresh token from storage
             const storedRefreshToken = cookies[REFRESH_COOKIE_NAME];
-            console.log(storedRefreshToken)
-            if (storedRefreshToken!==null)
+            console.log(storedRefreshToken);
+            if (storedRefreshToken !== null)
                 // Attempt to refresh the token
                 try {
                     // Use the refreshToken function from your auth service
@@ -48,13 +53,14 @@ apiClient.interceptors.response.use(
                     });
 
                     // Set the new access token in the original request and retry it
-                    originalRequest.headers['Authorization'] = `Bearer ${access}`;
+                    originalRequest.headers[
+                        'Authorization'
+                    ] = `Bearer ${access}`;
                     return apiClient(originalRequest);
                 } catch (refreshError) {
                     // Handle errors, maybe force logout or redirect to login page
                     return Promise.reject(refreshError);
                 }
-
         }
 
         // If error is not a 401 or there's another issue refreshing, reject the promise

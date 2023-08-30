@@ -12,6 +12,7 @@ type NoteState = {
     localSaveNote: (note: NoteType) => void;
     undo: () => void;
     redo: () => void;
+    clean: () => void;
 };
 
 export const useNoteStore = create<NoteState>((set) => ({
@@ -21,22 +22,30 @@ export const useNoteStore = create<NoteState>((set) => ({
 
     saveNote: async (note: NoteType) => {
         const cookies = parseCookies();
-        console.log(note);
-        // Store the note in history and update currentNote before saving to backend
-        set((state) => ({
-            currentNote: note,
-            history: [note, ...state.history],
-            reHistory: [],
-        }));
-        if (typeof note.id === 'undefined') return;
-        await partialUpdateNote(
-            note.id,
-            {
+
+        // Update the state
+        set((currentState) => {
+            // Merge current note with new note for a partial update
+            const mergedNote = {
+                ...currentState.currentNote,
                 ...note,
                 noteLastModified: new Date().toISOString(),
-            },
-            cookies[AUTH_COOKIE_NAME],
-        );
+            };
+
+            if (mergedNote.id)
+                // This will save to the backend but we won't await here so as to not delay the state update.
+                partialUpdateNote(
+                    mergedNote.id,
+                    mergedNote,
+                    cookies[AUTH_COOKIE_NAME],
+                );
+
+            return {
+                currentNote: mergedNote,
+                history: [mergedNote, ...currentState.history],
+                reHistory: [],
+            };
+        });
     },
 
     localSaveNote: (note: NoteType) => {
@@ -69,5 +78,13 @@ export const useNoteStore = create<NoteState>((set) => ({
                 reHistory: rest,
             };
         });
+    },
+
+    clean: () => {
+        set(() => ({
+            currentNote: {} as NoteType,
+            history: [],
+            reHistory: [],
+        }));
     },
 }));

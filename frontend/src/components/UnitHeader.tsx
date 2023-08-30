@@ -1,6 +1,6 @@
 import { t } from 'i18next';
-import { MdOutlinePlayLesson } from 'react-icons/md';
 import { Link } from 'react-router-dom';
+import { LessonPlayIcon } from '../assets/icons/Icons';
 
 export interface IUnitHeaderProps {
     unitNumber: number;
@@ -34,7 +34,7 @@ export function UnitHeader({
                     to={t('/lesson' + '/' + currentLesson)}
                     className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black"
                 >
-                    <MdOutlinePlayLesson size={32} />
+                    <LessonPlayIcon size={32} />
                 </Link>
             </header>
         </article>
