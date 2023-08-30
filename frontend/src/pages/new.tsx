@@ -13,6 +13,7 @@ interface INewProps {}
 
 const New: React.FunctionComponent<INewProps> = () => {
     const cookies = parseCookies();
+
     const [folder, setFolder] = useState({} as Folder);
     const [note, setNote] = useState({} as NoteType);
     const [searchParam, setSearchParam] = useSearchParams();
@@ -84,11 +85,21 @@ const New: React.FunctionComponent<INewProps> = () => {
         getNote();
     }, []);
 
+    const updateURLWithFolderId = (folderId: number) => {
+        const newQueryParameters = new URLSearchParams(window.location.search);
+        newQueryParameters.set(t('folderId'), folderId.toString());
+        setSearchParam(newQueryParameters);
+    };
+
     return (
         <div className="h-full max-h-screen overflow-hidden text-tiviBlack">
             <Header />
             <main className=" flex h-full flex-col">
-                <Note folder={folder} note={note} />
+                <Note
+                    folder={folder}
+                    note={note}
+                    updateURL={updateURLWithFolderId}
+                />
             </main>
         </div>
     );
