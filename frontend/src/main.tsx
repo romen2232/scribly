@@ -2,12 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './app/App';
 //Import of dist/main.css
-import '../dist/main.css'
+import '../dist/main.css';
 import { BrowserRouter } from 'react-router-dom';
 import './i18n/config';
 import 'react-toastify/dist/ReactToastify.css';
-import {NextUIProvider} from '@nextui-org/react'
-
+import { NextUIProvider } from '@nextui-org/react';
 
 /** We render the App component into the root element. With React.StrictMode, we
   enable additional checks and warnings for our application.
@@ -16,11 +15,11 @@ import {NextUIProvider} from '@nextui-org/react'
 */
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-    <React.StrictMode>
-        <BrowserRouter>
+    // <React.StrictMode>
+    <BrowserRouter>
         <NextUIProvider>
             <App />
         </NextUIProvider>
-        </BrowserRouter>
-    </React.StrictMode>,
+    </BrowserRouter>,
+    // </React.StrictMode>,
 );

@@ -24,6 +24,7 @@ export interface ITreeItem {
     favorite?: boolean;
     data: Folder | Note;
     openModal?: (parentFolderId: number) => void;
+    updateRoot?: () => void;
 }
 
 //TODO: Implement logic of favorite
@@ -37,6 +38,7 @@ export function TreeItem({
     favorite,
     data,
     openModal,
+    updateRoot,
 }: ITreeItem) {
     const { ref: hoverRef, isHovered: isHovered } = useHover();
     const [isFavorite, setIsFavorite] = useState(favorite);
@@ -49,30 +51,35 @@ export function TreeItem({
     const mlIndex = ['ml-0', 'ml-16', 'ml-32', 'ml-48'];
 
     const handleFavorite = (e: React.MouseEvent) => {
-        // e.stopPropagation();
+        e.stopPropagation();
         // The stopPropagation() method prevents propagation of the same event from being called.
         // Propagation means bubbling up to parent elements or capturing down to child elements.
         // Whereas The preventDefault() method cancels the event if it is cancelable, meaning that the default action that belongs to the event will not occur.
         e.preventDefault();
         if (folder) {
+            console.log(isFavorite);
             partialUpdateFolder(
                 data.id as number,
                 {
-                    favorite: !favorite,
+                    favorite: !isFavorite,
                 },
                 cookies[AUTH_COOKIE_NAME],
             ).then(() => {
                 setIsFavorite(!isFavorite);
+                updateRoot && updateRoot();
             });
         } else {
+            console.log(isFavorite);
+
             partialUpdateNote(
                 data.id as number,
                 {
-                    favorite: !favorite,
+                    favorite: !isFavorite,
                 },
                 cookies[AUTH_COOKIE_NAME],
             ).then(() => {
                 setIsFavorite(!isFavorite);
+                updateRoot && updateRoot();
             });
         }
     };
@@ -127,12 +134,16 @@ export function TreeItem({
                         </div>
 
                         <div className="flex items-center gap-10">
-                            {isHovered && folder && (
-                                <Add
-                                    parentFolderId={data.id as number}
-                                    openModal={openModal}
-                                />
-                            )}
+                            {isHovered &&
+                                folder &&
+                                'depth' in data &&
+                                data.depth &&
+                                data.depth <= 5 && (
+                                    <Add
+                                        parentFolderId={data.id as number}
+                                        openModal={openModal}
+                                    />
+                                )}
 
                             <div>
                                 {isFavorite ? (

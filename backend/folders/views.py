@@ -13,14 +13,11 @@ class FoldersListCreateView(generics.ListCreateAPIView):
     serializer_class = FoldersSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    # TODO: Auto increment depth when creating a new folder
     def create(self, request, *args, **kwargs):
         serializer = FoldersSerializer(
             data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         serializer.save(user=self.request.user)
-        
-        
         folder = serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -29,7 +26,7 @@ class FoldersRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Folders.objects.all()
     serializer_class = FoldersSerializer
     permission_classes = [permissions.IsAuthenticated]
-    
+
     def get(self, request, *args, **kwargs):
         try:
             folder = self.queryset.get(pk=kwargs['pk'])
