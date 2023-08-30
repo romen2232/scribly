@@ -106,6 +106,7 @@ const partialUpdateNote = async (
                 },
             },
         );
+
         return response.data;
     } catch (error) {
         throw new Error(`Error partially updating note: ${error}`);

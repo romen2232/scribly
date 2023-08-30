@@ -19,7 +19,7 @@ export function useAutosave<TData, TReturn>({
     data,
     onSave,
     interval = 2000,
-    saveOnUnmount = true,
+    saveOnUnmount = false,
 }: IUseAutosaveProps<TData, TReturn>) {
     // Reference to keep track of the last data
     const valueOnCleanup = useRef(data);
