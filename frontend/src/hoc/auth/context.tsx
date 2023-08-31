@@ -190,7 +190,6 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
 
             if (!storedToken) {
                 // If no token, redirect to login page
-                navigate(t('/login'));
                 resolve(true);
             } else {
                 // If token exists, update state with token

@@ -59,14 +59,7 @@ export const withAuth = (WrappedComponent: React.FC<any>) => {
 
         // If authentication is still loading, or token checking is in progress, display a loading message
         if (loading || checking) {
-            <div className="flex h-screen items-center justify-center">
-                <p>Loading...</p>
-            </div>;
-            return (
-                <div className="flex h-screen items-center justify-center">
-                    <p>Loading...</p>
-                </div>
-            );
+            return <Loader />;
         }
 
         // If authenticated, render the protected page by passing props to the WrappedComponent
@@ -89,17 +82,44 @@ export const withNoAuth = (WrappedComponent: React.FC<any>) => {
         // Get necessary values from the AuthContext and useNavigate hook
         const navigate = useNavigate();
         const context = useContext(AuthContext);
-        const { isAuthenticated, loading } = context;
+        const { isAuthenticated, loading, checkToken } = context;
+
+        // State to keep track of the component's mounted status and token checking status
+        const [isMounted, setIsMounted] = useState(false);
+        const [checking, setChecking] = useState(true);
+
+        // Effect hook to set isMounted to true when the component is mounted and false when unmounted
+        useEffect(() => {
+            setIsMounted(true);
+
+            return () => {
+                setIsMounted(false);
+            };
+        }, []);
+
+        // Effect hook to check the token and update the checking state accordingly
+        useEffect(() => {
+            const shouldRender = async () => {
+                const result = await checkToken();
+                setChecking(result);
+            };
+
+            shouldRender();
+        }, [checking]);
 
         useEffect(() => {
             // If authenticated, navigate to the home page
-            if (!loading && isAuthenticated) {
+            if (!loading && isAuthenticated && checking) {
                 navigate('/');
             }
-        }, [isAuthenticated, loading]);
+        }, [isAuthenticated, loading, checking]);
+
+        if (!isMounted) {
+            return null;
+        }
 
         // If authentication is still loading, display a loading message
-        if (loading) {
+        if (loading || checking) {
             return <Loader />;
         }
 
