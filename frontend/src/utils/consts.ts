@@ -19,9 +19,9 @@ export const TIVI_URL = '/src/assets/img/Tivi_0.1.0.png',
     RETURN_URL = '/src/assets/img/mock/return.png';
 
 export const BASE_URL = 'http://localhost:8000',
-    AUTH_COOKIE_NAME = 'escribly.auth',
-    REFRESH_COOKIE_NAME = 'escribly.refresh',
-    USER_COOKIE_NAME = 'escribly.user';
+    AUTH_COOKIE_NAME = 'scribly.auth',
+    REFRESH_COOKIE_NAME = 'scribly.refresh',
+    USER_COOKIE_NAME = 'scribly.user';
 
 export const mockUsers = [
         {

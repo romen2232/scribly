@@ -2,7 +2,7 @@ from celery import shared_task
 from django.core.mail import send_mail
 from django.utils import timezone
 
-from escribly_api import settings
+from scribly_api import settings
 from django.template.loader import render_to_string
 
 
@@ -17,7 +17,7 @@ def send_mail_to_verify_account(user_email, username, token):
 
     send_mail(
         subject='Account Activation',
-        from_email='escribly@gmail.com',
+        from_email='scribly@gmail.com',
         message="",
         recipient_list=[user_email, ],
         html_message=msg_html

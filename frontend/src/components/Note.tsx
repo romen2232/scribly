@@ -32,19 +32,22 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
     const [folderTree, setFolderTree] = useState<Folder>();
     const [newFolder, setNewFolder] = useState<Folder>();
     const cookies = parseCookies();
+    const [publicNote, setPublicNote] = useState(false);
 
     // Update note as soon as it's passed as prop
     useEffect(() => {
         setNewNote(note);
         setNewFolder(folder);
+        setPublicNote(note.public ?? false);
     }, [note]);
 
     useEffect(() => {
         setNewNote({
             ...newNote,
             folder: newFolder,
+            public: publicNote,
         });
-    }, [newFolder]);
+    }, [newFolder, publicNote]);
 
     // Save note on unmount
     useEffect(() => {
@@ -132,6 +135,7 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
                         className="h-16 w-full p-16 text-7xl placeholder-gray-500 focus:placeholder-gray-600 focus:outline-none"
                         placeholder="Título"
                         autoFocus
+                        autoComplete="off"
                         value={newNote.noteName ?? ''}
                         onChange={(e) =>
                             setNewNote({
@@ -150,22 +154,41 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
                         </p>
                     </div>
                 </div>
-                {newFolder?.id && (
-                    <button
-                        className={`hover:bg-hover:shadow items-center" m-16 flex h-min cursor-pointer items-center justify-between rounded-md p-3 duration-300 ease-in-out transition hover:text-tiviElectricPurple-100 hover:shadow-lg`}
-                        tabIndex={2}
-                        onClick={onOpen}
-                    >
-                        <FolderIcon className="h-10 w-10" />
-                        {(newFolder?.depth ?? 0) > 0 && (
-                            <div className="px-3 text-lg">
-                                <h4 className="font-bold">
-                                    {newFolder?.folderName}
-                                </h4>
-                            </div>
-                        )}
-                    </button>
-                )}
+                <div className="flex flex-col">
+                    {newFolder?.id && (
+                        <button
+                            className={`hover:bg-hover:shadow items-center" m-16 flex h-min cursor-pointer items-center justify-between rounded-md p-3 duration-300 ease-in-out transition hover:text-tiviElectricPurple-100 hover:shadow-lg`}
+                            tabIndex={2}
+                            onClick={onOpen}
+                        >
+                            <FolderIcon className="h-10 w-10" />
+                            {(newFolder?.depth ?? 0) > 0 && (
+                                <div className="px-3 text-lg">
+                                    <h4 className="font-bold">
+                                        {newFolder?.folderName}
+                                    </h4>
+                                </div>
+                            )}
+                        </button>
+                    )}
+
+                    <label className="flex cursor-pointer flex-col items-center justify-center">
+                        <div className="relative inline-flex items-center">
+                            <input
+                                type="checkbox"
+                                checked={publicNote}
+                                className="peer sr-only"
+                                onChange={() => {
+                                    setPublicNote(!publicNote);
+                                }}
+                            />
+                            <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:content-[''] after:transition-all peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-800"></div>
+                        </div>
+                        <span className="text-sm font-medium text-gray-900 dark:text-gray-300">
+                            Public
+                        </span>
+                    </label>
+                </div>
             </header>
             {/* Content */}
             <textarea

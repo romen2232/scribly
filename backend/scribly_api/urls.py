@@ -12,7 +12,7 @@ from django.conf.urls.static import static
 router = DefaultRouter()
 
 schema_view = get_schema_view(
-    title="Escribly API",
+    title="Scribly API",
     url='http://localhost:8000',
     renderer_classes=[JSONOpenAPIRenderer]
 )

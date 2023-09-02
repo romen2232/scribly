@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import EscriblyListCreateView, EscriblyRetrieveUpdateDeleteView
+from .views import ScriblyListCreateView, ScriblyRetrieveUpdateDeleteView
 
 urlpatterns = [
-    path('escriblys/', EscriblyListCreateView.as_view(), name='escribly-list-create'),
-    path('escribly/<int:pk>/', EscriblyRetrieveUpdateDeleteView.as_view(), name='escribly-retrieve-update-delete')
+    path('scriblys/', ScriblyListCreateView.as_view(), name='scribly-list-create'),
+    path('scribly/<int:pk>/', ScriblyRetrieveUpdateDeleteView.as_view(), name='scribly-retrieve-update-delete')
 ]

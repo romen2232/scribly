@@ -1,12 +1,12 @@
 from rest_framework import generics, permissions
 from rest_framework.response import Response
-from .models import Escribly
-from .serializers import EscriblySerializer
+from .models import Scribly
+from .serializers import ScriblySerializer
 
 
-class EscriblyListCreateView(generics.ListCreateAPIView):
-    queryset = Escribly.objects.all()
-    serializer_class = EscriblySerializer
+class ScriblyListCreateView(generics.ListCreateAPIView):
+    queryset = Scribly.objects.all()
+    serializer_class = ScriblySerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
@@ -14,13 +14,13 @@ class EscriblyListCreateView(generics.ListCreateAPIView):
         serializer = self.get_Serializer(
             data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
-        escribly = serializer.save()
-        return Response({"status": "success", "data": EscriblySerializer(escribly).data})
+        scribly = serializer.save()
+        return Response({"status": "success", "data": ScriblySerializer(scribly).data})
 
 
-class EscriblyRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Escribly.objects.all()
-    serializer_class = EscriblySerializer
+class ScriblyRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Scribly.objects.all()
+    serializer_class = ScriblySerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def update(self, request, *args, **kwargs):
@@ -29,5 +29,5 @@ class EscriblyRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
         serializer = self.get_serializer(
             instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
-        escribly = serializer.save()
-        return Response({"status": "success", "data": EscriblySerializer(escribly).data})
+        scribly = serializer.save()
+        return Response({"status": "success", "data": ScriblySerializer(scribly).data})

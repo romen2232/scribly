@@ -31,7 +31,6 @@ const New: React.FunctionComponent<INewProps> = () => {
 
     useEffect(() => {
         const getFolder = async () => {
-            //Check if folderId is a number
             if (isNaN(folderId)) {
                 setFolderId(-1);
             }
@@ -49,9 +48,13 @@ const New: React.FunctionComponent<INewProps> = () => {
             }
             const root = await rootFolder(cookies[AUTH_COOKIE_NAME]);
             setFolder(root);
-            if (root.id)
+            if (root.id) {
+                console.log(root.id);
+                setFolderId(root.id);
                 newQueryParameters.set(t('folderId'), root.id.toString());
+            }
             setSearchParam(newQueryParameters);
+            console.log(folderId);
         };
         const getNote = async () => {
             if (noteId !== -1) {
@@ -80,10 +83,9 @@ const New: React.FunctionComponent<INewProps> = () => {
                 setSearchParam(newQueryParameters);
             }
         };
-
         getFolder();
         getNote();
-    }, []);
+    }, [folderId]);
 
     const updateURLWithFolderId = (folderId: number) => {
         const newQueryParameters = new URLSearchParams(window.location.search);
