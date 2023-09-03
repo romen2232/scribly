@@ -55,12 +55,37 @@ class TaskRatingsView(APIView):
         return Response(serializer.data)
 
 
+class NoteRatingsView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, note_id, *args, **kwargs):
+        print("note_id", note_id)
+        ratings = Ratings.objects.filter(note_id=note_id)
+        serializer = RatingsSerializer(
+            ratings, many=True, context={'request': request})
+        return Response(serializer.data)
+
+    def post(self, request, *args, **kwargs):
+        serializer = RatingsSerializer(
+            data=request.data, context={'request': request})
+        user = request.user
+        if serializer.is_valid():
+            serializer.save(user=user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class RatingDetailView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def get_object(self, user_id, challenge_id=None, task_id=None):
+    def get_object(self, user_id, challenge_id=None, task_id=None, note_id=None):
         try:
-            return Ratings.objects.get(user=user_id, challenge=challenge_id, task=task_id)
+            if challenge_id is not None:
+                return Ratings.objects.get(user_id=user_id, challenge_id=challenge_id)
+            elif task_id is not None:
+                return Ratings.objects.get(user_id=user_id, task_id=task_id)
+            elif note_id is not None:
+                return Ratings.objects.get(user_id=user_id, note_id=note_id)
         except Ratings.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
