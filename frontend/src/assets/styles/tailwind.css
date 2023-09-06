@@ -9,12 +9,36 @@
     font-style: normal;
 }
 
+@font-face {
+  font-family: 'Poppins';
+  src: url('src/assets/fonts/Poppins/Poppins-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('src/assets/fonts/Poppins/Poppins-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('src/assets/fonts/Poppins/Poppins-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+}
+
 
 html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-}
+    background: theme('colors.mainBackground[200]');
+    font-family: 'Poppins', sans-serif;
+
+  }
 #root {
     height: 100%;
     width: 100%;
