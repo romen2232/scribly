@@ -28,7 +28,6 @@ apiClient.interceptors.response.use(
         const originalRequest = error.config;
 
         // Check if the error is a 401 and the request is not already trying to refresh the token
-        console.log(error.response, "What's the error?");
         if (
             error.response.status === 401 &&
             !originalRequest._retry &&
@@ -39,7 +38,6 @@ apiClient.interceptors.response.use(
 
             // Get refresh token from storage
             const storedRefreshToken = cookies[REFRESH_COOKIE_NAME];
-            console.log(storedRefreshToken);
             if (storedRefreshToken !== null)
                 // Attempt to refresh the token
                 try {

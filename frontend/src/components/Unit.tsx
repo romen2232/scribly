@@ -10,6 +10,7 @@ export interface IUnitProps {
 export function Unit({ unit }: IUnitProps) {
     const { lessons, unitColor, unitDescription, unitNumber } = unit;
     const [currentLesson, setCurrentLesson] = useState<number>();
+    console.log(unit);
 
     const [areLessonsVisible, setAreLessonsVisible] = useState(false);
 
@@ -52,7 +53,7 @@ export function Unit({ unit }: IUnitProps) {
                         return (
                             <LessonIcon
                                 key={lesson.id}
-                                bgColor={lesson.bgColor}
+                                bgColor={'secondaryYellow-500'}
                                 lesson={lesson}
                                 extraClasses={margin}
                                 disabled={disabled}

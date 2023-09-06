@@ -12,7 +12,7 @@ export function Header(props: IHeaderProps) {
         <header className="flex justify-between">
             <nav>
                 <button
-                    onClick={() => navigate(-1)}
+                    onClick={() => navigate(-5)}
                     className="duration-150 ease-in-out transition hover:text-tiviElectricPurple-100"
                 >
                     <BackIcon className="h-16 w-16 " />

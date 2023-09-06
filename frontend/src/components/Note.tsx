@@ -18,6 +18,8 @@ import {
 } from '@nextui-org/react';
 import { Tree } from './Tree';
 import { rootFolder } from '../services/folders';
+import useVisibility from '../hooks/useVisibility';
+import { useLocation } from 'react-router';
 export interface INoteProps {
     note: NoteType;
     folder?: Folder;
@@ -34,6 +36,14 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
     const cookies = parseCookies();
     const [publicNote, setPublicNote] = useState(false);
 
+    const [noteRef, isNoteVisible] = useVisibility<HTMLDivElement>();
+
+    const { pathname } = useLocation();
+
+    useEffect(() => {
+        console.log(pathname);
+    }, [pathname]);
+
     // Update note as soon as it's passed as prop
     useEffect(() => {
         setNewNote(note);
@@ -42,12 +52,24 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
     }, [note]);
 
     useEffect(() => {
+        if (!newFolder) return;
         setNewNote({
             ...newNote,
             folder: newFolder,
             public: publicNote,
         });
+        saveNote({
+            ...newNote,
+            folder: newFolder,
+            public: publicNote,
+        });
     }, [newFolder, publicNote]);
+
+    useEffect(() => {
+        if (!isNoteVisible) {
+            handleUnmount(newNote);
+        }
+    }, [isNoteVisible]);
 
     // Save note on unmount
     useEffect(() => {
@@ -96,6 +118,7 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
      * Destroy note if it's empty
      */
     const handleUnmount = async (note: NoteType) => {
+        console.log(note);
         if (note.noteContent === '' && note.noteName === '' && note.id) {
             await destroyNote(note.id, cookies[AUTH_COOKIE_NAME]);
         } else {
@@ -125,7 +148,7 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
     };
 
     return (
-        <div className="h-full">
+        <div ref={noteRef} className="h-full">
             <header className="flex items-center justify-between">
                 <div className="w-full">
                     <input

@@ -1,7 +1,7 @@
 import { apiClient } from './api';
-import { components } from '../utils/openapi';
-
-type Rating = components['schemas']['Rating'];
+import { parseCookies } from 'nookies';
+import { USER_COOKIE_NAME } from '../utils/consts';
+import { Rating } from '../utils/types';
 
 /** This request retrieves a list of all ratings.
  * @param token JWT token
@@ -269,6 +269,118 @@ const deleteUserTaskRating = async (
     }
 };
 
+const retrieveUserNoteRating = async (
+    noteId: number,
+    token: string,
+    userId?: number,
+): Promise<Rating> => {
+    let idUser = userId;
+    if (!idUser) {
+        const cookies = parseCookies();
+        idUser = JSON.parse(cookies[USER_COOKIE_NAME]).id;
+    }
+    try {
+        const response = await apiClient.get<Rating>(
+            `/api/v1/ratings/user/${idUser}/note/${noteId}/`,
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            },
+        );
+        return response.data;
+    } catch (error) {
+        throw new Error(`Error retrieving user note rating: ${error}`);
+    }
+};
+
+const createUserNoteRating = async (
+    rating: Partial<Rating>,
+    token: string,
+): Promise<Rating> => {
+    try {
+        const response = await apiClient.post<Rating>(
+            `/api/v1/ratings/note/`,
+            rating,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            },
+        );
+        return response.data;
+    } catch (error) {
+        throw new Error(`Error creating user note rating: ${error}`);
+    }
+};
+
+const updateUserNoteRating = async (
+    userId: number,
+    noteId: number,
+    rating: Partial<Rating>,
+    token: string,
+): Promise<Rating> => {
+    try {
+        const response = await apiClient.patch<Rating>(
+            `/api/v1/ratings/user/${userId}/note/${noteId}/`,
+            rating,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            },
+        );
+        return response.data;
+    } catch (error) {
+        throw new Error(`Error updating user note rating: ${error}`);
+    }
+};
+
+const partialUpdateUserNoteRating = async (
+    noteId: number,
+    rating: Partial<Rating>,
+    token: string,
+    userId?: number,
+): Promise<Rating> => {
+    let idUser = userId;
+    if (!idUser) {
+        const cookies = parseCookies();
+        idUser = JSON.parse(cookies[USER_COOKIE_NAME]).id;
+    }
+    try {
+        const response = await apiClient.patch<Rating>(
+            `/api/v1/ratings/user/${idUser}/note/${noteId}/`,
+            rating,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            },
+        );
+        return response.data;
+    } catch (error) {
+        throw new Error(`Error updating user note rating: ${error}`);
+    }
+};
+
+const deleteUserNoteRating = async (
+    userId: number,
+    noteId: number,
+    token: string,
+): Promise<void> => {
+    try {
+        await apiClient.delete(
+            `/api/v1/ratings/user/${userId}/note/${noteId}/`,
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            },
+        );
+    } catch (error) {
+        throw new Error(`Error deleting user note rating: ${error}`);
+    }
+};
+
 export {
     listRatings,
     createRating,
@@ -281,4 +393,9 @@ export {
     updateUserTaskRating,
     deleteUserChallengeRating,
     deleteUserTaskRating,
+    retrieveUserNoteRating,
+    createUserNoteRating,
+    updateUserNoteRating,
+    partialUpdateUserNoteRating,
+    deleteUserNoteRating,
 };

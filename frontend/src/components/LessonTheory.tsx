@@ -74,7 +74,9 @@ const LessonTheory: React.FC<LessonTheoryProps> = ({ theory, onEnd }) => {
     ]);
 
     return (
-        <div className={`flex h-screen items-center justify-center `}>
+        <div
+            className={`flex h-screen items-center justify-center p-48 text-center text-5xl font-extrabold`}
+        >
             {sections[currentSectionIndex]}
         </div>
     );

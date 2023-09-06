@@ -114,7 +114,7 @@ const Lesson = () => {
             setSkippedTask(false);
         } else {
             // TODO: Make page for when the lesson is completed
-            navigate(t('/'));
+            navigate(t('/finishLesson'));
         }
     };
 

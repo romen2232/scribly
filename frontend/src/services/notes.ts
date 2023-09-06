@@ -120,6 +120,7 @@ const partialUpdateNote = async (
  * @throws Error if note deletion fails
  */
 const destroyNote = async (id: number, token: string): Promise<void> => {
+    console.log('destroyNote');
     try {
         await apiClient.delete(`/api/v1/note/${id}/`, {
             headers: { Authorization: `Bearer ${token}` },

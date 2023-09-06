@@ -49,12 +49,10 @@ const New: React.FunctionComponent<INewProps> = () => {
             const root = await rootFolder(cookies[AUTH_COOKIE_NAME]);
             setFolder(root);
             if (root.id) {
-                console.log(root.id);
                 setFolderId(root.id);
                 newQueryParameters.set(t('folderId'), root.id.toString());
             }
             setSearchParam(newQueryParameters);
-            console.log(folderId);
         };
         const getNote = async () => {
             if (noteId !== -1) {
@@ -70,6 +68,7 @@ const New: React.FunctionComponent<INewProps> = () => {
                     setNoteId(-1);
                 }
             }
+            if (folderId === -1) return;
             const note = await createNote(
                 {
                     folder: folderId,
@@ -94,7 +93,7 @@ const New: React.FunctionComponent<INewProps> = () => {
     };
 
     return (
-        <div className="h-full max-h-screen overflow-hidden text-tiviBlack">
+        <div className="text-tiviBlack h-full max-h-screen overflow-hidden">
             <Header />
             <main className=" flex h-full flex-col">
                 <Note

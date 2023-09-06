@@ -25,7 +25,6 @@ const listFolders = async (token: string): Promise<Folder> => {
  */
 const createFolder = async (folder: Folder, token: string): Promise<Folder> => {
     try {
-        console.log(folder);
         const response = await apiClient.post<Folder>(
             '/api/v1/folders/',
             folder,

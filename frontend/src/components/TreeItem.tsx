@@ -77,8 +77,6 @@ export function TreeItem({
                 updateRoot && updateRoot();
             });
         } else {
-            console.log(isFavorite);
-
             partialUpdateNote(
                 data.id as number,
                 {

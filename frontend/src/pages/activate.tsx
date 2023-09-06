@@ -1,10 +1,14 @@
 import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { AuthContext } from '../hoc/auth/context';
 import { useContext } from 'react';
+import HeadFoot from '../components/HeadFoot';
+import { Hyperlink } from '../components/Hyperlink';
+import { Button } from '../components/Button';
+import { PaperPlane } from '../assets/icons/Icons';
 
 const determineDomain = (email: string) => {
-    let domain = email;
+    let domain = email.split('@')[1] ?? email;
     if (domain.includes('gmail')) domain = 'https://mail.google.com/mail/u/0/';
     else if (domain.includes('outlook') || domain.includes('hotmail'))
         domain = 'https://outlook.live.com/mail/0/inbox';
@@ -39,40 +43,41 @@ const Activate: React.FC = () => {
     }
 
     return (
-        <div className="flex h-full flex-col items-center bg-white ">
-            <div className="h-2/5 w-auto overflow-hidden">
-                <img
-                    src="/img/emailSent.jpg"
-                    alt={t('activate.Sent')}
-                    className="h-full min-w-full object-cover"
-                />
-            </div>
-            <div className="align-center flex flex-col px-28">
-                <h2 className="my-4 text-center text-2xl font-bold">
-                    {t('activate.Thanks')}
-                </h2>
-                <p className=" text-center">{t('activate.ConfirmationSent')}</p>
-                {domain !== '' ? (
-                    <Link
-                        to={domain}
-                        className="mx-44 mt-8 rounded bg-tiviElectricPurple-100 p-4 text-center font-bold transition duration-300 ease-in-out hover:bg-tiviElectricViolet"
-                    >
-                        {t('activate.GoToMail')}
-                    </Link>
-                ) : null}
+        <HeadFoot>
+            <div className="flex h-full flex-col items-center justify-center">
+                <div className="h-64 w-64 overflow-hidden rounded-full">
+                    <PaperPlane />
+                </div>
+                <div className="flex flex-col items-center justify-center px-28">
+                    <h2 className="my-4 text-center text-2xl font-bold">
+                        {t('activate.Thanks')}
+                    </h2>
+                    <p className=" text-center">
+                        {t('activate.ConfirmationSent')}
+                    </p>
+                    {domain !== '' ? (
+                        <Button
+                            linkTo={domain}
+                            className="mt-4 w-full rounded  px-3 py-2 font-bold text-secondaryYellow-500 duration-200 ease-in-out transition"
+                            bgColor="zinc-800 "
+                        >
+                            {t('activate.GoToMail')}
+                        </Button>
+                    ) : null}
 
-                <p className="mt-8 text-center text-xs">
-                    {t('activate.NoEmail')}
+                    <p className="mt-8 text-center text-xs">
+                        {t('activate.NoEmail')}
 
-                    <br />
-                    {t('activate.CheckSpam')}
-                    {/* TODO: Hacer algo para el resend */}
-                    <Link to="/login" className="text-tiviElectricViolet">
-                        {t('activate.resend')}
-                    </Link>
-                </p>
+                        <br />
+                        {t('activate.CheckSpam')}
+                        {/* TODO: Hacer algo para el resend */}
+                        <Hyperlink to="/login" color="pink">
+                            {t('activate.resend')}
+                        </Hyperlink>
+                    </p>
+                </div>
             </div>
-        </div>
+        </HeadFoot>
     );
 };
 export default Activate;

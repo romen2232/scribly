@@ -28,6 +28,8 @@ const Profile = () => {
     const loggedUsername = JSON.parse(cookies[USER_COOKIE_NAME]).username;
     const [posts, setPosts] = useState<Note[]>([]);
 
+    console.log(username);
+
     //TODO: change list Notes to list Notes by user
     useEffect(() => {
         listNotes(cookies[AUTH_COOKIE_NAME])

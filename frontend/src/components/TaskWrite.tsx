@@ -6,7 +6,7 @@ interface TaskWriteProps extends TaskProps {
     initialNote: NoteType;
 }
 
-const TaskWrite = ({ task, onSubmit, onSkip, initialNote }: TaskWriteProps) => {
+const TaskWrite = ({ task, onSubmit, initialNote }: TaskWriteProps) => {
     const [currentNote, setCurrentNote] = useState<NoteType>(initialNote);
 
     const handleNoteChange = (updatedNote: NoteType) => {
@@ -24,10 +24,6 @@ const TaskWrite = ({ task, onSubmit, onSkip, initialNote }: TaskWriteProps) => {
         onSubmit(answer, task);
     };
 
-    const handleSkip = () => {
-        onSkip(task);
-    };
-
     return (
         <div className="space-y-4">
             <h2 className="text-2xl font-bold">{task.taskName}</h2>
@@ -42,12 +38,6 @@ const TaskWrite = ({ task, onSubmit, onSkip, initialNote }: TaskWriteProps) => {
                     onClick={handleAnswer}
                 >
                     Submit
-                </button>
-                <button
-                    className="w-1/2 rounded-xl border-2 bg-gray-500 p-4"
-                    onClick={handleSkip}
-                >
-                    Skip
                 </button>
             </div>
         </div>

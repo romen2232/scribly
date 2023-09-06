@@ -165,6 +165,7 @@ export interface Rating {
     rating: number;
     challenge?: number | null;
     task?: number | null;
+    note?: number | null;
     rating_date: Date;
 }
 export interface BadgeUser {

@@ -35,12 +35,10 @@ export function Learn() {
         );
 
     return (
-        <main className="h-full ">
-            <div className="flex flex-col">
-                {units.map((unit) => (
-                    <Unit key={unit.id} unit={unit} />
-                ))}
-            </div>
+        <main className="flex h-full w-full flex-col items-center">
+            {units.map((unit) => (
+                <Unit key={unit.id} unit={unit} />
+            ))}
         </main>
     );
 }

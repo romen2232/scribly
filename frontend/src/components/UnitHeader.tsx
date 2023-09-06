@@ -1,6 +1,7 @@
 import { t } from 'i18next';
 import { Link } from 'react-router-dom';
 import { LessonPlayIcon } from '../assets/icons/Icons';
+import { Button } from './Button';
 
 export interface IUnitHeaderProps {
     unitNumber: number;
@@ -16,11 +17,9 @@ export function UnitHeader({
     currentLesson,
 }: IUnitHeaderProps) {
     return (
-        <article
-            className={[
-                'mb-8 max-w-2xl rounded-xl text-black',
-                backgroundColor,
-            ].join(' ')}
+        <Button
+            className="mb-8 max-w-2xl rounded-xl px-3 py-1.5 text-black"
+            bgColor={backgroundColor}
         >
             <header className="flex w-96 items-center justify-between p-4">
                 <div className="flex flex-col gap-1">
@@ -37,6 +36,6 @@ export function UnitHeader({
                     <LessonPlayIcon size={32} />
                 </Link>
             </header>
-        </article>
+        </Button>
     );
 }
