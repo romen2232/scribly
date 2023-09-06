@@ -5,11 +5,10 @@ import { AuthProvider } from '../hoc/auth/context';
 import Loader from '../pages/loader';
 import { ToastContainer } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
-import Login from '../pages/login';
+import LandingPage from '../pages/landingPage';
 const Home = lazy(() => import('../pages/home'));
 const New = lazy(() => import('../pages/new'));
 const Folders = lazy(() => import('../pages/folders'));
-const Register = lazy(() => import('../pages/register'));
 const Activate = lazy(() => import('../pages/activate'));
 const Profile = lazy(() => import('../pages/profile'));
 const Lesson = lazy(() => import('../pages/lesson'));
@@ -21,8 +20,8 @@ const ProtectedNew = withAuth(New);
 const ProtectedFolders = withAuth(Folders);
 const ProtectedProfile = withAuth(Profile);
 const ProtectedLesson = withAuth(Lesson);
-const ProtectedLogin = withNoAuth(Login);
-const ProtectedRegister = withNoAuth(Register);
+const ProtectedLogin = withNoAuth(LandingPage);
+const ProtectedRegister = withNoAuth(LandingPage);
 
 /**
  * Component App is the root component of our application. It renders the different

@@ -1,6 +1,8 @@
 import React, { FC, useState } from 'react';
 import { InputField } from './InputField';
 import { useTranslation } from 'react-i18next';
+import { Hyperlink } from './Hyperlink';
+import { Button } from './Button';
 
 interface FormProps {
     onSubmit: (email: string, password: string, username: string) => void;
@@ -12,48 +14,59 @@ export const FormRegister: FC<FormProps> = ({ onSubmit }) => {
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
 
-    const handleLogin = (event: React.FormEvent) => {
+    const handleRegister = (event: React.FormEvent) => {
         event.preventDefault();
         onSubmit(email, password, username);
     };
 
     return (
-        <form className="mt-8 space-y-6" onSubmit={handleLogin}>
-            <InputField
-                label={t('register.Email')}
-                inputType="email"
-                name={t('register.Email')}
-                placeholder={t('register.Email')}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-            />
-            <InputField
-                label={t('register.Username')}
-                inputType="text"
-                name={t('register.Username')}
-                placeholder={t('register.Username')}
-                value={username}
-                required
-                onChange={(e) => setUsername(e.target.value)}
-            />
-
-            <InputField
-                label="Password"
-                inputType="password"
-                placeholder="Password"
-                name="password"
-                value={password}
-                required
-                onChange={(e) => setPassword(e.target.value)}
-            />
-
-            <button
-                type="submit"
-                className="mt-4 w-full rounded bg-tiviElectricPurple-100 px-3 py-2 transition duration-200 ease-in-out hover:bg-tiviElectricViolet"
-            >
+        <main className="h-96">
+            <h2 className="my-4 text-center text-2xl font-bold">
                 {t('register.Register')}
-            </button>
-        </form>
+            </h2>
+            <p>
+                {t('register.Already')} &nbsp;
+                <Hyperlink to={t('/login')} color="blue">
+                    {t('login.Login')}
+                </Hyperlink>
+            </p>
+            <form className="mt-8 space-y-6" onSubmit={handleRegister}>
+                <InputField
+                    label={t('register.Email')}
+                    inputType="email"
+                    name={t('register.Email')}
+                    placeholder={t('register.Email')}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                />
+                <InputField
+                    label={t('register.Username')}
+                    inputType="text"
+                    name={t('register.Username')}
+                    placeholder={t('register.Username')}
+                    value={username}
+                    required
+                    onChange={(e) => setUsername(e.target.value)}
+                />
+
+                <InputField
+                    label="Password"
+                    inputType="password"
+                    placeholder="Password"
+                    name="password"
+                    value={password}
+                    required
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+
+                <Button
+                    className="mt-4 w-full rounded  px-3 py-2 font-bold text-secondaryYellow-500 duration-200 ease-in-out transition"
+                    bgColor="zinc-800 "
+                >
+                    {t('register.Register')}
+                </Button>
+            </form>
+        </main>
     );
 };

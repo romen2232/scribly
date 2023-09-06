@@ -15,11 +15,11 @@ import { NextUIProvider } from '@nextui-org/react';
 */
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-    // <React.StrictMode>
-    <BrowserRouter>
-        <NextUIProvider>
-            <App />
-        </NextUIProvider>
-    </BrowserRouter>,
-    // </React.StrictMode>,
+    <React.StrictMode>
+        <BrowserRouter>
+            <NextUIProvider>
+                <App />
+            </NextUIProvider>
+        </BrowserRouter>
+    </React.StrictMode>,
 );

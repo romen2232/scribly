@@ -22,18 +22,8 @@ export const withAuth = (WrappedComponent: React.FC<any>) => {
         const context = useContext(AuthContext);
         const { isAuthenticated, loading, checkToken } = context;
 
-        // State to keep track of the component's mounted status and token checking status
-        const [isMounted, setIsMounted] = useState(false);
+        // State to keep track of the component's token checking status
         const [checking, setChecking] = useState(true);
-
-        // Effect hook to set isMounted to true when the component is mounted and false when unmounted
-        useEffect(() => {
-            setIsMounted(true);
-
-            return () => {
-                setIsMounted(false);
-            };
-        }, []);
 
         // Effect hook to check the token and update the checking state accordingly
         useEffect(() => {
@@ -51,11 +41,6 @@ export const withAuth = (WrappedComponent: React.FC<any>) => {
                 navigate('/login');
             }
         }, [isAuthenticated, loading, checking]);
-
-        // If the component is not mounted yet, return null (don't render anything)
-        if (!isMounted) {
-            return null;
-        }
 
         // If authentication is still loading, or token checking is in progress, display a loading message
         if (loading || checking) {
@@ -82,44 +67,17 @@ export const withNoAuth = (WrappedComponent: React.FC<any>) => {
         // Get necessary values from the AuthContext and useNavigate hook
         const navigate = useNavigate();
         const context = useContext(AuthContext);
-        const { isAuthenticated, loading, checkToken } = context;
-
-        // State to keep track of the component's mounted status and token checking status
-        const [isMounted, setIsMounted] = useState(false);
-        const [checking, setChecking] = useState(true);
-
-        // Effect hook to set isMounted to true when the component is mounted and false when unmounted
-        useEffect(() => {
-            setIsMounted(true);
-
-            return () => {
-                setIsMounted(false);
-            };
-        }, []);
-
-        // Effect hook to check the token and update the checking state accordingly
-        useEffect(() => {
-            const shouldRender = async () => {
-                const result = await checkToken();
-                setChecking(result);
-            };
-
-            shouldRender();
-        }, [checking]);
+        const { isAuthenticated, loading } = context;
 
         useEffect(() => {
             // If authenticated, navigate to the home page
-            if (!loading && isAuthenticated && checking) {
+            if (!loading && isAuthenticated) {
                 navigate('/');
             }
-        }, [isAuthenticated, loading, checking]);
-
-        if (!isMounted) {
-            return null;
-        }
+        }, [isAuthenticated, loading]);
 
         // If authentication is still loading, display a loading message
-        if (loading || checking) {
+        if (loading) {
             return <Loader />;
         }
 
