@@ -47,6 +47,13 @@
     "profile.SeeMore": "Ver más",
 
     "folders.Title": "Carpetas",
+    "folders.Name": "Nombre",
+    "folders.Description": "Descripción",
+    "folders.Modal.Title": "Nueva carpeta",
+    "folders.Modal.Name": "Nombre",
+    "folders.modal.cancel": "Cancelar",
+    "folders.modal.create": "Crear",
+    "folders.NoFolders": "No se han encontrado carpetas ni notas",
 
     "note.NewNote": "Nueva nota",
 

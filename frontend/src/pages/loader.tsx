@@ -1,74 +1,20 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
+import '../assets/styles/loader.css';
 
-const loadingContainer = {
-    width: '4rem',
-    height: '4rem',
-    display: 'flex',
-    justifyContent: 'space-around',
-};
-const loadingCircle = {
-    display: 'block',
-    width: '1rem',
-    height: '1rem',
-    backgroundColor: '#B601FD',
-    borderRadius: '0.5rem',
-};
-
-const loadingContainerVariants = {
-    start: {
-        transition: {
-            staggerChildren: 0.2,
-        },
-    },
-    end: {
-        transition: {
-            staggerChildren: 0.2,
-        },
-    },
-};
-
-const loadingCircleVariants = {
-    start: {
-        y: '0%',
-    },
-    end: {
-        y: '60%',
-    },
-};
-const loadingCircleTransition = {
-    duration: 0.4,
-    repeat: Infinity,
-    repeatType: 'reverse',
-    repeatDelay: 0.1,
-};
-
+// https://codepen.io/borntofrappe/pen/yxExMw
 const Loader = () => {
+    const { t } = useTranslation();
     return (
-            <div className="fixed flex h-screen w-full items-center justify-center">
-                <motion.div
-                    style={loadingContainer}
-                    variants={loadingContainerVariants}
-                    initial="start"
-                    animate="end"
-                >
-                    <motion.span
-                        style={loadingCircle}
-                        variants={loadingCircleVariants}
-                        transition={loadingCircleTransition}
-                    ></motion.span>
-                    <motion.span
-                        style={loadingCircle}
-                        variants={loadingCircleVariants}
-                        transition={loadingCircleTransition}
-                    ></motion.span>
-                    <motion.span
-                        style={loadingCircle}
-                        variants={loadingCircleVariants}
-                        transition={loadingCircleTransition}
-                    ></motion.span>
-                </motion.div>
+        <div className="flex h-full w-full items-center justify-center">
+            <div className="card">
+                <div className="moon">
+                    <div className="eye left"></div>
+                    <div className="eye right"></div>
+                    <div className="mouth"></div>
+                </div>
+                <p>{t('Loading')}</p>
             </div>
+        </div>
     );
 };
 

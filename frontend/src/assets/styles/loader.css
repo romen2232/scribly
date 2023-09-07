@@ -1,0 +1,215 @@
+/* https://codepen.io/borntofrappe/pen/yxExMw */
+.card * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+.card {
+  background: #fffdf6;
+  padding: 5rem;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  position: relative;
+  animation: clearCard 0.5s 30s cubic-bezier(0.42, -1, 0.88, 1.44) forwards;
+}
+
+.card p {
+  font-weight: bold;
+  margin: 2.5rem;
+  font-size: 1.15rem;
+}
+.moon {
+  width: 82px;
+  height: 82px;
+  border-radius: 50%;
+  background: #a5cdce;
+  box-shadow: 0 0 0 10px #fffdf6, 0 0 0 11px rgba(50,205,255,0.5);
+  position: relative;
+}
+.moon:before,
+.moon:after {
+  position: absolute;
+  content: '';
+  background: #93c3c4;
+  border-radius: 50%;
+  animation: orbit 2s ease-in-out 15 alternate forwards;
+}
+.moon:before {
+  width: 12px;
+  height: 12px;
+  left: calc(50% - 6px);
+  top: calc(50% - 6px);
+  transform: rotate(0) translateX(52px) rotate(0);
+}
+.moon:after {
+  width: 10px;
+  height: 10px;
+  left: calc(50% - 5px);
+  top: calc(50% - 5px);
+  transform: rotate(-180deg) translateX(52px) rotate(180deg);
+}
+.moon .eye {
+  position: absolute;
+  width: 6px;
+  height: 16px;
+  border-radius: 50%;
+  background: #4b9b9d;
+  top: 35%;
+  animation: lookDown 2s ease-in-out 15 alternate forwards;
+}
+.moon .eye.left {
+  left: 50%;
+}
+.moon .eye.right {
+  left: 70%;
+}
+.moon .eye:before {
+  position: absolute;
+  content: '';
+  width: 8px;
+  height: 4px;
+  bottom: 0;
+  left: calc(50% - 4px);
+  border-radius: 50%;
+  background: #70dcff;
+}
+.moon .eye:after {
+  position: absolute;
+  content: '';
+  width: 8px;
+  height: 2px;
+  bottom: calc(100% + 10px);
+  left: calc(50% - 4px);
+  border-radius: 50% 50% 0 0;
+  background: #4b9b9d;
+}
+.moon .mouth {
+  position: absolute;
+  border-radius: 50%;
+  width: 6px;
+  height: 6px;
+  top: 65%;
+  left: 60%;
+  background: #4b9b9d;
+  animation: gasp 2s ease-in-out 15 alternate forwards;
+}
+@media (max-width: 500px) {
+  .card {
+    flex-direction: column;
+    padding: 2rem;
+  }
+}
+@-moz-keyframes clearCard {
+  100% {
+    transform: translateX(-100vh);
+    opacity: 0;
+  }
+}
+@-webkit-keyframes clearCard {
+  100% {
+    transform: translateX(-100vh);
+    opacity: 0;
+  }
+}
+@-o-keyframes clearCard {
+  100% {
+    transform: translateX(-100vh);
+    opacity: 0;
+  }
+}
+@keyframes clearCard {
+  100% {
+    transform: translateX(-100vh);
+    opacity: 0;
+  }
+}
+@-moz-keyframes loadMore {
+  100% {
+    width: 100%;
+  }
+}
+@-webkit-keyframes loadMore {
+  100% {
+    width: 100%;
+  }
+}
+@-o-keyframes loadMore {
+  100% {
+    width: 100%;
+  }
+}
+@keyframes loadMore {
+  100% {
+    width: 100%;
+  }
+}
+@-moz-keyframes orbit {
+  100% {
+    transform: rotate(360deg) translateX(52px) rotate(-360deg);
+  }
+}
+@-webkit-keyframes orbit {
+  100% {
+    transform: rotate(360deg) translateX(52px) rotate(-360deg);
+  }
+}
+@-o-keyframes orbit {
+  100% {
+    transform: rotate(360deg) translateX(52px) rotate(-360deg);
+  }
+}
+@keyframes orbit {
+  100% {
+    transform: rotate(360deg) translateX(52px) rotate(-360deg);
+  }
+}
+@-moz-keyframes lookDown {
+  100% {
+    top: 60%;
+    transform: scale(0.8);
+  }
+}
+@-webkit-keyframes lookDown {
+  100% {
+    top: 60%;
+    transform: scale(0.8);
+  }
+}
+@-o-keyframes lookDown {
+  100% {
+    top: 60%;
+    transform: scale(0.8);
+  }
+}
+@keyframes lookDown {
+  100% {
+    top: 60%;
+    transform: scale(0.8);
+  }
+}
+@-moz-keyframes gasp {
+  100% {
+    top: 80%;
+    transform: scale(0.7);
+  }
+}
+@-webkit-keyframes gasp {
+  100% {
+    top: 80%;
+    transform: scale(0.7);
+  }
+}
+@-o-keyframes gasp {
+  100% {
+    top: 80%;
+    transform: scale(0.7);
+  }
+}
+@keyframes gasp {
+  100% {
+    top: 80%;
+    transform: scale(0.7);
+  }
+}

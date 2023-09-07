@@ -33,7 +33,7 @@ const LandingPage: React.FC = () => {
     ) : (
         <HeadFoot>
             <PageContainer>
-                <div className="min-h-[550px]">
+                <div className="min-h-[550px] pt-9">
                     <Scribly />
                     <div className="duration-300 transition-all">
                         {location.pathname === t('/login') ? (

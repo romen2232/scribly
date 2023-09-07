@@ -8,7 +8,7 @@ export interface IAsideProps {
 
 export const AsideButton = ({ icon, title, linkTo }: IAsideProps) => {
     const classNames =
-        'mt-4 flex h-12 w-full items-center justify-start rounded-lg p-6 hover:bg-secondaryYellow-500 hover:font-bold hover:shadow-inner-dark hover:active:translate-y-1.5 hover:active:shadow-none';
+        'mt-4 flex h-12 w-full items-center justify-start rounded-lg p-6 hover:bg-secondaryYellow-500 hover:font-bold hover:shadow-inner-dark hover:active:translate-y-1.5 hover:active:shadow-none duration-150 ease-in-out transition';
     if (linkTo) {
         return (
             <Link to={linkTo} className={classNames}>

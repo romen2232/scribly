@@ -1,10 +1,4 @@
-// import { Header } from '../components/HeaderHome';
 import { Learn } from '../components/Learn';
-// import { Footer } from '../components/Footer';
-// import { LargeModal } from '../components/LargeModal';
-// import { useState } from 'react';
-// import { Streak } from '../components/Streak';
-// import { Category } from '../components/Category';
 import { Aside } from '../components/Aside';
 import Scribly from '../components/Scribly';
 import { AsideButton } from '../components/AsideButton';
@@ -21,13 +15,6 @@ interface IHomeProps {}
 
 const Home: React.FunctionComponent<IHomeProps> = () => {
     const { t } = useTranslation();
-    // const [isLargeModalOpen, setIsLargeModalOpen] = useState(false);
-    // const [LargeModalType, setLargeModalType] = useState('');
-
-    // const handleLargeModalClick = (type: string) => {
-    //     setIsLargeModalOpen(!isLargeModalOpen);
-    //     setLargeModalType(type);
-    // };
 
     return (
         <div className="flex h-full w-full items-center justify-between">

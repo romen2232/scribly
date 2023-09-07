@@ -22,18 +22,18 @@ const WavyHeader = ({ children, color, className }: wavyFooterProps) => {
 
     const fullClassName = desktop
         ? [
-              'md:h-42 absolute bottom-0 right-0 h-32 w-full overflow-hidden lg:bottom-auto lg:left-0 lg:top-0 lg:h-full lg:w-1/5',
+              'absolute bottom-0 right-0 h-20 w-full overflow-hidden lg:bottom-auto lg:left-0 lg:top-0 lg:h-full lg:w-1/5',
               bgColor(),
               className,
           ]
         : [
-              'md:h-42 absolute left-0 top-0 h-32 w-full overflow-hidden lg:bottom-auto lg:left-0 lg:top-0 lg:h-full lg:w-1/5',
+              ' absolute left-0 top-0 h-20 w-full overflow-hidden lg:bottom-auto lg:left-0 lg:top-0 lg:h-full lg:w-1/5',
               bgColor(),
               className,
           ];
 
     const updateMedia = () => {
-        setDesktop(window.innerWidth > 1024);
+        setDesktop(window.innerWidth >= 1024);
     };
 
     useEffect(() => {

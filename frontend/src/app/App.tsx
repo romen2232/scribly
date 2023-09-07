@@ -6,6 +6,7 @@ import Loader from '../pages/loader';
 import { ToastContainer } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import LandingPage from '../pages/landingPage';
+import PageNotFound from '../pages/pageNotFound';
 const Home = lazy(() => import('../pages/home'));
 const New = lazy(() => import('../pages/new'));
 const Folders = lazy(() => import('../pages/folders'));
@@ -82,7 +83,7 @@ export default function App() {
                             path={t('/lesson') + '/:lessonId'}
                             element={<ProtectedLesson />}
                         />
-                        <Route path="*" element={<h1>Not Found</h1>} />
+                        <Route path="*" element={<PageNotFound />} />
                     </Routes>
                 </Suspense>
             </AuthProvider>

@@ -5,7 +5,7 @@ type LessonTheoryProps = {
     theory: string;
     onEnd: () => void;
 };
-//TODO: add animation and styles
+//TODO: add animation and styles i.e. animation to show the user how to navigate through the theory
 const LessonTheory: React.FC<LessonTheoryProps> = ({ theory, onEnd }) => {
     // Split the theory into sections
     const sections = theory.split('\n\n');
@@ -75,7 +75,7 @@ const LessonTheory: React.FC<LessonTheoryProps> = ({ theory, onEnd }) => {
 
     return (
         <div
-            className={`flex h-screen items-center justify-center p-48 text-center text-5xl font-extrabold`}
+            className={`flex h-screen items-center justify-center p-48 text-center text-5xl font-extrabold leading-loose`}
         >
             {sections[currentSectionIndex]}
         </div>

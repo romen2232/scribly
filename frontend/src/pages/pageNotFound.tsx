@@ -1,12 +1,15 @@
+import { Header } from '../components/Header';
+import '../assets/styles/notFound.css';
+
 const PageNotFound: React.FC = () => {
     return (
-        <div className="container">
-            <div className="row">
-                <div className="col-12">
-                    <h1>404</h1>
-                    <p>Page not found</p>
+        <div id="notFound">
+            <Header />
+            <main id="main">
+                <div className="fof">
+                    <h1>Error 404</h1>
                 </div>
-            </div>
+            </main>
         </div>
     );
 };

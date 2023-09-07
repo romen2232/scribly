@@ -35,9 +35,9 @@ export function Learn() {
         );
 
     return (
-        <main className="flex h-full w-full flex-col items-center">
-            {units.map((unit) => (
-                <Unit key={unit.id} unit={unit} />
+        <main className="flex h-full w-full flex-col items-center py-12">
+            {units.map((unit, index) => (
+                <Unit key={unit.id} unit={unit} first={index === 0} />
             ))}
         </main>
     );

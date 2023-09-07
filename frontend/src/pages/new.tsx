@@ -8,9 +8,11 @@ import { AUTH_COOKIE_NAME } from '../utils/consts';
 import { createNote, retrieveNote } from '../services/notes';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import Loader from './loader';
 
 interface INewProps {}
 
+//TODO: check loader function
 const New: React.FunctionComponent<INewProps> = () => {
     const cookies = parseCookies();
 
@@ -28,6 +30,7 @@ const New: React.FunctionComponent<INewProps> = () => {
     const [noteId, setNoteId] = useState(
         Number(searchParam.get(t('noteId')) ?? -1),
     );
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const getFolder = async () => {
@@ -84,6 +87,7 @@ const New: React.FunctionComponent<INewProps> = () => {
         };
         getFolder();
         getNote();
+        setIsLoading(false);
     }, [folderId]);
 
     const updateURLWithFolderId = (folderId: number) => {
@@ -91,6 +95,8 @@ const New: React.FunctionComponent<INewProps> = () => {
         newQueryParameters.set(t('folderId'), folderId.toString());
         setSearchParam(newQueryParameters);
     };
+
+    if (isLoading) return <Loader />;
 
     return (
         <div className="text-tiviBlack h-full max-h-screen overflow-hidden">

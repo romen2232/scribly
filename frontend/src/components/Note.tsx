@@ -19,7 +19,6 @@ import {
 import { Tree } from './Tree';
 import { rootFolder } from '../services/folders';
 import useVisibility from '../hooks/useVisibility';
-import { useLocation } from 'react-router';
 export interface INoteProps {
     note: NoteType;
     folder?: Folder;
@@ -37,12 +36,6 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
     const [publicNote, setPublicNote] = useState(false);
 
     const [noteRef, isNoteVisible] = useVisibility<HTMLDivElement>();
-
-    const { pathname } = useLocation();
-
-    useEffect(() => {
-        console.log(pathname);
-    }, [pathname]);
 
     // Update note as soon as it's passed as prop
     useEffect(() => {
@@ -155,7 +148,7 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
                         type="text"
                         name="title"
                         id="title"
-                        className="h-16 w-full p-16 text-7xl placeholder-gray-500 focus:placeholder-gray-600 focus:outline-none"
+                        className="h-16 w-full bg-mainBackground-200 p-16 text-7xl placeholder-gray-500 focus:placeholder-gray-600 focus:outline-none"
                         placeholder="Título"
                         autoFocus
                         autoComplete="off"
@@ -180,7 +173,7 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
                 <div className="flex flex-col">
                     {newFolder?.id && (
                         <button
-                            className={`hover:bg-hover:shadow items-center" m-16 flex h-min cursor-pointer items-center justify-between rounded-md p-3 duration-300 ease-in-out transition hover:text-tiviElectricPurple-100 hover:shadow-lg`}
+                            className={`hover:bg-hover:shadow items-center" m-16 flex h-min cursor-pointer items-center justify-between rounded-md p-3 duration-300 ease-in-out transition hover:text-primaryBlue-600 hover:shadow-lg`}
                             tabIndex={2}
                             onClick={onOpen}
                         >
@@ -205,9 +198,9 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
                                     setPublicNote(!publicNote);
                                 }}
                             />
-                            <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:content-[''] after:transition-all peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-800"></div>
+                            <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:content-[''] after:transition-all peer-checked:bg-primaryPink-500 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primaryPink-200"></div>
                         </div>
-                        <span className="text-sm font-medium text-gray-900 dark:text-gray-300">
+                        <span className="pt-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                             Public
                         </span>
                     </label>
@@ -225,20 +218,21 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
                     })
                 }
                 tabIndex={1}
-                className="h-full w-full  p-16 font-sans text-2xl focus:placeholder-gray-500 focus:outline-none"
+                className="h-full w-full  bg-mainBackground-200 p-16 text-2xl focus:placeholder-gray-500 focus:outline-none"
                 placeholder="En algún lugar de la Mancha, de cuyo nombre no quiero acordarme..."
             ></textarea>
             <Modal
                 isOpen={isOpen}
                 onOpenChange={onOpenChange}
                 placement="top-center"
+                className="bg-mainBackground-200"
             >
                 <ModalContent>
                     {() => (
                         <>
                             <ModalHeader>
                                 <h1 className="text-2xl font-bold">
-                                    {t('folders.modal.title')}
+                                    {t('folders.Title')}
                                 </h1>
                             </ModalHeader>
                             <ModalBody>

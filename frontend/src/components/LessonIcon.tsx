@@ -19,7 +19,10 @@ export function LessonIcon({
     extraClasses,
     disabled,
 }: ILessonIconProps) {
-    const finalClasses = ['rounded-full p-6 w-min', extraClasses];
+    const finalClasses = [
+        'rounded-full p-6 w-32 h-32 flex items-center justify-center',
+        extraClasses,
+    ];
 
     if (disabled) finalClasses.push('opacity-50 cursor-not-allowed');
 

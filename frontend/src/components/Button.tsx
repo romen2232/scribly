@@ -7,9 +7,16 @@ export interface IButtonProps {
     className?: string;
     children: React.ReactNode;
     linkTo?: string;
+    onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 //TODO: doing the style change is a bit hacky, find a better way to do it
-export function Button({ bgColor, className, children, linkTo }: IButtonProps) {
+export function Button({
+    bgColor,
+    className,
+    children,
+    linkTo,
+    ...buttonProps
+}: IButtonProps) {
     const hexColor = getColor(bgColor);
     const isLightColor = determineLightColor(hexColor);
     console.log(isLightColor);
@@ -54,6 +61,7 @@ export function Button({ bgColor, className, children, linkTo }: IButtonProps) {
             onTouchStart={() => setIsActive(true)}
             onTouchEnd={() => setIsActive(false)}
             onMouseLeave={() => setIsActive(false)}
+            {...buttonProps}
         >
             {children}
         </button>

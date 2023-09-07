@@ -5,14 +5,14 @@ import { useState } from 'react';
 
 export interface IUnitProps {
     unit: UnitType;
+    first: boolean;
 }
 
-export function Unit({ unit }: IUnitProps) {
-    const { lessons, unitColor, unitDescription, unitNumber } = unit;
+export function Unit({ unit, first }: IUnitProps) {
+    const { lessons, unitColor, unitName, unitNumber } = unit;
     const [currentLesson, setCurrentLesson] = useState<number>();
-    console.log(unit);
 
-    const [areLessonsVisible, setAreLessonsVisible] = useState(false);
+    const [areLessonsVisible, setAreLessonsVisible] = useState(first);
 
     const [firstTime, setFirstTime] = useState(false);
     return (
@@ -20,7 +20,7 @@ export function Unit({ unit }: IUnitProps) {
             <div onClick={() => setAreLessonsVisible(!areLessonsVisible)}>
                 <UnitHeader
                     unitNumber={unitNumber}
-                    description={unitDescription}
+                    description={unitName}
                     backgroundColor={unitColor}
                     currentLesson={currentLesson}
                 />

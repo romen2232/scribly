@@ -3,6 +3,7 @@ import { AnswerProps, Note, Task, TaskUser } from '../utils/types';
 import { parseCookies } from 'nookies';
 import { partialUpdateTaskUserAnswer } from '../services/tasks';
 import { AUTH_COOKIE_NAME } from '../utils/consts';
+import confetti from 'canvas-confetti';
 
 const cookies = parseCookies();
 
@@ -82,6 +83,10 @@ export const useLessonStore = create<LessonStore>((set) => ({
             );
             set({ currentTaskUser: response });
             set({ isModalOpen: true });
+
+            if (response.answerBoolean) {
+                confetti();
+            }
         } catch (error) {
             console.error('Error submitting the task:', error);
         }
