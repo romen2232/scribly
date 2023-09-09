@@ -25,4 +25,6 @@ class Notes(models.Model):
         'users.User', on_delete=models.CASCADE, null=True, blank=True)
 
     favorite = models.BooleanField(default=False)
+    
+    note_analisys = models.TextField(max_length=10000, blank=True, default='')
 

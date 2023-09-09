@@ -1,6 +1,5 @@
 from django.urls import path
-from .views import NoteRatingsView, RatingsListView, UserRatingsView, ChallengeRatingsView, TaskRatingsView, RatingDetailView
-
+from .views import *
 urlpatterns = [
     path('ratings/', RatingsListView.as_view(), name='ratings-list'),
     path('ratings/user/<int:user_id>/',

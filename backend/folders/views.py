@@ -93,6 +93,7 @@ class RootFolder(generics.RetrieveAPIView):
 
     def get_object(self):
         try:
+            
             return Folders.objects.get(user=self.request.user, depth=0)
         except Folders.DoesNotExist:
             raise generics.PermissionDenied("Root folder not found")

@@ -11,7 +11,7 @@ def send_mail_to_verify_account(user_email, username, token):
     """ Task that sends the account activation email """
 
     print("Sending email to verify account")
-    msg_html=render_to_string('verify_email.html', {'username': username, 'action_url': f'{settings.FRONTEND_URL}/activate/{token}', 'logo_url': f'{settings.BACKEND_URL}/static/favicon.png', 'year': f'{timezone.now().year}'}
+    msg_html=render_to_string('verify_email.html', {'username': username, 'action_url': f'{settings.FRONTEND_URL}/activar/{token}', 'logo_url': f'{settings.BACKEND_URL}/static/favicon.png', 'year': f'{timezone.now().year}'}
     )
     print(msg_html)
 

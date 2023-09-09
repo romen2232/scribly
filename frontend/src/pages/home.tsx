@@ -10,17 +10,17 @@ import {
     ProfileIcon,
 } from '../assets/icons/Icons';
 import { useTranslation } from 'react-i18next';
-
+import { useState } from 'react';
+import { useCategoryStore } from '../stores/categoryStore';
 interface IHomeProps {}
-
 const Home: React.FunctionComponent<IHomeProps> = () => {
     const { t } = useTranslation();
-
+    const [showSubButtons, setShowSubButtons] = useState(false);
+    const { setCategory } = useCategoryStore();
     return (
         <div className="flex h-full w-full items-center justify-between">
             <Aside>
                 <Scribly />
-
                 <nav className="flex h-full w-64 flex-col items-start justify-between pt-16">
                     <ul className="w-full">
                         <AsideButton
@@ -36,9 +36,39 @@ const Home: React.FunctionComponent<IHomeProps> = () => {
                         <AsideButton
                             icon={<CategoryIcon className="h-6 w-6" />}
                             title={t('category.Title')}
+                            onClick={() => setShowSubButtons(!showSubButtons)}
                         />
+                        {showSubButtons && (
+                            <div className="flex flex-col">
+                                <AsideButton
+                                    icon={<CategoryIcon className="h-6 w-6" />}
+                                    title="Poesia"
+                                    onClick={() => {
+                                        setCategory('POETRY');
+                                        setShowSubButtons(!showSubButtons);
+                                    }}
+                                />
+                                <AsideButton
+                                    icon={<CategoryIcon className="h-6 w-6" />}
+                                    title="Ficción"
+                                    onClick={() => {
+                                        setCategory('PROSE');
+                                        setShowSubButtons(!showSubButtons);
+                                    }}
+                                />
+                                <AsideButton
+                                    icon={<CategoryIcon className="h-6 w-6" />}
+                                    title="Guión"
+                                    onClick={() => {
+                                        setCategory('SCRIPT');
+                                        setShowSubButtons(!showSubButtons);
+                                    }}
+                                />
+                            </div>
+                            // Wrong way of using OnClick -> how to execute 2 functions
+                            //Correct Way:
+                        )}
                     </ul>
-
                     <ul className="w-full">
                         <AsideButton
                             icon={<ProfileIcon className="h-6 w-6" />}
@@ -50,7 +80,6 @@ const Home: React.FunctionComponent<IHomeProps> = () => {
                             title={t('community.Title')}
                             linkTo={t('/community')}
                         />
-
                         <AsideButton
                             icon={<ProfileIcon className="h-6 w-6" />}
                             title={t('knowMore')}
@@ -87,5 +116,4 @@ const Home: React.FunctionComponent<IHomeProps> = () => {
         </div>
     );
 };
-
 export default Home;

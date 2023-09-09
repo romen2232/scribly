@@ -1,18 +1,35 @@
 from django.apps import AppConfig
 import openai   
 import requests 
-
+import os
 import re
 class TasksUsersConfig(AppConfig):
+    """Configuration class for the 'tasks_users' Django application."""
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'tasks_users'
 
+def evaluation(input, statement):
+    """
+    Evaluate a student's text response based on a provided statement using OpenAI's GPT-3.5 model.
 
-def evaluation(input, statement, difficulty=1):
-    openai.api_key = "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"
+    Parameters:
+    - input (str): The student's text response to be evaluated.
+    - statement (str): The statement of the activity.
 
+    Returns:
+    - tuple: Contains the evaluated score (float) and the detailed response (str) from GPT-3.5.
+    """
     
-    # Descripción de la dificultad
+    # Set OpenAI API key
+    openai.api_key = os.getenv('OPENAI_API_KEY')
+
+    # Set the API endpoint
+
+    URL = "https://api.openai.com/v1/chat/completions"
+    
+    # statement = "Escribe una historia sen la que el protagonista sea un robot del fututo"
+    difficulty=3
+# Descriptions for the difficulty levels    
     difficulty_descriptions = [
         "Sé amable y enfócate en los aspectos positivos, incluso si hay áreas de mejora.",
         "Proporciona una crítica equilibrada, destacando tanto los aspectos positivos como las áreas de mejora.",
@@ -22,184 +39,93 @@ def evaluation(input, statement, difficulty=1):
     ]
     critical_level = difficulty_descriptions[difficulty - 1]
     
-    URL = "https://api.openai.com/v1/chat/completions"
+    system_text= f"Eres un asistente de enseñanza amigable y servicial. Explicas conceptos de gran profundidad en pocas palabras,  usando términos simples y das ejemplos para ayudar a las personas a aprender. Proporcionas respuestas personalizadas que ayudan  al usuario a mejorar sus puntos débiles y darse cuenta de sus puntos fuertes.\n\nTu enfoque es {critical_level}."
+    user_text=f'''
+    Por favor, evalúa el siguiente texto para saber si cumple ESTRICTAMENTE el enunciado de la actividad, siguiendo los criterios detallados a continuación y presenta los resultados en un formato específico:
+
+**Información de referencia:**
+- **ENUNCIADO de la actividad:** {statement}
+- **TEXTO propuesto por el alumno:** {input}
+
+**Instrucciones de Evaluación:**
+
+1. **Escala de Evaluación:**
+   - **0 puntos:** Si el texto no se alinea EXACTAMENTE con el enunciado. Cualquier desviación del enunciado, por mínima que sea, debe resultar en una puntuación de 0 en esta categoría.
+   - **1 a 4 puntos:** Si el texto tiene relación con el enunciado, pero es demasiado breve o simple.
+   - **5 a 10 puntos:** Si el texto cumple adecuadamente con el enunciado y muestra un nivel de elaboración.
+
+2. **Atributos a evaluar:**
+   - **Cumplimiento del enunciado:** Debes ser extremadamente estricto en este aspecto. Si el texto no se alinea exactamente con el enunciado, la puntuación será 0. No hay excepciones.
+   - **Calidad literaria:** Evalúa la gramática, la puntuación y la estructura del texto.
+   - **Creatividad y originalidad:** Considera la innovación y la singularidad del texto.
+   - **Coherencia:** Asegúrate de que el texto tenga un flujo lógico y coherente.
+
+3. **Proceso de Reflexión:** Antes de tomar una decisión sobre la puntuación, tómate un momento para reflexionar sobre el texto y considerar todos los aspectos mencionados.
+
+**Formato de Presentación de la Evaluación:**
+
+- **Puntuación:** n/10
+- **Cumplimiento del enunciado:** [Análisis detallado]
+- **Calidad literaria:** [Análisis detallado]
+- **Creatividad y originalidad:** [Análisis detallado]
+- **Coherencia:** [Análisis detallado]
+- **Resumen:** [Resumen general de los análisis y la puntuación otorgada]**Formato de Presentación de la Evaluación:**
+
+**Formato de Rechazo por no cumplir el encunciado:**
+
+- **Puntuación:** 0/10
+- **Cumplimiento del enunciado:** [Justificacion razonada, satirica e ingeniosa]
+
+
+    '''
+
+    
+    
+
     payload = {
         "model": "gpt-3.5-turbo",
         "temperature": 1.0,
         "messages": [
-            # {"role": "system", "content": f"Eres un crítico literario y tu enfoque es {critical_level}. Tu tarea es evaluar un texto breve en relación con el statement: {statement}."},
-            # {"role": "user", "content": f"TEXTO \n\n{input}\n\n FIN TEXTO \n\n"},
-            # {"role": "assistant", "content": f"Evaluaré el texto cuidadosamente y proporcionaré una puntuación justa y detallada."}
-        
-            {"role": "system", "content": f"Eres un sistema de puntuación de una página web sobre escritura de relatos y tu enfoque es {critical_level}. Tu tarea es evaluar de 0 a 10 un texto breve en relación con el statement: {statement}. Y proporcionar una respuesta personalizada que ayude al usuario a mejorar sus puntos débiles y darse cuenta de sus puntos fuertes."},
-            {"role": "user", "content": f"TEXTO \n\n{input}\n\n FIN TEXTO \n\n"},
-            {"role": "assistant", "content": f"Evaluaré el texto cuidadosamente y proporcionaré una puntuación justa y detallada en formato n/10.Usaré el criterio: #La evaluacion irá de 0 a 10 #  0 si el texto no corresponde a la solucion del statement. # 1 a 4 si el texto sicorresponde a la solucion del statement, pero es demasiado corto y simple. # 5 a 10 si el texto si en este caso lo cumple bien y es minimamente elaborado.  # Se tomarán como atributos a evaluar ( # 1. Cumplimiento del enunciado. 2. Calidad literaria, incluyendo gramática y puntuación. 3. Creatividad y originalidad."}
-        
+            {"role": "system", "content": system_text},
+            {"role": "user", "content": user_text},
         ]
-    
     }
+
     headers = {
         "Content-Type": "application/json",
         "Authorization": f"Bearer {openai.api_key}"
     }
-    
-    response = requests.post(URL, headers=headers, json=payload)
-    response = response.json()
-    print(response)
-    message = response['choices'][0]['message']['content']
-    
-    # Extraer la puntuación final del mensaje
-    note = re.search(r'(\d+(\.\d+)?)/10', message)
+
+    # Make the API request
+    laresponse = requests.post(URL, headers=headers, json=payload).json()
+    laresponse = laresponse['choices'][0]['message']['content']
+
+    # Extract the final score from the message
+    note = re.search(r'(\d+(\.\d+)?)/10', laresponse)
     if note:
         note = float(note.group(1))
     else:
-        note = -10 # Puedes manejar este caso como prefieras
+        note = -10 # Handle this case as preferred
 
-    return (note,message)
-
-
-
-
-
-def chatbotAnswer(input):
-    openai.api_key = "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"
-
-
-
-
-    URL = "https://api.openai.com/v1/chat/completions"
-
-    payload = {
-    "model": "gpt-3.5-turbo",
-    "temperature" : 1.0,
-    "messages" : [
-        {"role": "system", "content": f"Eres un profesor de literatura. Experto en realizar correcciones positivas y constructivas a jóvenes escritores."},
-        {"role": "user", "content": f"TEXTO \n\n{input}\n\n FIN TEXTO \n\n"}, 
-        {"role": "assistant", "content": f"Te procuraré una serie de correcciones para que puedas mejorar tu texto, señalando a que partes del texto se refieren las correcciones . Finalmente te daré la versión corregida del texto."},
-    ]
-    }
-
-    headers = {
-    "Content-Type": "application/json",
-    "Authorization": f"Bearer {openai.api_key}"
-    }
-
-    response = requests.post(URL, headers=headers, json=payload)
-    response = response.json()
-
-    return response['choices'][0]['message']['content']
-
-
-
-def chatbotCorrection(input):
-    openai.api_key = "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"
-
-    mission = "Escribe una breve historia introduciendo a tu personaje principal."
-    
-
-    URL = "https://api.openai.com/v1/chat/completions"
-
-    payload = {
-    "model": "gpt-3.5-turbo",
-    "temperature" : 1.0,
-    "messages" : [
-        {"role": "system", "content": f"Eres un profesor de literatura. Experto en realizar correcciones ."},
-        {"role": "user", "content": f"TEXTO \n\n{input}\n\n FIN TEXTO \n\n"}, 
-        {"role": "assistant", "content": f"Si el texto del usuario cumple el cometido responderé SI, sino NO."},
-    ]
-    }
-
-    headers = {
-    "Content-Type": "application/json",
-    "Authorization": f"Bearer {openai.api_key}"
-    }
-
-    response = requests.post(URL, headers=headers, json=payload)
-    response = response.json()
-
-    if response['choices'][0]['message']['content'] == "SI": 
-        return True
-    else:
-        return False
-
-
-    return 
+    return note, laresponse
 
 def CorrectionWrite(input, statement):
-    mark,reponse = evaluation(input=input, statement=statement)
+    """
+    Determine if a student's text response passes the evaluation criteria.
+
+    Parameters:
+    - input (str): The student's text response.
+    - statement (str): The statement of the activity.
+
+    Returns:
+    - tuple: Contains the correction status (bool), detailed response (str) and evaluated score (float).
+    """
     
-    if mark >4: 
+    mark, response = evaluation(input=input, statement=statement)
+
+    if mark > 4:
         correction = True
     else:
         correction = False
-           
-    return correction, reponse, mark
 
-# def CorrectionComplete(text_user, correct_text):
-    
-#     #format correct_text
-    
-#     correct_text = correct_text.split("\n\n")[0]
-#     text_user = text_user.split("\n\n")[0]
-    
-    
-        
-#     return correction, reponse
-
-
-# def CorrectionReorder(text_user, correct_text):
-    
-#     #format correct_text
-    
-#     if text_user == correct_text:
-#         correction = True
-#         reponse = "Correcto"
-#     else:
-#         correction = False
-#         reponse = "Incorrecto"
-        
-#     return correction, reponse
-
-
-# def CorrectionChoose(text_user, correct_text):    
-
-#     correct_text = correct_text.split("\n\n")[0]
-#     text_user = text_user.split("\n\n")[0]
-    
-#     if text_user == correct_text:
-#         correction = True
-#         reponse = "Correcto"
-#     else:
-#         correction = False
-#         reponse = "Incorrecto"
-        
-#     return correction, reponse
-
-
-# def Correction(note, text_user, correct_text, type, statement):
-    
-#     if type == "WRITE":
-        
-#         task_user = note.note_content
-#         correction, reponse = CorrectionWrite(input=task_user, statement=statement)
-#     elif type == "COMPLETE":
-#         correct_text = correct_text
-#         text_user = text_user
-#         correction, reponse = CorrectionComplete(text_user, correct_text)
-#     elif type == "REORDER":
-#         correct_text = correct_text
-#         text_user = text_user
-#         correction, reponse = CorrectionReorder(text_user, correct_text)
-#     elif type == "CHOOSE":
-#         correct_text = correct_text
-#         text_user = text_user
-#         correction, reponse = CorrectionChoose(text_user, correct_text)
-#     else:
-#         correction = False
-#         reponse = "Type not found"
-        
-#     return correction, reponse
-    
-   
-    
-     
+    return correction, response, mark

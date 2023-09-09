@@ -91,6 +91,7 @@ class LessonImportView(generics.CreateAPIView):
         # Assuming 'lessons' is the key in the JSON
         lessons_datas = request.data.get('lessons', [])
         created_lessons = []
+        created_tasks = []
 
         for lesson_data in lessons_datas:
 
@@ -108,7 +109,7 @@ class LessonImportView(generics.CreateAPIView):
             task_data = lesson_data["tasks"]
 
             # Create an instance of TaskImportView
-            created_tasks = import_tasks(request, id, task_data)
+            created_tasks.append( import_tasks(request, id, task_data))
 
             # Set the request for the task view
 

@@ -253,12 +253,12 @@ CELERY_BROKER_URL = 'amqp://localhost'
 # EMAIL_USE_SSL = False
 
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'scribly@gmail.com'
+EMAIL_HOST_USER = 'escribly@gmail.com'
 EMAIL_HOST_PASSWORD = 'lxbxximpemzbgeia'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_TIMEOUT = 300  # in seconds
-DEFAULT_FROM_EMAIL = 'german <germanamiau@gmail.com>'
+DEFAULT_FROM_EMAIL = ''
 
 
 

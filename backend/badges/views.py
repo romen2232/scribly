@@ -44,3 +44,34 @@ class BadgeRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
         serializer.is_valid(raise_exception=True)
         badge = serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    
+    
+ 
+class ImportBadges(generics.CreateAPIView):
+    
+    queryset = Badge.objects.all()
+    serializer_class = BadgeSerializer
+    permission_classes = [permissions.IsAuthenticated]    
+
+    def create(self, request, *args, **kwargs):
+        # Assuming 'lessons' is the key in the JSON
+        badges_datas = request.data.get('badges', [])
+        created_badges = []
+        print(badges_datas)
+
+        for badge_data in badges_datas:
+
+            badge_data_edited = {"badge_name": badge_data["badge_name"], "badge_description": badge_data["badge_description"]}
+            
+            serializer = self.get_serializer(data=badge_data_edited)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+
+            created_badges.append(serializer.data)
+
+        return Response(created_badges, status=status.HTTP_201_CREATED)
+    
+    
+    
+    

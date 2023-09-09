@@ -11,13 +11,17 @@ django-localflavor==4.0
 Django==4.2.3
 djangorestframework-simplejwt==5.2.2
 djangorestframework==3.14.0
+dj_database_url==0.4.1
 dnspython==2.4.1
 drf-yasg==1.21.7
 eventlet==0.33.3
+gunicorn==21.2.0
 greenlet==2.0.2
 gunicorn==21.2.0
 kombu==5.3.1
+openai==0.27.8
 prompt-toolkit==3.0.39
+psycopg2 == 2.9.7
 PyJWT==2.8.0
 python-dotenv==1.0.0
 python-stdnum==1.18
@@ -27,6 +31,7 @@ sqlparse==0.4.4
 validate-docbr==1.10.0
 vine==5.0.0
 wcwidth==0.2.6
+whitenoise==6.5.0
 django-cors-headers==4.2.0
 psycopg==3.1.9
 Pillow==10.0.0

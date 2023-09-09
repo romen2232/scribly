@@ -65,7 +65,7 @@ class NotesFolderSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Notes
-        fields = ['id', 'note_name', 'folder', 'favorite']
+        fields = ['id', 'note_name', 'folder', 'favorite', 'note_content']
 
 class FoldersRecursiveSerializer(serializers.ModelSerializer):
     
@@ -80,7 +80,7 @@ class FoldersRecursiveSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         
-        representation['notes'] = NotesFolderSerializer(instance.notes_set.all(), many=True).data
+        representation['notes'] = self.get_notes(instance)
         representation['subfolders'] = self.get_subfolders(instance)
 
         return representation
@@ -101,8 +101,16 @@ class FoldersRecursiveSerializer(serializers.ModelSerializer):
         return FoldersRecursiveSerializer(subfolders, many=True).data
     
     def get_notes(self, obj):
+<<<<<<< HEAD
+        """Get notes related to the folder whose content is different of ""."""
+        
+        notes = Notes.objects.filter(folder=obj).exclude(note_content="")
+        #notes = notes.filter()
+        
+=======
         """Get notes related to the folder."""
         notes = obj.notes_set.all()
+>>>>>>> parent of 3d9c41b (Ultimo comit de mierda)
         return NotesFolderSerializer(notes, many=True).data
 
 

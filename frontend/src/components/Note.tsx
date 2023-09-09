@@ -1,4 +1,5 @@
 import { useAutosave } from '../hooks/useAutosave';
+import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { FolderIcon } from '../assets/icons/Icons';
 import { Folder, Note as NoteType } from '../utils/types';
@@ -140,11 +141,25 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
         onOpenChange();
     };
 
+    const fadeInDown = {
+        hidden: { opacity: 0, y: -50 },
+        visible: { opacity: 1, y: 0 },
+    };
+
+    // const fadeInUp = {
+    //     hidden: { opacity: 0, y: 50 },
+    //     visible: { opacity: 1, y: 0 }
+    // };
+
     return (
-        <div ref={noteRef} className="h-full">
+        <motion.div ref={noteRef} className="h-full">
             <header className="flex items-center justify-between">
                 <div className="w-full">
-                    <input
+                    <motion.input
+                        initial="hidden"
+                        animate="visible"
+                        variants={fadeInDown}
+                        transition={{ duration: 0.5 }}
                         type="text"
                         name="title"
                         id="title"
@@ -159,17 +174,20 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
                                 noteName: e.target.value,
                             })
                         }
+                        style={{
+                            maxHeight: '10px',
+                            border: 'solid blue',
+                        }}
                     />
-                    {/* Date */}
                     <div className="pointer-events-none flex justify-between px-16">
                         <p className="text-2xl text-gray-500">
-                            {' '}
                             {formatDate(
                                 new Date(newNote.noteLastModified ?? ''),
                             )}
                         </p>
                     </div>
                 </div>
+
                 <div className="flex flex-col">
                     {newFolder?.id && (
                         <button
@@ -206,8 +224,11 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
                     </label>
                 </div>
             </header>
-            {/* Content */}
-            <textarea
+            <motion.textarea
+                // initial="hidden"
+                // animate="visible"
+                // variants={fadeInUp}
+                // transition={{ duration: 0.5, delay: 0.3 }}
                 name="text"
                 id="text"
                 value={newNote.noteContent ?? ''}
@@ -217,10 +238,21 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
                         noteContent: e.target.value,
                     })
                 }
+                style={{
+                    //pos in the center
+
+                    maxHeight: '350px',
+                    maxWidth: '90%',
+
+                    // minHeight: '00px', // Establece la altura máxima deseada
+                    overflowY: 'auto', // Hace que aparezca una barra de desplazamiento vertical si es necesario
+                    backgroundColor: '#F3F4F6',
+                    border: '6px double black',
+                }}
                 tabIndex={1}
                 className="h-full w-full  bg-mainBackground-200 p-16 text-2xl focus:placeholder-gray-500 focus:outline-none"
                 placeholder="En algún lugar de la Mancha, de cuyo nombre no quiero acordarme..."
-            ></textarea>
+            ></motion.textarea>
             <Modal
                 isOpen={isOpen}
                 onOpenChange={onOpenChange}
@@ -246,6 +278,6 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
                     )}
                 </ModalContent>
             </Modal>
-        </div>
+        </motion.div>
     );
 }

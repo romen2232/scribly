@@ -115,10 +115,10 @@ class LessonsUsersSerializerWithTaskUser(serializers.ModelSerializer):
             lesson=validated_data['lesson'], type="CHOOSE")
 
         # Select random n task from each type - Inactive -> Activation in line 131
-        n = 2
-        task_write = task_write.order_by('?')[:n]
+        n = 3
+        task_write = task_write.order_by('?')[:1]
         task_complete = task_complete.order_by('?')[:n]
-        task_reorder = task_reorder.order_by('?')[:n]
+        # task_reorder = task_reorder.order_by('?')[:n]
         task_choose = task_choose.order_by('?')[:n]
 
         # Define a list with all the tasks

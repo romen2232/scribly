@@ -1,3 +1,4 @@
+
 """
 Django settings for scribly_api project.
 

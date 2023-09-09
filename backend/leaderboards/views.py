@@ -1,6 +1,8 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from .models import Leaderboards
+from .serializers import *
 from .serializers import *
 
 
@@ -10,9 +12,10 @@ class LeaderboardsListCreateView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
+        
         serializer = self.get_serializer(
             data=request.data, context={'request': request})
-        print(serializer)
+        
         serializer.is_valid(raise_exception=True)
         leaderboard = serializer.save()
         return Response({"status": "success", "data": LeaderboardsSerializer(leaderboard).data}, status=status.HTTP_201_CREATED)
@@ -48,3 +51,6 @@ class LeaderboardUsers(generics.ListAPIView):
     def get_queryset(self,league_id):
         #print(self.request.user)
         return Leaderboards.objects.filter(league=league)
+
+
+

@@ -1,11 +1,17 @@
 from rest_framework import serializers
 from .models import Leaderboards
 from leagues.models import Leagues
+from leagues.models import Leagues
 from leagues.serializers import LeagueSerializer
+from users.models import User
 from users.models import User
 
 
 class LeaderboardsSerializer(serializers.ModelSerializer):
+    league = LeagueSerializer(read_only=True)
+    
+    league = serializers.PrimaryKeyRelatedField(
+        queryset=Leagues.objects.all(), write_only=True)
     league = LeagueSerializer(read_only=True)
     
     league = serializers.PrimaryKeyRelatedField(
@@ -25,6 +31,8 @@ class LeaderboardsSerializer(serializers.ModelSerializer):
         return representation
 
     def create(self, validated_data):
+        
+        
         
         
         leaderboard = Leaderboards.objects.create(**validated_data)
