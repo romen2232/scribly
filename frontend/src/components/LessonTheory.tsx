@@ -1,17 +1,30 @@
+import { useCycle } from 'framer-motion';
+// import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
+
+// import "../assets/styles/lessonTheory.css"
 
 type LessonTheoryProps = {
     theory: string;
     onEnd: () => void;
 };
-//TODO: add animation and styles
+
+//TODO: add animation and styles i.e. animation to show the user how to navigate through the theory
+
 const LessonTheory: React.FC<LessonTheoryProps> = ({ theory, onEnd }) => {
     // Split the theory into sections
     const sections = theory.split('\n\n');
     const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
     const [accumulatedDeltaY, setAccumulatedDeltaY] = useState(0); // Used for scrolling
     const navigate = useNavigate();
+    const [backgroundColor1, cycleBackgroundColor] = useCycle(
+        'mainBackground',
+        'blue',
+    );
+    const [isAnimating, setIsAnimating] = useState(false);
+
+    console.log(backgroundColor1, isAnimating);
 
     useEffect(() => {
         const handleWindowClick = (e: MouseEvent) => {
@@ -20,6 +33,9 @@ const LessonTheory: React.FC<LessonTheoryProps> = ({ theory, onEnd }) => {
             if (e.clientX > windowWidth / 2) {
                 // Right side
                 // Navigate to next section
+                setIsAnimating(true);
+                cycleBackgroundColor();
+
                 if (currentSectionIndex < sections.length - 1) {
                     setCurrentSectionIndex((prevIndex) => prevIndex + 1);
                 } else {
@@ -33,6 +49,8 @@ const LessonTheory: React.FC<LessonTheoryProps> = ({ theory, onEnd }) => {
                 } else {
                     navigate(-1);
                 }
+                cycleBackgroundColor();
+                setIsAnimating(true);
             }
         };
         const handleScroll = (e: WheelEvent) => {
@@ -74,7 +92,10 @@ const LessonTheory: React.FC<LessonTheoryProps> = ({ theory, onEnd }) => {
     ]);
 
     return (
-        <div className={`flex h-screen items-center justify-center `}>
+        <div
+            className={`flex h-screen items-center justify-center p-48 text-center text-5xl font-extrabold leading-loose`}
+        >
+            <></>
             {sections[currentSectionIndex]}
         </div>
     );

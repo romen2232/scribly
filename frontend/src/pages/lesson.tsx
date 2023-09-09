@@ -19,6 +19,8 @@ import { parseCookies } from 'nookies';
 import { AUTH_COOKIE_NAME } from '../utils/consts';
 import { createNote } from '../services/notes';
 import { useLessonStore } from '../stores/lessonStore';
+import { Header } from '../components/Header';
+import { Button } from '../components/Button';
 
 //TODO: Is completed and the update of the task user
 
@@ -114,7 +116,7 @@ const Lesson = () => {
             setSkippedTask(false);
         } else {
             // TODO: Make page for when the lesson is completed
-            navigate(t('/'));
+            navigate(t('/finishLesson'));
         }
     };
 
@@ -146,14 +148,15 @@ const Lesson = () => {
     };
 
     return (
-        <div>
+        <div className="flex h-full flex-col">
+            <Header />
             {!isTheoryEnd ? (
                 <LessonTheory
                     theory={lessonUser.lesson.lessonTheory}
                     onEnd={handleTheoryEnd}
                 />
             ) : (
-                <div className="tasks" key={currentTask?.id}>
+                <div className="tasks h-full" key={currentTask?.id}>
                     {renderTask()}
                 </div>
             )}
@@ -165,12 +168,12 @@ const Lesson = () => {
                 classNames={{
                     header:
                         currentTaskUser?.answerBoolean && !skippedTask
-                            ? 'bg-green-500'
-                            : 'bg-red-500',
+                            ? 'bg-green-400'
+                            : 'bg-red-400',
                     closeButton: 'text-black',
                 }}
             >
-                <ModalContent>
+                <ModalContent className="bg-mainBackground-200">
                     {(onClose) => {
                         return (
                             <>
@@ -193,27 +196,38 @@ const Lesson = () => {
                                     )}
                                 </ModalBody>
                                 <ModalFooter>
-                                    <button
+                                    <Button
                                         className={`rounded-xl
                                              p-4 font-semibold hover:shadow-[0px_0px_5px_rgba(0,0,0,0.35)]
-                                         ${
-                                             skippedTask ||
-                                             !currentTaskUser?.answerBoolean
-                                                 ? 'text-tiviElectricViolet'
-                                                 : 'bg-tiviElectricPurple-50'
-                                         }`}
+                                    `}
+                                        bgColor={
+                                            skippedTask ||
+                                            !currentTaskUser?.answerBoolean
+                                                ? 'primaryPink-500'
+                                                : 'primaryBlue-50'
+                                        }
+                                        onClick={() => {
+                                            onClose();
+                                        }}
                                     >
                                         {currentTaskUser?.answerBoolean
                                             ? t('task.Review')
                                             : t('task.Retry')}
-                                    </button>
-                                    <button
+                                    </Button>
+                                    <Button
                                         className={`rounded-xl  p-4 font-bold hover:shadow-[0px_0px_5px_rgba(0,0,0,0.35)] ${
                                             skippedTask ||
                                             !currentTaskUser?.answerBoolean
-                                                ? 'bg-gray-300 hover:bg-red-500'
-                                                : 'bg-tiviElectricPurple-100'
-                                        }`}
+                                                ? ''
+                                                : 'text-white'
+                                        }
+                                        `}
+                                        bgColor={
+                                            skippedTask ||
+                                            !currentTaskUser?.answerBoolean
+                                                ? 'bg-gray-300'
+                                                : 'bg-primaryBlue-500'
+                                        }
                                         onClick={() => {
                                             onClose();
                                             goToNextTask();
@@ -222,7 +236,7 @@ const Lesson = () => {
                                         {skippedTask
                                             ? t('task.SkipNext')
                                             : t('task.Next')}
-                                    </button>
+                                    </Button>
                                 </ModalFooter>
                             </>
                         );

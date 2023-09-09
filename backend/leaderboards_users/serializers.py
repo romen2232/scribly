@@ -2,11 +2,18 @@ from rest_framework import serializers
 from .models import Leaderboards_users
 from leaderboards.serializers import LeaderboardsSerializer
 from users.serializers import UserSerializer
+from users.models import User
+from leaderboards.models import Leaderboards    
 
 
 class LeaderboardUserSerializer(serializers.ModelSerializer):
     leaderboard = LeaderboardsSerializer(read_only=True)
-    User = UserSerializer(read_only=True)
+    user = UserSerializer(read_only=True)
+    
+    leaderboard = serializers.PrimaryKeyRelatedField(
+        queryset=Leaderboards.objects.all(), write_only=True)
+    user = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(), write_only=True)
 
     class Meta:
         model = Leaderboards_users
@@ -17,7 +24,7 @@ class LeaderboardUserSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
 
         # Explicitly set the context for nested serializers
-        leaderboard_serializer = LeaderboardsSerializer(
+        leaderboard_serializer = LeaderboardsSerializer( 
             instance.leaderboard, context=self.context)
         user_serializer = UserSerializer(instance.user, context=self.context)
 
@@ -40,3 +47,9 @@ class LeaderboardUserSerializer(serializers.ModelSerializer):
         leaderboard_user = Leaderboards_users.objects.get(
             leaderboard=leaderboard, user=user)
         return leaderboard_user
+    
+    def update(self, instance, validated_data):
+        instance.leaderboard_score = validated_data.get(
+            'leaderboard_score', instance.leaderboard_score)
+        instance.save()
+        return instance

@@ -12,5 +12,8 @@ urlpatterns = [
     path('users/notes/public', PublicNoteList.as_view(), name='public-note-list'),
     path('users/notes/public/<int:user_id>/', PublicNoteListByUser.as_view(), name='public-note-list-by-user'),
     path('users/notes/public/<str:username>/', PublicNoteListByUsername.as_view(), name='public-note-list-by-username'),
+    path('note/analyze/', AnalyzeNote.as_view(), name='analyze-note'),
+    path('note/analyze/<int:pk>/', AnalyzeNoteEdit.as_view(), name='note-analyze-edit'),
+    # path('test/', TestGPT.as_view(), name='test')
     
 ]

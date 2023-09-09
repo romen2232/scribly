@@ -1,19 +1,19 @@
 from rest_framework import serializers
-from .models import Escribly
+from .models import Scribly
 
-class EscriblySerializer(serializers.ModelSerializer):
+class ScriblySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Escribly
-        fields = ['id', 'escribly_name', 'escribly_description', 'escribly_image']
+        model = Scribly
+        fields = ['id', 'scribly_name', 'scribly_description', 'scribly_image']
         
     def create(self, validated_data):
-        escribly_name = validated_data['escribly_name']
-        escribly_description = validated_data['escribly_description']
-        escribly_image = self.context['request'].FILES.get('escribly_image')
+        scribly_name = validated_data['scribly_name']
+        scribly_description = validated_data['scribly_description']
+        scribly_image = self.context['request'].FILES.get('scribly_image')
         
-        escribly = Escribly.objects.create(escribly_name=escribly_name, escribly_description=escribly_description, escribly_image=escribly_image)
+        scribly = Scribly.objects.create(scribly_name=scribly_name, scribly_description=scribly_description, scribly_image=scribly_image)
         
-        escribly.save()
+        scribly.save()
         
-        return escribly
+        return scribly
 

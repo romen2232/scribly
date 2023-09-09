@@ -5,6 +5,8 @@
         "lib": ["ES2020", "DOM", "DOM.Iterable"],
         "module": "ESNext",
         "skipLibCheck": true,
+        "allowJs": true,
+        "outDir": "./dist",
 
         /* Bundler mode */
         "moduleResolution": "node",
@@ -27,6 +29,6 @@
         "src/utils/openapi.d.ts",
         "jest.config.js"
     ],
-    "include": ["vite.config.ts", "tailwind.config.js", "src/**/*"],
+    "include": ["vite.config.ts", "src/**/*"],
     "references": [{ "path": "./tsconfig.node.json" }]
 }

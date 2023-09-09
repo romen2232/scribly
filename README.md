@@ -80,7 +80,7 @@ Code and documentation copyright 2011-2018 the authors. Code released under the 
 
 Enjoy :metal:
 
-# Escribly
+# Scribly
 
 Summer of code 2023 Aircury
 
@@ -113,13 +113,13 @@ Este comando ejecuta una instancia de Celery como un trabajador para procesar ta
 
 ### Comando:
 
-celery -A escribly_api worker -l info -P eventlet
+celery -A scribly_api worker -l info -P eventlet
 
 ### Detalles:
 
 -   `celery`: Comando principal para interactuar con Celery, un sistema de cola y programación distribuida en Python.
 
--   `-A escribly_api`: Especifica el nombre del módulo de la aplicación de Celery. Reemplaza "escribly_api" con el nombre de tu propia aplicación.
+-   `-A scribly_api`: Especifica el nombre del módulo de la aplicación de Celery. Reemplaza "scribly_api" con el nombre de tu propia aplicación.
 
 -   `worker`: Inicia un trabajador (worker) para procesar las tareas en la cola de tareas.
 

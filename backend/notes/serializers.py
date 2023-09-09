@@ -30,7 +30,7 @@ class NoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notes
         fields = ['id', 'note_name', 'note_content', 'note_image', 'note_last_modified',
-                  'public', 'note_average_rating', 'tags', 'task', 'challenge', 'folder', 'user',
+                  'public', 'note_average_rating', 'tags', 'task', 'challenge', 'note_analisys', 'folder', 'user',
                   'task_detail', 'challenge_detail', 'folder_detail', 'user_detail', 'favorite']
 
     def to_representation(self, instance):

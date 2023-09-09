@@ -3,7 +3,6 @@ import { Note as NoteType } from '../utils/types';
 import { partialUpdateNote } from '../services/notes';
 import { AUTH_COOKIE_NAME } from '../utils/consts';
 import { parseCookies } from 'nookies';
-
 type NoteState = {
     currentNote: NoteType;
     history: NoteType[];
@@ -13,6 +12,7 @@ type NoteState = {
     undo: () => void;
     redo: () => void;
     clean: () => void;
+    // analyzeNote: (note: NoteType) => Promise<void>;
 };
 
 export const useNoteStore = create<NoteState>((set) => ({

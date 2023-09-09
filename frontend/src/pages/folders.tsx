@@ -20,8 +20,8 @@ import {
     useDisclosure,
 } from '@nextui-org/react';
 import { searchFolders } from '../utils/functions';
-import { StarIcon, StarOutlineIcon } from '../assets/icons/Icons';
 import { InputField } from '../components/InputField';
+import { Button } from '../components/Button';
 
 interface IFolderProps {}
 
@@ -93,22 +93,16 @@ const Folders: React.FunctionComponent<IFolderProps> = () => {
     return (
         <>
             <Header />
-            <h1 className="flex w-full justify-center py-10 text-3xl">
-                {t('folders.title')}
+            <h1 className="flex w-full justify-center py-10 text-4xl font-extrabold ">
+                {t('folders.Title')}
             </h1>
             <nav className="flex w-full items-center px-12">
-                <SearchBar onChange={(e) => setSearchQuery(e.target.value)} />
-                {showFavorites ? (
-                    <StarIcon
-                        className="h-7 w-7"
-                        onClick={() => setShowFavorites(false)}
-                    />
-                ) : (
-                    <StarOutlineIcon
-                        className="h-7 w-7"
-                        onClick={() => setShowFavorites(true)}
-                    />
-                )}
+                <SearchBar
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    setShowFavorites={setShowFavorites}
+                    showFavorites={showFavorites}
+                />
+
                 <Add
                     parentFolderId={folders?.id ?? -1}
                     openModal={handleOpenModal}
@@ -122,7 +116,10 @@ const Folders: React.FunctionComponent<IFolderProps> = () => {
                         updateRoot={updateRootFolder}
                     />
                 ) : (
-                    <p>No matching folders found</p>
+                    <p className="w-full pt-24 text-center text-3xl font-bold">
+                        {/* TODO: Typewriter effect maybe? */}
+                        {t('folders.NoFolders')}
+                    </p>
                 )
             ) : folders ? (
                 <Tree
@@ -138,13 +135,14 @@ const Folders: React.FunctionComponent<IFolderProps> = () => {
                 isOpen={isOpen}
                 onOpenChange={onOpenChange}
                 placement="top-center"
+                className="bg-mainBackground-200"
             >
                 <ModalContent>
                     {(onClose) => (
                         <>
                             <ModalHeader>
                                 <h1 className="text-2xl font-bold">
-                                    {t('folders.modal.title')}
+                                    {t('folders.Modal.Title')}
                                 </h1>
                             </ModalHeader>
                             <ModalBody>
@@ -172,16 +170,18 @@ const Folders: React.FunctionComponent<IFolderProps> = () => {
                                 />
                             </ModalBody>
                             <ModalFooter>
-                                <button
+                                <Button
                                     className="w-full rounded-lg bg-gray-200 px-5 py-2.5 text-center text-sm font-medium text-gray-700 hover:bg-gray-300 focus:outline-none focus:ring-4 focus:ring-gray-400 dark:bg-gray-700 dark:hover:bg-gray-800 dark:focus:ring-gray-600 sm:w-auto"
+                                    bgColor="gray-200"
                                     onClick={() => {
                                         onClose();
                                     }}
                                 >
                                     {t('folders.modal.cancel')}
-                                </button>
-                                <button
-                                    className="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-auto"
+                                </Button>
+                                <Button
+                                    className="w-full rounded-lg bg-primaryBlue-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-primaryBlue-800 focus:outline-none focus:ring-4 focus:ring-primaryBlue-300 sm:w-auto"
+                                    bgColor="primaryBlue-700"
                                     onClick={() => {
                                         if (
                                             folderName === '' ||
@@ -198,7 +198,7 @@ const Folders: React.FunctionComponent<IFolderProps> = () => {
                                     }}
                                 >
                                     {t('folders.modal.create')}
-                                </button>
+                                </Button>
                             </ModalFooter>
                         </>
                     )}

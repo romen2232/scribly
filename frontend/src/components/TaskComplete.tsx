@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import { TaskProps } from '../utils/types';
 import { shuffleArray } from '../utils/functions';
+import { Button } from './Button';
 
 //this will be the task and [this the correct option] having other options\n\n [this is other option][this is other option 1][this is other option 2]
+
+//TODO: add animation with this as a reference: https://codepen.io/chadd/pen/mdPZrbP
 
 const TaskComplete = ({ task, onSubmit, onSkip }: TaskProps) => {
     const [sentenceParts, setSentenceParts] = useState<(string | null)[]>([]);
@@ -69,11 +72,12 @@ const TaskComplete = ({ task, onSubmit, onSkip }: TaskProps) => {
 
     return (
         <>
-            <div className="space-y-4">
-                <h2 className="text-2xl font-bold">{task.taskName}</h2>
-                <p className="text-lg">{task.taskDescription}</p>
-
-                <div className="border p-2">
+            <div className="relative flex h-full flex-col items-center justify-around gap-4">
+                {' '}
+                <h2 className="mb-12 mt-16 w-8/12 text-center text-4xl font-bold">
+                    {task.taskDescription}
+                </h2>
+                <div className="flex w-8/12 items-baseline justify-between border p-2 text-left text-xl">
                     {sentenceParts.map((part, index) => {
                         if (!part) {
                             return (
@@ -86,7 +90,6 @@ const TaskComplete = ({ task, onSubmit, onSkip }: TaskProps) => {
                         return part;
                     })}
                 </div>
-
                 <div className="flex space-x-2">
                     {options.map((option, index) => (
                         <button
@@ -119,23 +122,27 @@ const TaskComplete = ({ task, onSubmit, onSkip }: TaskProps) => {
                         </button>
                     ))}
                 </div>
-                <button
-                    className={`w-1/2 rounded-xl border-2 p-4 ${
+                <Button
+                    className={`h-24 w-1/2 rounded-xl border-2 p-4 text-2xl font-bold text-white ${
                         selectedOption === null
-                            ? 'cursor-not-allowed bg-gray-500'
-                            : 'bg-tiviElectricPurple-100'
+                            ? 'bg-gray-500'
+                            : 'bg-primaryPink-100'
                     }`}
+                    bgColor={
+                        selectedOption === null ? 'gray-500' : 'primaryPink-500'
+                    }
                     {...(selectedOption === null && { disabled: true })}
                     onClick={handleAnswer}
                 >
                     Submit
-                </button>
-                <button
-                    className="w-1/2 rounded-xl border-2 bg-gray-500 p-4"
+                </Button>
+                <Button
+                    className="absolute bottom-2 left-2 rounded-xl border-2 p-4 font-bold text-secondaryYellow-500"
+                    bgColor="zinc-800"
                     onClick={handleSkip}
                 >
                     Skip
-                </button>
+                </Button>
             </div>
         </>
     );

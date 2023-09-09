@@ -8,9 +8,11 @@ import { AUTH_COOKIE_NAME } from '../utils/consts';
 import { createNote, retrieveNote } from '../services/notes';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import Loader from './loader';
 
 interface INewProps {}
 
+//TODO: check loader function
 const New: React.FunctionComponent<INewProps> = () => {
     const cookies = parseCookies();
 
@@ -28,10 +30,10 @@ const New: React.FunctionComponent<INewProps> = () => {
     const [noteId, setNoteId] = useState(
         Number(searchParam.get(t('noteId')) ?? -1),
     );
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const getFolder = async () => {
-            //Check if folderId is a number
             if (isNaN(folderId)) {
                 setFolderId(-1);
             }
@@ -49,8 +51,10 @@ const New: React.FunctionComponent<INewProps> = () => {
             }
             const root = await rootFolder(cookies[AUTH_COOKIE_NAME]);
             setFolder(root);
-            if (root.id)
+            if (root.id) {
+                setFolderId(root.id);
                 newQueryParameters.set(t('folderId'), root.id.toString());
+            }
             setSearchParam(newQueryParameters);
         };
         const getNote = async () => {
@@ -67,6 +71,7 @@ const New: React.FunctionComponent<INewProps> = () => {
                     setNoteId(-1);
                 }
             }
+            if (folderId === -1) return;
             const note = await createNote(
                 {
                     folder: folderId,
@@ -80,10 +85,10 @@ const New: React.FunctionComponent<INewProps> = () => {
                 setSearchParam(newQueryParameters);
             }
         };
-
         getFolder();
         getNote();
-    }, []);
+        setIsLoading(false);
+    }, [folderId]);
 
     const updateURLWithFolderId = (folderId: number) => {
         const newQueryParameters = new URLSearchParams(window.location.search);
@@ -91,8 +96,10 @@ const New: React.FunctionComponent<INewProps> = () => {
         setSearchParam(newQueryParameters);
     };
 
+    if (isLoading) return <Loader />;
+
     return (
-        <div className="h-full max-h-screen overflow-hidden text-tiviBlack">
+        <div className="text-tiviBlack h-full max-h-screen overflow-hidden">
             <Header />
             <main className=" flex h-full flex-col">
                 <Note

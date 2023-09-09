@@ -1,11 +1,12 @@
 import { useAutosave } from '../hooks/useAutosave';
+import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { FolderIcon } from '../assets/icons/Icons';
 import { Folder, Note as NoteType } from '../utils/types';
 import { t } from 'i18next';
 import { formatDate } from '../utils/functions';
 import { useNoteStore } from '../stores/noteStore';
-import { destroyNote } from '../services/notes';
+import { destroyNote, analyzeNote } from '../services/notes';
 import { parseCookies } from 'nookies';
 import { AUTH_COOKIE_NAME } from '../utils/consts';
 import useKeyboardShortcuts from '../hooks/useKeyboardShortcuts';
@@ -17,34 +18,54 @@ import {
     useDisclosure,
 } from '@nextui-org/react';
 import { Tree } from './Tree';
+// import { AnswerProps } from '../utils/types';
 import { rootFolder } from '../services/folders';
+import useVisibility from '../hooks/useVisibility';
 export interface INoteProps {
     note: NoteType;
     folder?: Folder;
     onNoteChange?: (note: NoteType) => void;
     updateURL?: (folderId: number) => void;
+    // onSubmit: (answer: AnswerProps) => void;
 }
 
 export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
-    const { currentNote, saveNote, undo, redo } = useNoteStore();
+    const { currentNote, saveNote, undo, redo, localSaveNote } = useNoteStore();
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const [newNote, setNewNote] = useState({} as NoteType);
     const [folderTree, setFolderTree] = useState<Folder>();
     const [newFolder, setNewFolder] = useState<Folder>();
     const cookies = parseCookies();
+    const [publicNote, setPublicNote] = useState(false);
+
+    const [noteRef, isNoteVisible] = useVisibility<HTMLDivElement>();
 
     // Update note as soon as it's passed as prop
     useEffect(() => {
         setNewNote(note);
         setNewFolder(folder);
+        setPublicNote(note.public ?? false);
     }, [note]);
 
     useEffect(() => {
+        if (!newFolder) return;
         setNewNote({
             ...newNote,
             folder: newFolder,
+            public: publicNote,
         });
-    }, [newFolder]);
+        saveNote({
+            ...newNote,
+            folder: newFolder,
+            public: publicNote,
+        });
+    }, [newFolder, publicNote]);
+
+    useEffect(() => {
+        if (!isNoteVisible) {
+            handleUnmount(newNote);
+        }
+    }, [isNoteVisible]);
 
     // Save note on unmount
     useEffect(() => {
@@ -93,6 +114,7 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
      * Destroy note if it's empty
      */
     const handleUnmount = async (note: NoteType) => {
+        console.log(note);
         if (note.noteContent === '' && note.noteName === '' && note.id) {
             await destroyNote(note.id, cookies[AUTH_COOKIE_NAME]);
         } else {
@@ -121,17 +143,49 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
         onOpenChange();
     };
 
+    const fadeInDown = {
+        hidden: { opacity: 0, y: -50 },
+        visible: { opacity: 1, y: 0 },
+    };
+    const handleAnalyzeNote = async (note: NoteType) => {
+        const id = note.id;
+        const token = cookies[AUTH_COOKIE_NAME];
+
+        try {
+            if (id != undefined) {
+                const result = await analyzeNote(id, note, token);
+
+                localSaveNote({
+                    ...result,
+                    noteLastModified: formatDate(new Date()),
+                });
+            }
+
+            //TODO: Modal here
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     return (
-        <div className="h-full">
+        <motion.div
+            ref={noteRef}
+            className="flex h-full flex-col overflow-hidden"
+        >
             <header className="flex items-center justify-between">
                 <div className="w-full">
-                    <input
+                    <motion.input
+                        initial="hidden"
+                        animate="visible"
+                        variants={fadeInDown}
+                        transition={{ duration: 0.5 }}
                         type="text"
                         name="title"
                         id="title"
-                        className="h-16 w-full p-16 text-7xl placeholder-gray-500 focus:placeholder-gray-600 focus:outline-none"
-                        placeholder="Título"
+                        className="h-16 w-full bg-mainBackground-200 p-16 text-7xl placeholder-gray-500 focus:placeholder-gray-600 focus:outline-none"
+                        placeholder={t('note.Title')}
                         autoFocus
+                        autoComplete="off"
                         value={newNote.noteName ?? ''}
                         onChange={(e) =>
                             setNewNote({
@@ -140,35 +194,60 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
                             })
                         }
                     />
-                    {/* Date */}
                     <div className="pointer-events-none flex justify-between px-16">
                         <p className="text-2xl text-gray-500">
-                            {' '}
                             {formatDate(
                                 new Date(newNote.noteLastModified ?? ''),
                             )}
                         </p>
                     </div>
                 </div>
-                {newFolder?.id && (
+
+                <div className="flex flex-col">
+                    {newFolder?.id && (
+                        <button
+                            className={`hover:bg-hover:shadow  mx-16  my-2 flex h-min cursor-pointer items-center justify-between rounded-md p-3 duration-300 ease-in-out transition hover:text-primaryBlue-600 hover:shadow-lg`}
+                            tabIndex={2}
+                            onClick={onOpen}
+                        >
+                            <FolderIcon className="h-10 w-10" />
+                            {(newFolder?.depth ?? 0) > 0 && (
+                                <div className="px-3 text-lg">
+                                    <h4 className="font-bold">
+                                        {newFolder?.folderName}
+                                    </h4>
+                                </div>
+                            )}
+                        </button>
+                    )}
+
+                    <label className="flex cursor-pointer flex-col items-center justify-center">
+                        <div className="relative inline-flex items-center">
+                            <input
+                                type="checkbox"
+                                checked={publicNote}
+                                className="peer sr-only"
+                                onChange={() => {
+                                    setPublicNote(!publicNote);
+                                }}
+                            />
+                            <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:content-[''] after:transition-all peer-checked:bg-primaryPink-500 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primaryPink-200"></div>
+                        </div>
+                        <span className="pt-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                            Public
+                        </span>
+                    </label>
+
                     <button
-                        className={`hover:bg-hover:shadow items-center" m-16 flex h-min cursor-pointer items-center justify-between rounded-md p-3 duration-300 ease-in-out transition hover:text-tiviElectricPurple-100 hover:shadow-lg`}
+                        className={`hover:bg-hover:shadow items-center" mx-16 my-2 flex h-min cursor-pointer items-center justify-between rounded-md p-3 duration-300 ease-in-out transition hover:text-primaryBlue-600 hover:shadow-lg`}
                         tabIndex={2}
-                        onClick={onOpen}
+                        onClick={() => handleAnalyzeNote(newNote)}
                     >
                         <FolderIcon className="h-10 w-10" />
-                        {(newFolder?.depth ?? 0) > 0 && (
-                            <div className="px-3 text-lg">
-                                <h4 className="font-bold">
-                                    {newFolder?.folderName}
-                                </h4>
-                            </div>
-                        )}
                     </button>
-                )}
+                </div>
             </header>
-            {/* Content */}
-            <textarea
+            <motion.textarea
                 name="text"
                 id="text"
                 value={newNote.noteContent ?? ''}
@@ -179,20 +258,22 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
                     })
                 }
                 tabIndex={1}
-                className="h-full w-full  p-16 font-sans text-2xl focus:placeholder-gray-500 focus:outline-none"
+                className="m-24 mb-12 mt-16 h-full overflow-scroll bg-mainBackground-200 text-2xl focus:placeholder-gray-500 focus:outline-none"
                 placeholder="En algún lugar de la Mancha, de cuyo nombre no quiero acordarme..."
-            ></textarea>
+            ></motion.textarea>
+
             <Modal
                 isOpen={isOpen}
                 onOpenChange={onOpenChange}
                 placement="top-center"
+                className="bg-mainBackground-200"
             >
                 <ModalContent>
                     {() => (
                         <>
                             <ModalHeader>
                                 <h1 className="text-2xl font-bold">
-                                    {t('folders.modal.title')}
+                                    {t('folders.Title')}
                                 </h1>
                             </ModalHeader>
                             <ModalBody>
@@ -206,6 +287,6 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
                     )}
                 </ModalContent>
             </Modal>
-        </div>
+        </motion.div>
     );
 }

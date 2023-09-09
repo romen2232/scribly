@@ -86,50 +86,6 @@ class LessonUserRetrieveView(APIView):
             return Response({"detail": "Lesson not started yet."}, status=status.HTTP_404_NOT_FOUND)
 
 
-# class LessonUserCreateOrUpdateView(APIView):
-#     permission_classes = [permissions.IsAuthenticated]
-
-#     def post(self, request, lesson_id, *args, **kwargs):
-#         current_user = request.user
-
-#         # Check if a lesson_user exists for the given user and lesson
-#         existing_lesson_users = Lessons_users.objects.filter(user=current_user, lesson=lesson_id)
-        
-#         if existing_lesson_users.exists():
-#             # Fetch the latest lesson_user based on the start date
-#             latest_lesson_user = existing_lesson_users.latest('lesson_start_date')
-
-#             if latest_lesson_user.percentage_completed == 100:
-#                 # Create a new record
-#                 new_lesson_user_data = {
-#                     'lesson': lesson_id,
-#                     'user': current_user.id,
-#                     'percentage_completed': 0  # or any default value you want
-#                 }
-#                 serializer = LessonsUsersSerializerWithTaskUser(data=new_lesson_user_data, context={'request': request})
-#                 if serializer.is_valid():
-#                     serializer.save()
-#                     return Response(serializer.data, status=status.HTTP_201_CREATED)
-#                 else:
-#                     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-#             else:
-#                 return Response({"detail": "Latest lesson is already in progress."}, status=status.HTTP_400_BAD_REQUEST)
-
-#         else:
-#             # Create a new record if none exists
-#             new_lesson_user_data = {
-#                 'lesson': lesson_id,
-#                 'user': current_user.id,
-#                 'percentage_completed': 0  # or any default value you want
-#             }
-#             serializer = LessonsUsersSerializerWithTaskUser(data=new_lesson_user_data, context={'request': request})
-#             if serializer.is_valid():
-#                 serializer.save()
-#                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-#             else:
-#                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-   
    
    
 class LessonUserCreateOrUpdateView(APIView):

@@ -46,6 +46,22 @@
     "profile.Logout": "Cerrar sesión",
     "profile.SeeMore": "Ver más",
 
+    "folders.Title": "Carpetas",
+    "folders.Name": "Nombre",
+    "folders.Description": "Descripción",
+    "folders.Modal.Title": "Nueva carpeta",
+    "folders.Modal.Name": "Nombre",
+    "folders.modal.cancel": "Cancelar",
+    "folders.modal.create": "Crear",
+    "folders.NoFolders": "No se han encontrado carpetas ni notas",
+
+    "note.NewNote": "Nueva nota",
+    "note.Title": "Título",
+
+    "category.Title": "Categorías",
+
+    "community.Title": "Comunidad",
+
     "badge.Title": "Insignias",
     "badge.Level": "Nivel",
 
@@ -66,8 +82,10 @@
 
     "ratings.AverageRating": "Puntuación media",
 
+    "knowMore": "Saber más",
+
     "Loading": "Cargando...",
-    "emailAccount": "escribly@gmail.com",
+    "emailAccount": "scribly@gmail.com",
     "or": "o",
 
     "/": "/",
@@ -84,6 +102,7 @@
     "/followers": "/seguidores",
     "/following": "/siguiendo",
     "/about": "/acerca",
+    "/lesson": "/leccion",
 
     "folderId": "idCarpeta",
     "noteId": "idNota"

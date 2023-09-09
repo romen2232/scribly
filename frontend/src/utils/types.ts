@@ -69,6 +69,7 @@ export interface Note {
     folder?: Folder | number;
     user?: User;
     favorite?: boolean;
+    noteAnalysis?: string;
 }
 export interface League {
     id?: number;
@@ -165,6 +166,7 @@ export interface Rating {
     rating: number;
     challenge?: number | null;
     task?: number | null;
+    note?: number | null;
     rating_date: Date;
 }
 export interface BadgeUser {
@@ -253,4 +255,10 @@ export interface TaskProps {
 export interface AnswerProps {
     answerText: string;
     answerNote?: number;
+}
+
+export interface NoteProps {
+    // task: Task;
+    onSubmit: (answer: AnswerProps) => void;
+    // onSkip: (task: Task) => void;
 }

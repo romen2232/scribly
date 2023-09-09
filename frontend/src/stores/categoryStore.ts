@@ -13,7 +13,8 @@ export interface CategoryStore {
 const categoryPersist = persist<CategoryStore>(
     (set) => ({
         category: 'POETRY',
-        setCategory: (newCategory) => set(() => ({ category: newCategory })),
+        setCategory: (newCategory: Category) =>
+            set(() => ({ category: newCategory })),
     }),
     {
         name: 'category-storage',

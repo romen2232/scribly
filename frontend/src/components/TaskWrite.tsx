@@ -2,11 +2,14 @@ import { useState } from 'react';
 import { TaskProps } from '../utils/types';
 import { Note } from './Note';
 import { Note as NoteType } from '../utils/types';
+
+import { Button } from './Button';
+
 interface TaskWriteProps extends TaskProps {
     initialNote: NoteType;
 }
 
-const TaskWrite = ({ task, onSubmit, onSkip, initialNote }: TaskWriteProps) => {
+const TaskWrite = ({ task, onSubmit, initialNote }: TaskWriteProps) => {
     const [currentNote, setCurrentNote] = useState<NoteType>(initialNote);
 
     const handleNoteChange = (updatedNote: NoteType) => {
@@ -14,42 +17,39 @@ const TaskWrite = ({ task, onSubmit, onSkip, initialNote }: TaskWriteProps) => {
     };
 
     const handleAnswer = async () => {
-        // Save the note first
+        const answerText = currentNote.noteContent ?? '';
+
+        // Verificar la longitud del contenido
+        if (answerText.length > 100) {
+            // Suponiendo que 1000 caracteres es el límite
+            alert(answerText.slice(0, 100)); // Mostrar la primera parte
+            alert(answerText.slice(100)); // Mostrar la segunda parte
+        } else {
+            alert(answerText); // Mostrar el contenido completo
+        }
 
         const answer = {
-            answerText: currentNote.noteContent ?? '',
+            answerText: answerText,
             answerNote: currentNote.id,
         };
 
         onSubmit(answer, task);
     };
 
-    const handleSkip = () => {
-        onSkip(task);
-    };
-
     return (
-        <div className="space-y-4">
-            <h2 className="text-2xl font-bold">{task.taskName}</h2>
-            <p className="text-lg">{task.taskDescription}</p>
-
-            {/* Render the Note component for writing the task */}
-            <Note note={initialNote} onNoteChange={handleNoteChange} />
-
-            <div className="flex justify-between">
-                <button
-                    className="w-1/2 rounded-xl border-2 bg-tiviElectricPurple-100 p-4"
-                    onClick={handleAnswer}
-                >
-                    Submit
-                </button>
-                <button
-                    className="w-1/2 rounded-xl border-2 bg-gray-500 p-4"
-                    onClick={handleSkip}
-                >
-                    Skip
-                </button>
+        <div className="relative flex h-full flex-col items-center justify-around gap-4">
+            <div>
+                {/* Render the Note component for writing the task */}
+                <Note note={initialNote} onNoteChange={handleNoteChange} />
             </div>
+
+            <Button
+                className={`h-24 w-1/2 rounded-xl border-2 bg-primaryBlue-500 p-4 text-2xl font-bold text-white`}
+                bgColor={'primaryBlue-500'}
+                onClick={() => handleAnswer()}
+            >
+                Submit
+            </Button>
         </div>
     );
 };

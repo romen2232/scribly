@@ -15,16 +15,16 @@ league: number;
 week_date: Date;
 }
 AUTHORIZATION Bearer Token
-This folder is using Bearer Token from collection Escribly
+This folder is using Bearer Token from collection Scribly
 leaderboards
 AUTHORIZATION Bearer Token
-This folder is using Bearer Token from collection Escribly
+This folder is using Bearer Token from collection Scribly
 GET
 list Leaderboards
 /api/v1/leaderboards/
 This request lists all available leaderboards.
 AUTHORIZATION Bearer Token
-This request is using Bearer Token from collection Escribly
+This request is using Bearer Token from collection Scribly
 HEADERS
 Accept
 POST
@@ -32,7 +32,7 @@ application/json
 create Leaderboards
 /api/v1/leaderboards/
 This request creates a new leaderboard.AUTHORIZATION Bearer Token
-This request is using Bearer Token from collection Escribly
+This request is using Bearer Token from collection Scribly
 HEADERS
 Content-Typeapplication/x-www-form-urlencoded
 Acceptapplication/json
@@ -44,18 +44,18 @@ id<integer>
 week_date<dateTime>
 leaderboard
 AUTHORIZATION Bearer Token
-This folder is using Bearer Token from collection Escribly
+This folder is using Bearer Token from collection Scribly
 {leaderboard_id}
 AUTHORIZATION Bearer Token
-This folder is using Bearer Token from collection Escribly
+This folder is using Bearer Token from collection Scribly
 users
 AUTHORIZATION Bearer Token
-This folder is using Bearer Token from collection Escribly
+This folder is using Bearer Token from collection Scribly
 GET
 list Leaderboard Users
 /api/v1/leaderboard/:leaderboard_id/users/
 This request lists all users belonging to a specific leaderboard.AUTHORIZATION Bearer Token
-This request is using Bearer Token from collection Escribly
+This request is using Bearer Token from collection Scribly
 HEADERS
 Accept
 application/json
@@ -64,13 +64,13 @@ leaderboard_id
 <string>
 {id}
 AUTHORIZATION Bearer Token
-This folder is using Bearer Token from collection Escribly
+This folder is using Bearer Token from collection Scribly
 GET
 retrieve Leaderboards
 /api/v1/leaderboard/:id/
 This request retrieves specific leaderboard details based on the provided leaderboard ID.
 AUTHORIZATION Bearer Token
-This request is using Bearer Token from collection Escribly
+This request is using Bearer Token from collection Scribly
 HEADERS
 Accept
 application/json
@@ -81,7 +81,7 @@ PUT
 update Leaderboards
 /api/v1/leaderboard/:id/This request updates the information for the specified leaderboard.
 AUTHORIZATION Bearer Token
-This request is using Bearer Token from collection Escribly
+This request is using Bearer Token from collection Scribly
 HEADERS
 Content-Typeapplication/x-www-form-urlencoded
 Acceptapplication/json
@@ -99,7 +99,7 @@ partial Update Leaderboards
 /api/v1/leaderboard/:id/
 This request partially updates the information for the specified leaderboard.
 AUTHORIZATION Bearer Token
-This request is using Bearer Token from collection Escribly
+This request is using Bearer Token from collection Scribly
 HEADERS
 Content-Typeapplication/x-www-form-urlencoded
 Acceptapplication/json
@@ -118,19 +118,19 @@ destroy Leaderboards
 /api/v1/leaderboard/:id/
 This request deletes the specified leaderboard.
 AUTHORIZATION Bearer Token
-This request is using Bearer Token from collection Escribly
+This request is using Bearer Token from collection Scribly
 PATH VARIABLES
 id
 <string>
 user
 AUTHORIZATION Bearer Token
-This folder is using Bearer Token from collection Escribly
+This folder is using Bearer Token from collection Scribly
 POST
 create Leaderboard User
 /api/v1/leaderboard/user/
 This request creates a relation between an user a leaderboard.
 AUTHORIZATION Bearer Token
-This request is using Bearer Token from collection Escribly
+This request is using Bearer Token from collection Scribly
 HEADERSContent-Typeapplication/x-www-form-urlencoded
 Acceptapplication/json
 
@@ -146,16 +146,16 @@ leaderboard_update_date: Date;
 leaderboard_score: number;
 }
 AUTHORIZATION Bearer Token
-This folder is using Bearer Token from collection Escribly
+This folder is using Bearer Token from collection Scribly
 leaderboards
 AUTHORIZATION Bearer Token
-This folder is using Bearer Token from collection Escribly
+This folder is using Bearer Token from collection Scribly
 GET
 list User Leaderboards
 /api/v1/user/:user_id/leaderboards/
 This endpoint is used to retrieve all leaderboards for a given user.
 AUTHORIZATION Bearer Token
-This request is using Bearer Token from collection Escribly
+This request is using Bearer Token from collection Scribly
 HEADERS
 Accept
 application/json
@@ -164,15 +164,15 @@ user_id
 <string>
 leaderboard
 AUTHORIZATION Bearer Token
-This folder is using Bearer Token from collection Escribly{leaderboard_id}
+This folder is using Bearer Token from collection Scribly{leaderboard_id}
 AUTHORIZATION Bearer Token
-This folder is using Bearer Token from collection Escribly
+This folder is using Bearer Token from collection Scribly
 GET
 retrieve Specific User Leaderboard
 /api/v1/user/:user_id/leaderboard/:leaderboard_id/
 This endpoint is used to retrieve a specific leaderboard for a given user.
 AUTHORIZATION Bearer Token
-This request is using Bearer Token from collection Escribly
+This request is using Bearer Token from collection Scribly
 HEADERS
 Accept
 application/json
@@ -184,7 +184,7 @@ partial Update Specific User Leaderboard
 /api/v1/user/:user_id/leaderboard/:leaderboard_id/
 This endpoint is used to partially update a specific leaderboard for a given user.
 AUTHORIZATION Bearer Token
-This request is using Bearer Token from collection Escribly
+This request is using Bearer Token from collection Scribly
 HEADERS
 Content-Typeapplication/x-www-form-urlencoded
 Acceptapplication/json
@@ -195,7 +195,7 @@ destroy Specific User Leaderboard
 /api/v1/user/:user_id/leaderboard/:leaderboard_id/
 This endpoint is used to delete a specific leaderboard for a given user.
 AUTHORIZATION Bearer Token
-This request is using Bearer Token from collection Escribly
+This request is using Bearer Token from collection Scribly
 PATH VARIABLES
 user_id<string>
 leaderboard_id<string>
@@ -257,8 +257,7 @@ const createLeaderboard = async (
 const listLeaderboardUsers = async (
     leaderboardId: number,
     token: string,
-): Promise<
-User[]> => {
+): Promise<User[]> => {
     try {
         const response = await apiClient.get<User[]>(
             `/api/v1/leaderboard/${leaderboardId}/users/`,
@@ -396,7 +395,7 @@ const createLeaderboardUser = async (
     }
 };
 
-//TODO: Implement in backend 
+//TODO: Implement in backend
 /** This endpoint is used to retrieve all leaderboards for a given user.
  * @param userId User ID
  * @param token JWT token
@@ -415,7 +414,7 @@ const listUserLeaderboards = async (
             },
         );
 
-       return response.data;
+        return response.data;
     } catch (error) {
         throw new Error(`Error listing user leaderboards: ${error}`);
     }

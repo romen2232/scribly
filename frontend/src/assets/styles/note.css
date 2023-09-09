@@ -1,0 +1,19 @@
+@keyframes gradientChange {
+    0% {
+        background: linear-gradient(45deg, #f06, #9f6);
+    }
+    50% {
+        background: linear-gradient(45deg, #9f6, #f06);
+    }
+    100% {
+        background: linear-gradient(45deg, #f06, #9f6);
+    }
+}
+
+.h-full {
+    animation: gradientChange 15s infinite;
+}
+
+button:hover {
+    transform: translateY(-5px);
+}

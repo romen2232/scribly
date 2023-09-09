@@ -182,6 +182,11 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
         navigate(t('/login'));
     }, []);
 
+    /**
+     *
+     * @returns Promise<boolean> Returns a promise that resolves to a boolean
+  
+     */
     // Token checker function
     const checkToken = async () => {
         const checking = new Promise<boolean>((resolve) => {

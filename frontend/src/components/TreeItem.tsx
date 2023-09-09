@@ -77,8 +77,6 @@ export function TreeItem({
                 updateRoot && updateRoot();
             });
         } else {
-            console.log(isFavorite);
-
             partialUpdateNote(
                 data.id as number,
                 {
@@ -120,6 +118,11 @@ export function TreeItem({
         return null;
     }
 
+    //TODO: BIG TODO: this is a hacky way to fix the bug where the note is not deleted when it's empty, this should be fixed in the backend and in the frontend at Note
+    if (!folder && 'noteName' in data && data.noteName === '') {
+        return null;
+    }
+
     return (
         <>
             <div className="w-full px-4 pb-3">
@@ -127,7 +130,11 @@ export function TreeItem({
                     <div
                         ref={hoverRef}
                         onClick={handleItemClick}
-                        className={`hover:bg-hover:shadow flex cursor-pointer items-center  justify-between rounded-md p-3 duration-300 ease-in-out transition hover:bg-tiviElectricPurple-50 hover:shadow-lg ${mlIndex[index]}`}
+                        className={`hover:bg-hover:shadow flex cursor-pointer items-center justify-between rounded-md p-3 duration-300 ease-in-out transition ${
+                            folder
+                                ? 'hover:bg-primaryPink-100'
+                                : 'hover:bg-primaryBlue-100'
+                        } hover:shadow-lg ${mlIndex[index]}`}
                     >
                         <div className="flex items-center">
                             {folder ? (

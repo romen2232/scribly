@@ -5,13 +5,14 @@ import { useState } from 'react';
 
 export interface IUnitProps {
     unit: UnitType;
+    first: boolean;
 }
 
-export function Unit({ unit }: IUnitProps) {
-    const { lessons, unitColor, unitDescription, unitNumber } = unit;
+export function Unit({ unit, first }: IUnitProps) {
+    const { lessons, unitColor, unitName, unitNumber } = unit;
     const [currentLesson, setCurrentLesson] = useState<number>();
 
-    const [areLessonsVisible, setAreLessonsVisible] = useState(false);
+    const [areLessonsVisible, setAreLessonsVisible] = useState(first);
 
     const [firstTime, setFirstTime] = useState(false);
     return (
@@ -19,7 +20,7 @@ export function Unit({ unit }: IUnitProps) {
             <div onClick={() => setAreLessonsVisible(!areLessonsVisible)}>
                 <UnitHeader
                     unitNumber={unitNumber}
-                    description={unitDescription}
+                    description={unitName}
                     backgroundColor={unitColor}
                     currentLesson={currentLesson}
                 />
@@ -52,7 +53,7 @@ export function Unit({ unit }: IUnitProps) {
                         return (
                             <LessonIcon
                                 key={lesson.id}
-                                bgColor={lesson.bgColor}
+                                bgColor={'secondaryYellow-500'}
                                 lesson={lesson}
                                 extraClasses={margin}
                                 disabled={disabled}

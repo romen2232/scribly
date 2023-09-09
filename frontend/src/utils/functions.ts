@@ -1,4 +1,13 @@
 import { Folder } from './types';
+import tailwindConfig from '../../tailwind.config';
+
+type ColorShades = {
+    [shade: string]: string;
+};
+
+type ColorsConfig = {
+    [colorName: string]: string | ColorShades;
+};
 
 /**
  * Checks if password is strong
@@ -178,4 +187,106 @@ export function searchFolders(
     }
 
     return null;
+}
+
+/**
+ * Returns the color from the Tailwind config
+ * @param colorName Name of the color
+ * @param shade Shade of the color
+ * @returns Color in hex format without the #
+ */
+export function getColor(
+    tailwindColor: string,
+    tailwindShade?: string | number,
+) {
+    if (tailwindColor.startsWith('#')) return tailwindColor.replace('#', '');
+
+    const parsedColor = tailwindColor.replace('bg-', '');
+    const colors = tailwindConfig?.theme?.colors as ColorsConfig;
+    let colorName = parsedColor.replace('bg-', '');
+    let shade = tailwindShade;
+
+    if (parsedColor.split('-').length > 1) {
+        colorName = parsedColor.split('-')[0];
+        shade = parsedColor.split('-')[1];
+    }
+
+    if (typeof shade === 'string') {
+        shade = parseInt(shade);
+    }
+
+    const color = colors[colorName];
+    if (!color) {
+        throw new Error(`Color ${colorName} not found in Tailwind config.`);
+    }
+
+    if (typeof color === 'string') {
+        if (shade) {
+            throw new Error(
+                `Shade ${shade} was specified, but color ${colorName} is a string and doesn't have shades.`,
+            );
+        }
+        return color;
+    }
+
+    // At this point, TypeScript knows color is of type ColorShades
+    const shadeColor = color[shade!]; // We use `!` to assert that shade is defined
+    if (!shadeColor) {
+        throw new Error(
+            `Shade ${shade} of color ${colorName} not found in Tailwind config.`,
+        );
+    }
+
+    return shadeColor.replace('#', '');
+}
+
+/**
+ * Returns the lightness of a color
+ * @param color Color in hex format
+ * @returns Lightness of the color
+ */
+export function determineLightColor(hexColor: string) {
+    // Check if the given hex has the # symbol at the start and remove it
+    if (hexColor.charAt(0) === '#') {
+        hexColor = hexColor.slice(1);
+    }
+
+    // Convert the hex to RGB values
+    const r = parseInt(hexColor.substring(0, 2), 16) / 255;
+    const g = parseInt(hexColor.substring(2, 4), 16) / 255;
+    const b = parseInt(hexColor.substring(4, 6), 16) / 255;
+
+    // Calculate the luminance using relative luminance formula
+    const getLuminanceComponent = (color: number) => {
+        if (color <= 0.03928) {
+            return color / 12.92;
+        } else {
+            return Math.pow((color + 0.055) / 1.055, 2.4);
+        }
+    };
+
+    const luminance =
+        0.2126 * getLuminanceComponent(r) +
+        0.7152 * getLuminanceComponent(g) +
+        0.0722 * getLuminanceComponent(b);
+
+    // Typically, a luminance value of greater than 0.5 is considered "light",
+    // and anything less than or equal to that is "dark"
+    return luminance > 0.5;
+}
+
+/**
+ * Lightens a color
+ * @param color Color in hex format
+ * @param percent Percent to lighten the color by
+ * @returns Lightened color in hex format
+ */
+export function lightenColor(color: string, percent: number) {
+    const parsedColor = color.replace('#', '');
+    const num = parseInt(parsedColor.slice(1), 16);
+    const amt = Math.round(2.55 * percent);
+    const R = (num >> 16) + amt;
+    const G = ((num >> 8) & 0x00ff) + amt;
+    const B = (num & 0x0000ff) + amt;
+    return `#${((1 << 24) | (R << 16) | (G << 8) | B).toString(16).slice(1)}`;
 }
