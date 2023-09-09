@@ -209,12 +209,12 @@ def AnswerNote(input):
     )
   
     response = response.json()
-    print(response)
+    # print(response)
     
     return response['choices'][0]['message']['content']
  
 
-class AnalyseNote(generics.ListCreateAPIView):
+class AnalyzeNote(generics.ListCreateAPIView):
     queryset = Notes.objects.all()
     serializer_class = NoteSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -233,7 +233,7 @@ class AnalyseNote(generics.ListCreateAPIView):
     
     
 
-class AnalyseNoteEdit(generics.RetrieveUpdateDestroyAPIView):
+class AnalyzeNoteEdit(generics.RetrieveUpdateDestroyAPIView):
     queryset = Notes.objects.all()
     serializer_class = NoteSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -256,4 +256,5 @@ class AnalyseNoteEdit(generics.RetrieveUpdateDestroyAPIView):
         chat = AnswerNote(input=note_content)
         serializer.is_valid(raise_exception=True)
         note = serializer.save(note_analisys=chat)
+        print(note.note_analisys)
         return Response(serializer.data, status=status.HTTP_200_OK)

@@ -6,7 +6,7 @@ import { Folder, Note as NoteType } from '../utils/types';
 import { t } from 'i18next';
 import { formatDate } from '../utils/functions';
 import { useNoteStore } from '../stores/noteStore';
-import { destroyNote } from '../services/notes';
+import { destroyNote, analyzeNote } from '../services/notes';
 import { parseCookies } from 'nookies';
 import { AUTH_COOKIE_NAME } from '../utils/consts';
 import useKeyboardShortcuts from '../hooks/useKeyboardShortcuts';
@@ -18,6 +18,7 @@ import {
     useDisclosure,
 } from '@nextui-org/react';
 import { Tree } from './Tree';
+// import { AnswerProps } from '../utils/types';
 import { rootFolder } from '../services/folders';
 import useVisibility from '../hooks/useVisibility';
 export interface INoteProps {
@@ -25,10 +26,11 @@ export interface INoteProps {
     folder?: Folder;
     onNoteChange?: (note: NoteType) => void;
     updateURL?: (folderId: number) => void;
+    // onSubmit: (answer: AnswerProps) => void;
 }
 
 export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
-    const { currentNote, saveNote, undo, redo } = useNoteStore();
+    const { currentNote, saveNote, undo, redo, localSaveNote } = useNoteStore();
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const [newNote, setNewNote] = useState({} as NoteType);
     const [folderTree, setFolderTree] = useState<Folder>();
@@ -145,14 +147,31 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
         hidden: { opacity: 0, y: -50 },
         visible: { opacity: 1, y: 0 },
     };
+    const handleAnalyzeNote = async (note: NoteType) => {
+        const id = note.id;
+        const token = cookies[AUTH_COOKIE_NAME];
 
-    // const fadeInUp = {
-    //     hidden: { opacity: 0, y: 50 },
-    //     visible: { opacity: 1, y: 0 }
-    // };
+        try {
+            if (id != undefined) {
+                const result = await analyzeNote(id, note, token);
+
+                localSaveNote({
+                    ...result,
+                    noteLastModified: formatDate(new Date()),
+                });
+            }
+
+            //TODO: Modal here
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     return (
-        <motion.div ref={noteRef} className="h-full">
+        <motion.div
+            ref={noteRef}
+            className="flex h-full flex-col overflow-hidden"
+        >
             <header className="flex items-center justify-between">
                 <div className="w-full">
                     <motion.input
@@ -164,7 +183,7 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
                         name="title"
                         id="title"
                         className="h-16 w-full bg-mainBackground-200 p-16 text-7xl placeholder-gray-500 focus:placeholder-gray-600 focus:outline-none"
-                        placeholder="Título"
+                        placeholder={t('note.Title')}
                         autoFocus
                         autoComplete="off"
                         value={newNote.noteName ?? ''}
@@ -174,10 +193,6 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
                                 noteName: e.target.value,
                             })
                         }
-                        style={{
-                            maxHeight: '10px',
-                            border: 'solid blue',
-                        }}
                     />
                     <div className="pointer-events-none flex justify-between px-16">
                         <p className="text-2xl text-gray-500">
@@ -191,7 +206,7 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
                 <div className="flex flex-col">
                     {newFolder?.id && (
                         <button
-                            className={`hover:bg-hover:shadow items-center" m-16 flex h-min cursor-pointer items-center justify-between rounded-md p-3 duration-300 ease-in-out transition hover:text-primaryBlue-600 hover:shadow-lg`}
+                            className={`hover:bg-hover:shadow  mx-16  my-2 flex h-min cursor-pointer items-center justify-between rounded-md p-3 duration-300 ease-in-out transition hover:text-primaryBlue-600 hover:shadow-lg`}
                             tabIndex={2}
                             onClick={onOpen}
                         >
@@ -222,13 +237,17 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
                             Public
                         </span>
                     </label>
+
+                    <button
+                        className={`hover:bg-hover:shadow items-center" mx-16 my-2 flex h-min cursor-pointer items-center justify-between rounded-md p-3 duration-300 ease-in-out transition hover:text-primaryBlue-600 hover:shadow-lg`}
+                        tabIndex={2}
+                        onClick={() => handleAnalyzeNote(newNote)}
+                    >
+                        <FolderIcon className="h-10 w-10" />
+                    </button>
                 </div>
             </header>
             <motion.textarea
-                // initial="hidden"
-                // animate="visible"
-                // variants={fadeInUp}
-                // transition={{ duration: 0.5, delay: 0.3 }}
                 name="text"
                 id="text"
                 value={newNote.noteContent ?? ''}
@@ -238,21 +257,11 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
                         noteContent: e.target.value,
                     })
                 }
-                style={{
-                    //pos in the center
-
-                    maxHeight: '350px',
-                    maxWidth: '90%',
-
-                    // minHeight: '00px', // Establece la altura máxima deseada
-                    overflowY: 'auto', // Hace que aparezca una barra de desplazamiento vertical si es necesario
-                    backgroundColor: '#F3F4F6',
-                    border: '6px double black',
-                }}
                 tabIndex={1}
-                className="h-full w-full  bg-mainBackground-200 p-16 text-2xl focus:placeholder-gray-500 focus:outline-none"
+                className="m-24 mb-12 mt-16 h-full overflow-scroll bg-mainBackground-200 text-2xl focus:placeholder-gray-500 focus:outline-none"
                 placeholder="En algún lugar de la Mancha, de cuyo nombre no quiero acordarme..."
             ></motion.textarea>
+
             <Modal
                 isOpen={isOpen}
                 onOpenChange={onOpenChange}

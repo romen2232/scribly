@@ -21,7 +21,6 @@ gunicorn==21.2.0
 kombu==5.3.1
 openai==0.27.8
 prompt-toolkit==3.0.39
-psycopg2 == 2.9.7
 PyJWT==2.8.0
 python-dotenv==1.0.0
 python-stdnum==1.18

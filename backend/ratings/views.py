@@ -140,8 +140,9 @@ class RatingDetailView(APIView):
         except Ratings.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-    def get(self, request, user_id, challenge_id=None, task_id=None, format=None):
-        rating = self.get_object(user_id, challenge_id, task_id)
+    def get(self, request, user_id, challenge_id=None, task_id=None, note_id=None, format=None):
+        
+        rating = self.get_object(user_id, challenge_id, task_id, note_id)
         serializer = RatingsSerializer(rating, context={'request': request})
         return Response(serializer.data)
 

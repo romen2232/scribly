@@ -130,6 +130,36 @@ const destroyNote = async (id: number, token: string): Promise<void> => {
     }
 };
 
+/** Partially updates a note
+ * @param id Note ID
+ * @param answer Note to partially update (only fields to update)
+ * @param token JWT token
+ * @returns Partially updated note
+ * @throws Error if note partial update fails
+ */
+const analyzeNote = async (
+    id: number,
+    note: Partial<Note>,
+    token: string,
+): Promise<Note> => {
+    try {
+        const response = await apiClient.patch<Note>(
+            `/api/v1/note/analyze/${id}/`,
+            note,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            },
+        );
+
+        return response.data;
+    } catch (error) {
+        throw new Error(`Error analysing note: ${error}`);
+    }
+};
+
 export {
     listNotes,
     createNote,
@@ -137,4 +167,5 @@ export {
     updateNote,
     partialUpdateNote,
     destroyNote,
+    analyzeNote,
 };

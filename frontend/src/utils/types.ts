@@ -69,6 +69,7 @@ export interface Note {
     folder?: Folder | number;
     user?: User;
     favorite?: boolean;
+    noteAnalysis?: string;
 }
 export interface League {
     id?: number;
@@ -254,4 +255,10 @@ export interface TaskProps {
 export interface AnswerProps {
     answerText: string;
     answerNote?: number;
+}
+
+export interface NoteProps {
+    // task: Task;
+    onSubmit: (answer: AnswerProps) => void;
+    // onSkip: (task: Task) => void;
 }
