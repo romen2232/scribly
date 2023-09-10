@@ -130,7 +130,7 @@ export function TreeItem({
                     <div
                         ref={hoverRef}
                         onClick={handleItemClick}
-                        className={`hover:bg-hover:shadow flex cursor-pointer items-center justify-between rounded-md p-3 duration-300 ease-in-out transition ${
+                        className={`hover:bg-hover:shadow flex w-full cursor-pointer items-center justify-between rounded-md p-3 duration-300 ease-in-out transition ${
                             folder
                                 ? 'hover:bg-primaryPink-100'
                                 : 'hover:bg-primaryBlue-100'

@@ -18,7 +18,7 @@ export function UnitHeader({
 }: IUnitHeaderProps) {
     return (
         <Button
-            className="mb-8 max-w-2xl rounded-xl px-3 py-1.5 text-black"
+            className=" max-w-2xl rounded-xl px-3 py-1.5 text-black"
             bgColor={backgroundColor}
         >
             <header className="flex w-96 items-center justify-between p-4">

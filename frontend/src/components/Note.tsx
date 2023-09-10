@@ -1,7 +1,7 @@
 import { useAutosave } from '../hooks/useAutosave';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { FolderIcon } from '../assets/icons/Icons';
+import { FolderIcon, GemIcon } from '../assets/icons/Icons';
 import { Folder, Note as NoteType } from '../utils/types';
 import { t } from 'i18next';
 import { formatDate } from '../utils/functions';
@@ -16,11 +16,16 @@ import {
     ModalHeader,
     ModalContent,
     useDisclosure,
+    ModalFooter,
 } from '@nextui-org/react';
 import { Tree } from './Tree';
 // import { AnswerProps } from '../utils/types';
 import { rootFolder } from '../services/folders';
 import useVisibility from '../hooks/useVisibility';
+import { retrieveUser } from '../services/auth';
+import Loader from '../pages/loader';
+import { Button } from './Button';
+
 export interface INoteProps {
     note: NoteType;
     folder?: Folder;
@@ -29,6 +34,7 @@ export interface INoteProps {
     // onSubmit: (answer: AnswerProps) => void;
 }
 
+//TODO: Tab index is not working as intendeed
 export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
     const { currentNote, saveNote, undo, redo, localSaveNote } = useNoteStore();
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -37,8 +43,22 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
     const [newFolder, setNewFolder] = useState<Folder>();
     const cookies = parseCookies();
     const [publicNote, setPublicNote] = useState(false);
+    const [gems, setGems] = useState(0);
+    const [waitingForAnalysis, setWaitingForAnalysis] = useState(false);
+    const [folderOrAnalysis, setFolderOrAnalysis] = useState<
+        'folder' | 'analysis'
+    >('folder');
+    const [setAnalysis] = useState('');
+    const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
+    const [parsedAnalysis, setParsedAnalysis] = useState<string[][]>([[]]);
 
     const [noteRef, isNoteVisible] = useVisibility<HTMLDivElement>();
+
+    useEffect(() => {
+        retrieveUser(cookies[AUTH_COOKIE_NAME]).then((response) => {
+            setGems(response.gems ?? 0);
+        });
+    }, []);
 
     // Update note as soon as it's passed as prop
     useEffect(() => {
@@ -114,7 +134,6 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
      * Destroy note if it's empty
      */
     const handleUnmount = async (note: NoteType) => {
-        console.log(note);
         if (note.noteContent === '' && note.noteName === '' && note.id) {
             await destroyNote(note.id, cookies[AUTH_COOKIE_NAME]);
         } else {
@@ -147,24 +166,56 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
         hidden: { opacity: 0, y: -50 },
         visible: { opacity: 1, y: 0 },
     };
+
     const handleAnalyzeNote = async (note: NoteType) => {
         const id = note.id;
         const token = cookies[AUTH_COOKIE_NAME];
-
+        if (gems < 100 || waitingForAnalysis) return;
         try {
             if (id != undefined) {
+                setWaitingForAnalysis(true);
+                openAnalysis();
                 const result = await analyzeNote(id, note, token);
-
+                if (result.noteAnalysis === undefined)
+                    throw new Error(t('note.AnalysisError'));
+                setParsedAnalysis(parseAnalysis(result.noteAnalysis));
+                setAnalysis(result.noteAnalysis);
                 localSaveNote({
                     ...result,
                     noteLastModified: formatDate(new Date()),
                 });
+                setWaitingForAnalysis(false);
             }
-
-            //TODO: Modal here
         } catch (error) {
             console.error(error);
         }
+    };
+
+    /**
+     * Parses the analysis string
+     * @param analysis
+     * @returns A 2D array with the titles and the text of the analysis
+     */
+    const parseAnalysis = (analysis: string) => {
+        const analysisArray = analysis.replace('\\n\\n', '').split('**');
+        const parsedAnalysis: string[][] = [];
+        for (let i = 1; i < analysisArray.length; i += 2) {
+            const title = analysisArray[i];
+            const text = analysisArray[i + 1];
+            parsedAnalysis.push([title, text]);
+        }
+        console.log(parsedAnalysis);
+        return parsedAnalysis;
+    };
+
+    const openFolder = () => {
+        setFolderOrAnalysis('folder');
+        onOpen();
+    };
+
+    const openAnalysis = () => {
+        setFolderOrAnalysis('analysis');
+        onOpen();
     };
 
     return (
@@ -208,7 +259,7 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
                         <button
                             className={`hover:bg-hover:shadow  mx-16  my-2 flex h-min cursor-pointer items-center justify-between rounded-md p-3 duration-300 ease-in-out transition hover:text-primaryBlue-600 hover:shadow-lg`}
                             tabIndex={2}
-                            onClick={onOpen}
+                            onClick={openFolder}
                         >
                             <FolderIcon className="h-10 w-10" />
                             {(newFolder?.depth ?? 0) > 0 && (
@@ -239,15 +290,20 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
                     </label>
 
                     <button
-                        className={`hover:bg-hover:shadow items-center" mx-16 my-2 flex h-min cursor-pointer items-center justify-between rounded-md p-3 duration-300 ease-in-out transition hover:text-primaryBlue-600 hover:shadow-lg`}
+                        className={` mx-16 my-2 flex h-min flex-col items-center justify-between rounded-md p-3 duration-300 ease-in-out transition  ${
+                            gems < 100 || waitingForAnalysis
+                                ? 'cursor-default  opacity-50'
+                                : 'hover:bg-hover:shadow cursor-pointer  hover:text-primaryBlue-600 hover:shadow-lg'
+                        }`}
                         tabIndex={2}
                         onClick={() => handleAnalyzeNote(newNote)}
                     >
-                        <FolderIcon className="h-10 w-10" />
+                        <GemIcon className="h-10 w-10" />
+                        <h4 className="px-3 text-lg font-bold">{gems}</h4>
                     </button>
                 </div>
             </header>
-            <motion.textarea
+            <textarea
                 name="text"
                 id="text"
                 value={newNote.noteContent ?? ''}
@@ -260,7 +316,7 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
                 tabIndex={1}
                 className="m-24 mb-12 mt-16 h-full overflow-scroll bg-mainBackground-200 text-2xl focus:placeholder-gray-500 focus:outline-none"
                 placeholder="En algún lugar de la Mancha, de cuyo nombre no quiero acordarme..."
-            ></motion.textarea>
+            ></textarea>
 
             <Modal
                 isOpen={isOpen}
@@ -269,22 +325,73 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
                 className="bg-mainBackground-200"
             >
                 <ModalContent>
-                    {() => (
-                        <>
-                            <ModalHeader>
-                                <h1 className="text-2xl font-bold">
-                                    {t('folders.Title')}
-                                </h1>
-                            </ModalHeader>
-                            <ModalBody>
-                                <Tree
-                                    rootFolder={folderTree}
-                                    onlyFolders={true}
-                                    changeFolder={changeFolder}
-                                />
-                            </ModalBody>
-                        </>
-                    )}
+                    {(onClose) => {
+                        return folderOrAnalysis === 'folder' ? (
+                            <>
+                                <ModalHeader>
+                                    <h1 className="text-2xl font-bold">
+                                        {t('folders.Title')}
+                                    </h1>
+                                </ModalHeader>
+                                <ModalBody>
+                                    <Tree
+                                        rootFolder={folderTree}
+                                        onlyFolders={true}
+                                        changeFolder={changeFolder}
+                                    />
+                                </ModalBody>
+                            </>
+                        ) : (
+                            <>
+                                <ModalHeader>
+                                    <h1 className="text-2xl font-bold">
+                                        {parsedAnalysis[currentSectionIndex][0]}
+                                    </h1>
+                                </ModalHeader>
+                                {waitingForAnalysis ? (
+                                    <ModalBody>
+                                        <Loader text={t('loading.Longer')} />
+                                    </ModalBody>
+                                ) : (
+                                    <>
+                                        <ModalBody>
+                                            <div className="flex flex-col items-center justify-center">
+                                                <p className="text-xl">
+                                                    {
+                                                        parsedAnalysis[
+                                                            currentSectionIndex
+                                                        ][1]
+                                                    }
+                                                </p>
+                                            </div>
+                                        </ModalBody>
+                                        <ModalFooter>
+                                            <Button
+                                                className={`rounded-xl
+                                             p-4 font-semibold hover:shadow-[0px_0px_5px_rgba(0,0,0,0.35)]
+                                    `}
+                                                bgColor={'primaryPink-500'}
+                                                onClick={() => {
+                                                    currentSectionIndex <
+                                                    parsedAnalysis.length - 1
+                                                        ? setCurrentSectionIndex(
+                                                              currentSectionIndex +
+                                                                  1,
+                                                          )
+                                                        : onClose();
+                                                }}
+                                            >
+                                                {currentSectionIndex <
+                                                parsedAnalysis.length - 1
+                                                    ? t('notes.Next')
+                                                    : t('notes.Close')}
+                                            </Button>
+                                        </ModalFooter>
+                                    </>
+                                )}
+                            </>
+                        );
+                    }}
                 </ModalContent>
             </Modal>
         </motion.div>
