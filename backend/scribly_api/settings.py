@@ -1,13 +1,4 @@
 
-
-# import os
-
-# if os.environ.get("DJANGO_ENV") == "PRODUCTION":
-#     from .production_settings import *
-# else:
-#     from .local_settings import *
-
-
 """
 Django settings for scribly_api project.
 
@@ -20,6 +11,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import dj_database_url
 from pathlib import Path
 from datetime import timedelta
 import os
@@ -38,7 +30,7 @@ SECRET_KEY = 'xwzhBVDo8SagCO9kU?nY*0W6pyZ3s$2GvrNubT@dL&l7cJ)eFR'
 # os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     '*',
@@ -49,7 +41,7 @@ BACKEND_URL = 'http://localhost:8000'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-STATIC_URL = 'static/'
+STATIC_URL = 'backend/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 # Application definition
@@ -99,6 +91,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -106,7 +99,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'scribly_api.urls'
@@ -136,8 +128,8 @@ WSGI_APPLICATION = 'scribly_api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'escribly_db',
-        'USER': 'escribly_admin',
+        'NAME': 'scribly_db',
+        'USER': 'scribly_admin',
         'PASSWORD': 'titivillus',
         'HOST': 'localhost',
         'PORT': '5432',
@@ -246,8 +238,18 @@ CELERY_BROKER_URL = 'amqp://localhost'
 # EMAIL_USE_SSL = False
 
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'escribly@gmail.com'
+EMAIL_HOST_USER = 'scribly@gmail.com'
 EMAIL_HOST_PASSWORD = 'lxbxximpemzbgeia'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_TIMEOUT = 300  # in seconds
+DEFAULT_FROM_EMAIL = 'german <germanamiau@gmail.com>'
+
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+DATABASES = {
+    "default": dj_database_url.config(default=DATABASE_URL, conn_max_age=1800),
+}
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
