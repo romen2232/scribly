@@ -126,15 +126,7 @@ WSGI_APPLICATION = 'scribly_api.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'scribly_db',
-        'USER': 'scribly_admin',
-        'PASSWORD': 'titivillus',
-        'HOST': 'localhost',
-        'PORT': '5432',
-
-    }
+    "default": dj_database_url.config(default="postgres://postgres:postgres@localhost:5432/scribly", conn_max_age=1800),
 }
 
 AUTH_USER_MODEL = 'users.User'
