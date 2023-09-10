@@ -4,28 +4,28 @@
 
 @font-face {
     font-family: 'HandyCasualCondensed';
-    src: url('src/assets/fonts/TTF/HandyCasualCondensed-Oblique.ttf') format('truetype');
+    src: url('/src/assets/fonts/TTF/HandyCasualCondensed-Oblique.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
   font-family: 'Poppins';
-  src: url('src/assets/fonts/Poppins/Poppins-Regular.ttf') format('truetype');
+  src: url('/src/assets/fonts/Poppins/Poppins-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Poppins';
-  src: url('src/assets/fonts/Poppins/Poppins-Bold.ttf') format('truetype');
+  src: url('/src/assets/fonts/Poppins/Poppins-Bold.ttf') format('truetype');
   font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Poppins';
-  src: url('src/assets/fonts/Poppins/Poppins-Black.ttf') format('truetype');
+  src: url('/src/assets/fonts/Poppins/Poppins-Black.ttf') format('truetype');
   font-weight: 900;
   font-style: normal;
 }
