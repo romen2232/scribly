@@ -7,6 +7,7 @@ from rest_framework.schemas import get_schema_view
 from rest_framework.renderers import JSONOpenAPIRenderer
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import TemplateView
 
 
 router = DefaultRouter()
@@ -50,13 +51,15 @@ api_urlpatterns = [
 ]
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('', TemplateView.as_view(template_name='index.html'), name='index'),
     path('admin/', admin.site.urls),
     path('api/v1/', include(api_urlpatterns)),
 ]
 
 # TODO: NGINX for serving static files in production
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)
 if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
+    urlpatterns += static(settings.STATIC_URL,
+                          document_root=settings.STATICFILES_DIRS[0])

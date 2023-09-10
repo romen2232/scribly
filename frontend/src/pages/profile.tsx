@@ -11,13 +11,12 @@ import Loader from './loader';
 import { Header } from '../components/Header';
 import { Flag, Setting } from '../utils/icons';
 import { Link } from 'react-router-dom';
-import Statistics from '../components/Statistics';
 import BadgesDisplay from '../components/BadgesDisplay';
 import PostsScroll from '../components/PostsScroll';
 import { listNotes } from '../services/notes';
 import { Note } from '../utils/types';
 
-const PageNotFound = lazy(() => import('../pages/pageNotFound'));
+const PageNotFound = lazy(() => import('./pageNotFound'));
 
 const Profile = () => {
     const { t } = useTranslation();
@@ -77,7 +76,6 @@ const Profile = () => {
                 </div>
             </Header>
             <UserInfo user={user} />
-            <Statistics user={user} />
             <BadgesDisplay user={user} />
             <PostsScroll posts={posts} />
         </div>
