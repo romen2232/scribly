@@ -48,7 +48,6 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
     const [folderOrAnalysis, setFolderOrAnalysis] = useState<
         'folder' | 'analysis'
     >('folder');
-    const [setAnalysis] = useState('');
     const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
     const [parsedAnalysis, setParsedAnalysis] = useState<string[][]>([[]]);
 
@@ -179,7 +178,6 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
                 if (result.noteAnalysis === undefined)
                     throw new Error(t('note.AnalysisError'));
                 setParsedAnalysis(parseAnalysis(result.noteAnalysis));
-                setAnalysis(result.noteAnalysis);
                 localSaveNote({
                     ...result,
                     noteLastModified: formatDate(new Date()),
