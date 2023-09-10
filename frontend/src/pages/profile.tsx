@@ -16,7 +16,7 @@ import PostsScroll from '../components/PostsScroll';
 import { listNotes } from '../services/notes';
 import { Note } from '../utils/types';
 
-const PageNotFound = lazy(() => import('../pages/pageNotFound'));
+const PageNotFound = lazy(() => import('./pageNotFound'));
 
 const Profile = () => {
     const { t } = useTranslation();

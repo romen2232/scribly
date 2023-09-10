@@ -42,7 +42,8 @@ BACKEND_URL = 'http://localhost:8000'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_URL = 'backend/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), os.path.join(
+    BASE_DIR, '../frontend/build/static')]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 # Application definition
 
