@@ -57,6 +57,9 @@
 
     "note.NewNote": "Nueva nota",
     "note.Title": "Título",
+    "note.Analyze": "Analizar",
+    "note.Save": "Guardar",
+    "note.AnalyzeError": "Hemos tenido un error al analizar tu nota",
 
     "category.Title": "Categorías",
     "category.Poetry": "Poesía",
@@ -88,6 +91,7 @@
     "knowMore": "Saber más",
 
     "Loading": "Cargando...",
+    "loading.Longer": "Esto puede tardar un poco más de lo normal...",
     "emailAccount": "scribly@gmail.com",
     "or": "o",
 

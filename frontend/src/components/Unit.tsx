@@ -15,6 +15,23 @@ export function Unit({ unit, first }: IUnitProps) {
     const [areLessonsVisible, setAreLessonsVisible] = useState(first);
 
     const [firstTime, setFirstTime] = useState(false);
+
+    /**
+     * @param index index of the lesson
+     * @param unit number of the unit
+     * @returns alignment of the lesson
+     */
+    const alignment = (index: number) => {
+        switch (index % 5) {
+            case 0:
+                return 'self-start';
+            case 2:
+            case 3:
+                return 'self-end';
+            default:
+                return 'self-middle';
+        }
+    };
     return (
         <div className="py-6">
             <div onClick={() => setAreLessonsVisible(!areLessonsVisible)}>
@@ -28,9 +45,7 @@ export function Unit({ unit, first }: IUnitProps) {
             <div className="flex flex-col items-center justify-center">
                 {areLessonsVisible &&
                     lessons.map((lesson, index) => {
-                        let margin = 'ml-16',
-                            disabled = false;
-                        if (index % 2 === 0) margin = 'mr-16';
+                        let disabled = false;
 
                         if (index > 0) {
                             if (
@@ -55,7 +70,7 @@ export function Unit({ unit, first }: IUnitProps) {
                                 key={lesson.id}
                                 bgColor={'secondaryYellow-500'}
                                 lesson={lesson}
-                                extraClasses={margin}
+                                extraClasses={alignment(index)}
                                 disabled={disabled}
                             />
                         );

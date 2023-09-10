@@ -71,7 +71,6 @@ const TaskChoose: React.FC<TaskProps> = ({ task, onSubmit, onSkip }) => {
                 onClick={handleSkip}
             >
                 Skip
-                <h2 className="text-2xl font-bold">{task.taskName}</h2>
             </Button>
         </div>
     );

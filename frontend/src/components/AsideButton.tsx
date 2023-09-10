@@ -7,6 +7,7 @@ export interface IAsideProps {
     onClick?: () => void;
     disabled?: boolean;
     className?: string;
+    bgColor?: string;
 }
 
 export const AsideButton = ({
@@ -16,13 +17,15 @@ export const AsideButton = ({
     onClick,
     disabled,
     className,
+    bgColor,
 }: IAsideProps) => {
     const finalClass = [
         'mt-3.5 flex h-12 w-full items-center justify-start rounded-lg p-6  duration-150 ease-in-out transition',
         className,
         disabled
             ? 'cursor-default'
-            : 'hover:bg-secondaryYellow-500 hover:font-bold hover:shadow-inner-dark hover:active:translate-y-1.5 hover:active:shadow-none',
+            : 'hover:font-bold hover:shadow-inner-dark hover:active:translate-y-1.5 hover:active:shadow-none',
+        bgColor ?? 'hover:bg-secondaryYellow-400',
     ].join(' ');
     if (linkTo) {
         return (

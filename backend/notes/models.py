@@ -26,5 +26,5 @@ class Notes(models.Model):
 
     favorite = models.BooleanField(default=False)
     
-    note_analisys = models.TextField(max_length=10000, blank=True, default='')
+    note_analysis = models.TextField(max_length=10000, blank=True, default='')
 

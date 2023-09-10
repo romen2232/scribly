@@ -12,13 +12,13 @@
   align-items: center;
   justify-content: space-around;
   position: relative;
-  animation: clearCard 0.5s 30s cubic-bezier(0.42, -1, 0.88, 1.44) forwards;
 }
 
 .card p {
   font-weight: bold;
-  margin: 2.5rem;
-  font-size: 1.15rem;
+  margin-left: 2.5rem;
+  
+  font-size: 1rem;
 }
 .moon {
   width: 82px;
@@ -34,7 +34,8 @@
   content: '';
   background: #93c3c4;
   border-radius: 50%;
-  animation: orbit 2s ease-in-out 15 alternate forwards;
+  animation: orbit 2s ease-in-out alternate infinite ;
+  -webkit-animation: orbit 2s ease-in-out alternate infinite ;
 }
 .moon:before {
   width: 12px;
@@ -57,7 +58,8 @@
   border-radius: 50%;
   background: #4b9b9d;
   top: 35%;
-  animation: lookDown 2s ease-in-out 15 alternate forwards;
+  animation: lookDown 2s ease-in-out alternate infinite;
+  -webkit-animation: lookDown 2s ease-in-out alternate infinite;
 }
 .moon .eye.left {
   left: 50%;
@@ -93,7 +95,8 @@
   top: 65%;
   left: 60%;
   background: #4b9b9d;
-  animation: gasp 2s ease-in-out 15 alternate forwards;
+  animation: gasp 2s ease-in-out alternate infinite;
+  -webkit-animation: gasp 2s ease-in-out alternate infinite;
 }
 @media (max-width: 500px) {
   .card {

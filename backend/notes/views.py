@@ -131,7 +131,7 @@ class PublicNoteListByUsername(generics.ListAPIView):
 
 def AnswerNote(input):
 
-    openai.api_key = os.getenv("OPENAI_API_KEY")
+    openai.api_key = "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"
 
     URL = "https://api.openai.com/v1/chat/completions"
 
@@ -220,7 +220,7 @@ class AnalyzeNote(generics.ListCreateAPIView):
         chat = AnswerNote(input=note_content)
 
         serializer.is_valid(raise_exception=True)
-        serializer.save(user=self.request.user, note_analisys=chat)
+        serializer.save(user=self.request.user, note_analysis=chat)
         # note = serializer.save()
         return Response(chat, status=status.HTTP_201_CREATED)
 
@@ -246,6 +246,6 @@ class AnalyzeNoteEdit(generics.RetrieveUpdateDestroyAPIView):
         note_content = instance.note_content
         chat = AnswerNote(input=note_content)
         serializer.is_valid(raise_exception=True)
-        note = serializer.save(note_analisys=chat)
-        print(note.note_analisys)
+        note = serializer.save(note_analysis=chat)
+        print(note.note_analysis)
         return Response(serializer.data, status=status.HTTP_200_OK)

@@ -16,7 +16,11 @@ import {
     AiFillFlag,
     AiFillSetting,
 } from 'react-icons/ai';
-import { BsFileEarmarkText, BsFillFileEarmarkPlusFill } from 'react-icons/bs';
+import {
+    BsFileEarmarkText,
+    BsFillFileEarmarkPlusFill,
+    BsGem,
+} from 'react-icons/bs';
 import { IconBaseProps } from 'react-icons/lib';
 import { JSX } from 'react/jsx-runtime';
 
@@ -117,6 +121,10 @@ export const ProseIcon = (props: JSX.IntrinsicAttributes & IconBaseProps) => {
 
 export const ScriptIcon = (props: JSX.IntrinsicAttributes & IconBaseProps) => {
     return <PiFilmScriptLight {...props} />;
+};
+
+export const GemIcon = (props: JSX.IntrinsicAttributes & IconBaseProps) => {
+    return <BsGem {...props} />;
 };
 
 export const WavyFooter = () => {

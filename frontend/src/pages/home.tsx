@@ -39,9 +39,10 @@ const Home: React.FunctionComponent<IHomeProps> = () => {
                             setCategory('POETRY');
                             setShowSubButtons(!showSubButtons);
                         }}
-                        className="ml-10 w-48 text-gray-700"
+                        className="ml-10 w-48 "
                         {...(category === 'POETRY' &&
                             !showSubButtons && { disabled: true })}
+                        bgColor="hover:bg-primaryBlue-400"
                     />
                 );
             case 'PROSE':
@@ -53,9 +54,10 @@ const Home: React.FunctionComponent<IHomeProps> = () => {
                             setCategory('PROSE');
                             setShowSubButtons(!showSubButtons);
                         }}
-                        className="ml-10 w-48 text-gray-700"
+                        className="ml-10 w-48 "
                         {...(category === 'PROSE' &&
                             !showSubButtons && { disabled: true })}
+                        bgColor="hover:bg-primaryPink-400"
                     />
                 );
             case 'SCRIPT':
@@ -67,7 +69,7 @@ const Home: React.FunctionComponent<IHomeProps> = () => {
                             setCategory('SCRIPT');
                             setShowSubButtons(!showSubButtons);
                         }}
-                        className="ml-10 w-48 text-gray-700"
+                        className="ml-10 w-48 "
                         {...(category === 'SCRIPT' &&
                             !showSubButtons && { disabled: true })}
                     />
