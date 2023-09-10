@@ -5,14 +5,28 @@ export interface IAsideProps {
     title: string;
     linkTo?: string;
     onClick?: () => void;
+    disabled?: boolean;
+    className?: string;
 }
 
-export const AsideButton = ({ icon, title, linkTo, onClick }: IAsideProps) => {
-    const classNames =
-        'mt-4 flex h-12 w-full items-center justify-start rounded-lg p-6 hover:bg-secondaryYellow-500 hover:font-bold hover:shadow-inner-dark hover:active:translate-y-1.5 hover:active:shadow-none duration-150 ease-in-out transition';
+export const AsideButton = ({
+    icon,
+    title,
+    linkTo,
+    onClick,
+    disabled,
+    className,
+}: IAsideProps) => {
+    const finalClass = [
+        'mt-3.5 flex h-12 w-full items-center justify-start rounded-lg p-6  duration-150 ease-in-out transition',
+        className,
+        disabled
+            ? 'cursor-default'
+            : 'hover:bg-secondaryYellow-500 hover:font-bold hover:shadow-inner-dark hover:active:translate-y-1.5 hover:active:shadow-none',
+    ].join(' ');
     if (linkTo) {
         return (
-            <Link to={linkTo} className={classNames}>
+            <Link to={linkTo} className={finalClass}>
                 {icon}
                 <span className="ml-4 text-xl">{title}</span>
             </Link>
@@ -20,7 +34,7 @@ export const AsideButton = ({ icon, title, linkTo, onClick }: IAsideProps) => {
     } else {
         return (
             <li className="w-full">
-                <button className={classNames} onClick={onClick}>
+                <button className={finalClass} onClick={onClick}>
                     {icon}
                     <span className="ml-4 text-xl">{title}</span>
                 </button>

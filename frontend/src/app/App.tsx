@@ -50,7 +50,7 @@ export default function App() {
                 <Suspense fallback={<Loader />}>
                     <Routes>
                         <Route path={t('/')} element={<ProtectedHome />} />
-                        <Route path={t('/about')} element={<h1>About</h1>} />
+                        <Route path={t('/about')} element={<ProtectedHome />} />
                         <Route path={t('/note')} element={<ProtectedNew />} />
                         <Route
                             path={t('/folders')}

@@ -29,6 +29,7 @@ export interface INoteProps {
     // onSubmit: (answer: AnswerProps) => void;
 }
 
+//TODO: Tab index is not working as intendeed
 export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
     const { currentNote, saveNote, undo, redo, localSaveNote } = useNoteStore();
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -159,6 +160,7 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
                     ...result,
                     noteLastModified: formatDate(new Date()),
                 });
+                console.log(result);
             }
 
             //TODO: Modal here
@@ -247,7 +249,7 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
                     </button>
                 </div>
             </header>
-            <motion.textarea
+            <textarea
                 name="text"
                 id="text"
                 value={newNote.noteContent ?? ''}
@@ -260,7 +262,7 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
                 tabIndex={1}
                 className="m-24 mb-12 mt-16 h-full overflow-scroll bg-mainBackground-200 text-2xl focus:placeholder-gray-500 focus:outline-none"
                 placeholder="En algún lugar de la Mancha, de cuyo nombre no quiero acordarme..."
-            ></motion.textarea>
+            ></textarea>
 
             <Modal
                 isOpen={isOpen}

@@ -20,6 +20,9 @@ import { BsFileEarmarkText, BsFillFileEarmarkPlusFill } from 'react-icons/bs';
 import { IconBaseProps } from 'react-icons/lib';
 import { JSX } from 'react/jsx-runtime';
 
+import { PiAlienThin, PiFilmScriptLight } from 'react-icons/pi';
+import { GiQuillInk } from 'react-icons/gi';
+
 import '../styles/paperPlane.css';
 
 export const FolderIcon = (props: JSX.IntrinsicAttributes & IconBaseProps) => {
@@ -102,6 +105,18 @@ export const FlagIcon = (props: JSX.IntrinsicAttributes & IconBaseProps) => {
 
 export const SettingIcon = (props: JSX.IntrinsicAttributes & IconBaseProps) => {
     return <AiFillSetting {...props} />;
+};
+
+export const PoetryIcon = (props: JSX.IntrinsicAttributes & IconBaseProps) => {
+    return <GiQuillInk {...props} />;
+};
+
+export const ProseIcon = (props: JSX.IntrinsicAttributes & IconBaseProps) => {
+    return <PiAlienThin {...props} />;
+};
+
+export const ScriptIcon = (props: JSX.IntrinsicAttributes & IconBaseProps) => {
+    return <PiFilmScriptLight {...props} />;
 };
 
 export const WavyFooter = () => {
