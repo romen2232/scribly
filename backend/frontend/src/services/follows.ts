@@ -161,6 +161,23 @@ const createFollow = async (
     }
 };
 
+const notFollowing = async (
+    userId: number,
+    token: string,
+): Promise<User[]> => {
+    try {
+        const response = await apiClient.get<User[]>(
+            `api/v1/follows/notFollowing/${userId}/`,
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            },
+        );
+        return response.data;
+    } catch (error) {
+        throw new Error(`Error listing users not followed: ${error}`);
+    }
+}
+
 export {
     listUserFollowers,
     listUserFollowings,
@@ -169,4 +186,5 @@ export {
     retrieveUserFriends,
     listFollows,
     createFollow,
+    notFollowing
 };

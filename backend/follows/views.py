@@ -82,3 +82,15 @@ class FriendsView(APIView):
         serializer = FollowSerializer(
             friends, many=True, context={'request': request})
         return Response(serializer.data)
+
+
+class NotFollowingView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, user_id, *args, **kwargs):
+        # This filter shows all the users that the user is not following.
+        not_following = get_user_model().objects.exclude(
+            id__in=Follows.objects.filter(follower_id=user_id).values_list('followed_id', flat=True))
+        serializer = UserSerializer(
+            not_following, many=True, context={'request': request})
+        return Response(serializer.data)

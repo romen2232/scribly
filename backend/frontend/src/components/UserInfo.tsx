@@ -6,24 +6,36 @@ import {
     listUserFollowings,
     createFollow,
     destroyFollow,
+    notFollowing,
 } from '../services/follows';
+import {
+    Modal,
+    ModalContent,
+    ModalHeader,
+    ModalBody,
+    useDisclosure,
+} from '@nextui-org/react';
 import { useEffect, useState } from 'react';
 import { parseCookies } from 'nookies';
 import { AUTH_COOKIE_NAME, USER_COOKIE_NAME } from '../utils/consts';
 import Follows from './Follows'
 import { Button } from './Button';
+import UserList from './UserList';
+import { FollowIcon } from '../assets/icons/Icons';
 
 export interface IUserInfoProps {
     user: User;
 }
 
 const UserInfo: React.FC<IUserInfoProps> = ({ user }) => {
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const profilePhoto = user.profilePhoto;
     const { t } = useTranslation();
     const [followers, setFollowers] = useState<Follow[]>([]);
     const [followings, setFollowings] = useState<Follow[]>([]);
     const [youFollow, setYouFollow] = useState<boolean>(false);
     const [followsYou, setFollowsYou] = useState<boolean>(false);
+    const [notFollowingList, setNotFollowingList] = useState<User[]>([]);
 
     const cookies = parseCookies();
     const loggedUser = JSON.parse(cookies[USER_COOKIE_NAME]);
@@ -63,7 +75,28 @@ const UserInfo: React.FC<IUserInfoProps> = ({ user }) => {
             });
     }, []);
 
+    useEffect(() => {
+        notFollowing(user.id, cookies[AUTH_COOKIE_NAME])
+            .then((response) => {
+                setNotFollowingList(response);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, []);
+
+    const handleFollow = (user:User) => {
+        createFollow(
+            loggedUser.id,
+            user.id,
+            cookies[AUTH_COOKIE_NAME],
+        ).then(() => {
+            setNotFollowingList(notFollowingList.filter((u) => u.id !== user.id));
+        });
+    }
+
     return (
+        <>
         <div className='flex flex-col h-full'>
             <div className="flex">
                 <div className="w-full overflow-hidden">
@@ -102,11 +135,10 @@ const UserInfo: React.FC<IUserInfoProps> = ({ user }) => {
             </div>
             <div className="flex justify-around py-8">
                 {loggedUser.username == user.username ? (
-                    // TODO: Make this link to the add friends page
                     <Button
                     className='rounded-lg font-bold text-lg'
                         bgColor='secondaryYellow-500'
-                        onClick={() => console.log('Add friends')}
+                        onClick={onOpen}
 
                     >
                         {t('profile.AddFriends')}
@@ -144,6 +176,34 @@ const UserInfo: React.FC<IUserInfoProps> = ({ user }) => {
                 )}
             </div>
         </div>
+        <Modal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        scrollBehavior="inside"
+    >
+        <ModalContent>
+            <>
+                <ModalHeader className="flex flex-col gap-1">
+                    {t('profile.NotFollowing')}
+                </ModalHeader>
+                <ModalBody>
+                    <UserList users={notFollowingList}>
+                        <Button
+                        className='rounded-lg font-bold text-lg'
+
+                            bgColor='primaryBlue-500'
+                            onClick={(e) => {
+                                e.preventDefault();
+                                handleFollow(user)}}
+                        >
+                            <FollowIcon className="w-6 h-6" />
+                        </Button>
+                    </UserList>
+                </ModalBody>
+            </>
+        </ModalContent>
+    </Modal>
+    </>
     );
 };
 

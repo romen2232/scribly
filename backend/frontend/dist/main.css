@@ -2003,6 +2003,10 @@ video {
   border-bottom-width: 1px;
 }
 
+.border-b-0 {
+  border-bottom-width: 0px;
+}
+
 .border-b-2 {
   border-bottom-width: 2px;
 }
@@ -2017,10 +2021,6 @@ video {
 
 .border-r-4 {
   border-right-width: 4px;
-}
-
-.border-b-0 {
-  border-bottom-width: 0px;
 }
 
 .border-solid {
@@ -5020,16 +5020,6 @@ html, body {
   background-color: rgb(243 195 63 / var(--tw-bg-opacity));
 }
 
-.hover\:bg-tiviElectricPurple-100:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(210 134 254 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-tiviElectricViolet:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(182 1 253 / var(--tw-bg-opacity));
-}
-
 .hover\:font-bold:hover {
   font-weight: 700;
 }
@@ -5052,11 +5042,6 @@ html, body {
 .hover\:\!text-warning-foreground:hover {
   --tw-text-opacity: 1 !important;
   color: hsl(var(--nextui-warning-foreground) / var(--nextui-warning-foreground-opacity, var(--tw-text-opacity))) !important;
-}
-
-.hover\:text-black:hover {
-  --tw-text-opacity: 1;
-  color: rgb(0 0 0 / var(--tw-text-opacity));
 }
 
 .hover\:text-gray-700:hover {
@@ -6993,14 +6978,14 @@ html, body {
     padding-right: 1.5rem;
   }
 
-  .sm\:text-sm {
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-  }
-
   .sm\:text-4xl {
     font-size: 2.25rem;
     line-height: 2.5rem;
+  }
+
+  .sm\:text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
   }
 
   .sm\:\[--scale-enter\:100\%\] {

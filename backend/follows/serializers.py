@@ -6,6 +6,10 @@ from users.serializers import UserSerializer
 class FollowSerializer(serializers.ModelSerializer):
     follower = UserSerializer(read_only=True)
     followed = UserSerializer(read_only=True)
+    follower = serializers.PrimaryKeyRelatedField(
+        queryset=UserSerializer.Meta.model.objects.all(), write_only=True)
+    followed = serializers.PrimaryKeyRelatedField(
+        queryset=UserSerializer.Meta.model.objects.all(), write_only=True)
 
     class Meta:
         model = Follows

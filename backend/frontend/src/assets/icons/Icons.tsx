@@ -17,6 +17,10 @@ import {
     AiFillSetting,
 } from 'react-icons/ai';
 import {
+    RiUserFollowLine,
+    RiUserUnfollowLine
+} from 'react-icons/ri';
+import {
     BsFileEarmarkText,
     BsFillFileEarmarkPlusFill,
     BsGem,
@@ -126,6 +130,14 @@ export const ScriptIcon = (props: JSX.IntrinsicAttributes & IconBaseProps) => {
 export const GemIcon = (props: JSX.IntrinsicAttributes & IconBaseProps) => {
     return <BsGem {...props} />;
 };
+
+export const FollowIcon = (props: JSX.IntrinsicAttributes & IconBaseProps) => {
+    return <RiUserFollowLine {...props} />;
+}
+
+export const UnfollowIcon = (props: JSX.IntrinsicAttributes & IconBaseProps) => {
+    return <RiUserUnfollowLine {...props} />;
+}
 
 export const WavyFooter = () => {
     return (

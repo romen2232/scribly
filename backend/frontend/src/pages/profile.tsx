@@ -79,7 +79,7 @@ const Profile = () => {
                 <UserInfo user={user} />
                 <BadgesDisplay user={user} />
             </div>
-            <PostsScroll posts={posts} />
+<PostsScroll posts={posts} />
         </div>
     );
 };
