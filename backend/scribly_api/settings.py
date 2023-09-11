@@ -127,20 +127,20 @@ WSGI_APPLICATION = 'scribly_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     "default": dj_database_url.config(default="postgres://postgres:postgres@localhost:5432/scribly", conn_max_age=1800),
-# }
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'escribly_db',
-        'USER': 'escribly_admin',
-        'PASSWORD': 'titivillus',
-        'HOST': 'localhost',
-        'PORT': '5432',
-
-    }
+    "default": dj_database_url.config(default="postgres://postgres:postgres@localhost:5432/scribly", conn_max_age=1800),
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'escribly_db',
+#         'USER': 'escribly_admin',
+#         'PASSWORD': 'titivillus',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+
+#     }
+# }
 
 AUTH_USER_MODEL = 'users.User'
 
@@ -243,7 +243,7 @@ CELERY_BROKER_URL = 'amqp://localhost'
 # EMAIL_USE_SSL = False
 
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'scribly@gmail.com'
+EMAIL_HOST_USER = 'escribly@gmail.com'
 EMAIL_HOST_PASSWORD = 'lxbxximpemzbgeia'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
@@ -251,7 +251,6 @@ EMAIL_TIMEOUT = 300  # in seconds
 
 
 DATABASE_URL = os.getenv("DATABASE_URL")
-
 
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
