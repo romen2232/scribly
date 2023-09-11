@@ -232,7 +232,7 @@ CELERY_BROKER_URL = 'amqp://localhost'
 # EMAIL_USE_SSL = False
 
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'scribly@gmail.com'
+EMAIL_HOST_USER = 'escribly@gmail.com'
 EMAIL_HOST_PASSWORD = 'lxbxximpemzbgeia'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
