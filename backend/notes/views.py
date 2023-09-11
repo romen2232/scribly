@@ -131,7 +131,7 @@ class PublicNoteListByUsername(generics.ListAPIView):
 
 def AnswerNote(input):
 
-    openai.api_key = "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"
+    openai.api_key = os.getenv('OPENAI_API_KEY')
 
     URL = "https://api.openai.com/v1/chat/completions"
 
