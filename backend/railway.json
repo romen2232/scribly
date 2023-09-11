@@ -4,7 +4,7 @@
         "builder": "NIXPACKS"
     },
     "deploy": {
-        "startCommand": "cd ../frontend && npm install && npx tailwindcss -i ./src/assets/styles/tailwind.css -o ./dist/main.css && npm run build && cd ../backend && ./migrations.sh && python manage.py collectstatic --noinput && gunicorn --timeout 500 scribly_api.wsgi",
+        "startCommand": "cd frontend && npm install && npx tailwindcss -i ./src/assets/styles/tailwind.css -o ./dist/main.css && npm run build && cd ../backend && ./migrations.sh && python manage.py collectstatic --noinput && gunicorn --timeout 500 scribly_api.wsgi",
         "restartPolicyType": "NEVER",
         "restartPolicyMaxRetries": 10
     }
