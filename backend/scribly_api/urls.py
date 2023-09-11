@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 
-from django.urls import include, path
+from django.urls import include, path, re_path
 from rest_framework.routers import DefaultRouter
 from rest_framework.schemas import get_schema_view
 from rest_framework.renderers import JSONOpenAPIRenderer
@@ -51,9 +51,10 @@ api_urlpatterns = [
 ]
 
 urlpatterns = [
-    path('', TemplateView.as_view(template_name='index.html'), name='index'),
     path('admin/', admin.site.urls),
     path('api/v1/', include(api_urlpatterns)),
+    re_path(r'^.*$', TemplateView.as_view(template_name='index.html'),
+            name='index'),
 ]
 
 # TODO: NGINX for serving static files in production
