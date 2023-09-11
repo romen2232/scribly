@@ -2,23 +2,29 @@ import { t } from 'i18next';
 import { Link } from 'react-router-dom';
 import { LessonPlayIcon } from '../assets/icons/Icons';
 import { Button } from './Button';
+import { determineLightColor, getColor } from '../utils/functions';
 
 export interface IUnitHeaderProps {
     unitNumber: number;
     description: string;
     backgroundColor: string;
-    currentLesson?: number;
 }
 
 export function UnitHeader({
     unitNumber,
     description,
     backgroundColor,
-    currentLesson,
 }: IUnitHeaderProps) {
+
+    const hexColor = getColor(backgroundColor);
+    const isLightColor = determineLightColor(hexColor);
+
+    //TODO: determine a good way to do this
+    const currentLesson = Math.floor(Math.random() * 75) + 1;
+
     return (
         <Button
-            className=" max-w-2xl rounded-xl px-3 py-1.5 text-black"
+            className={`w-full max-w-2xl rounded-xl px-3 py-1.5 ${isLightColor?"text-black":"text-white"}`}
             bgColor={backgroundColor}
         >
             <header className="flex w-96 items-center justify-between p-4">
