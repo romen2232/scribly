@@ -43,7 +43,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_URL = 'backend/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), os.path.join(
-    BASE_DIR.parent, 'frontend', 'dist')]
+    BASE_DIR, 'frontend', 'dist')]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 # Application definition
 
@@ -237,7 +237,6 @@ EMAIL_HOST_PASSWORD = 'lxbxximpemzbgeia'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_TIMEOUT = 300  # in seconds
-DEFAULT_FROM_EMAIL = 'german <germanamiau@gmail.com>'
 
 
 DATABASE_URL = os.getenv("DATABASE_URL")
