@@ -6,8 +6,8 @@ import {
     FaUsers,
     FaUser,
 } from 'react-icons/fa';
+import { FiLogOut } from 'react-icons/fi';
 import { IoIosAddCircle, IoIosArrowRoundBack } from 'react-icons/io';
-import { SiKnowledgebase } from 'react-icons/si';
 import { MdOutlinePlayLesson } from 'react-icons/md';
 import {
     AiFillStar,
@@ -18,7 +18,8 @@ import {
 } from 'react-icons/ai';
 import {
     RiUserFollowLine,
-    RiUserUnfollowLine
+    RiUserUnfollowLine,
+    RiQuillPenLine
 } from 'react-icons/ri';
 import {
     BsFileEarmarkText,
@@ -94,7 +95,7 @@ export const ProfileIcon = (props: JSX.IntrinsicAttributes & IconBaseProps) => {
 export const KnowledgeIcon = (
     props: JSX.IntrinsicAttributes & IconBaseProps,
 ) => {
-    return <SiKnowledgebase {...props} />;
+    return <RiQuillPenLine {...props} />;
 };
 
 export const LessonPlayIcon = (
@@ -138,6 +139,11 @@ export const FollowIcon = (props: JSX.IntrinsicAttributes & IconBaseProps) => {
 export const UnfollowIcon = (props: JSX.IntrinsicAttributes & IconBaseProps) => {
     return <RiUserUnfollowLine {...props} />;
 }
+
+export const LogoutIcon = (props: JSX.IntrinsicAttributes & IconBaseProps) => {
+    return <FiLogOut {...props} />;
+}
+
 
 export const WavyFooter = () => {
     return (
