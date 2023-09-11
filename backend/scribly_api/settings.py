@@ -19,18 +19,18 @@ from dotenv import load_dotenv
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = 'shttp://scribly.org/'
 
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'xwzhBVDo8SagCO9kU?nY*0W6pyZ3s$2GvrNubT@dL&l7cJ)eFR'
-# os.getenv("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY")
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     '*',
@@ -233,7 +233,7 @@ CELERY_BROKER_URL = 'amqp://localhost'
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'escribly@gmail.com'
-EMAIL_HOST_PASSWORD = 'lxbxximpemzbgeia'
+EMAIL_HOST_PASSWORD = os.getenv("PASSWORD_MAIL")
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_TIMEOUT = 300  # in seconds
