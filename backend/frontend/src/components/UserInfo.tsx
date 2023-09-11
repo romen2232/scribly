@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { parseCookies } from 'nookies';
 import { AUTH_COOKIE_NAME, USER_COOKIE_NAME } from '../utils/consts';
 import Follows from './Follows'
+import { Button } from './Button';
 
 export interface IUserInfoProps {
     user: User;
@@ -63,9 +64,16 @@ const UserInfo: React.FC<IUserInfoProps> = ({ user }) => {
     }, []);
 
     return (
-        <>
+        <div className='flex flex-col h-full'>
             <div className="flex">
                 <div className="w-full overflow-hidden">
+                <div className="mx-20 flex w-40 items-center">
+                    <img
+                        src={profilePhoto ?? '/user.png'}
+                        alt="avatar"
+                        className="rounded-full border border-gray-500 shadow-sm"
+                    />
+                </div>
                     <h1 className="text-center text-2xl font-bold">
                         {user.username?.toUpperCase()}
                     </h1>
@@ -91,43 +99,23 @@ const UserInfo: React.FC<IUserInfoProps> = ({ user }) => {
                         <Follows type='following' follows={followings}></Follows>
                     </div>
                 </div>
-                <div className="mx-20 flex w-40 items-center">
-                    <img
-                        src={profilePhoto ?? '/user.png'}
-                        alt="avatar"
-                        className="rounded-full border border-gray-500 shadow-sm"
-                    />
-                </div>
             </div>
             <div className="flex justify-around py-8">
                 {loggedUser.username == user.username ? (
                     // TODO: Make this link to the add friends page
-                    <button
-                        className="
-                        focus:shadow-outline
-                        rounded
-                        bg-tiviElectricPurple-100
-                        px-4
-                        py-2
-                        font-bold
-                        hover:bg-tiviElectricViolet
-                        focus:outline-none
-                    "
+                    <Button
+                    className='rounded-lg font-bold text-lg'
+                        bgColor='secondaryYellow-500'
+                        onClick={() => console.log('Add friends')}
+
                     >
                         {t('profile.AddFriends')}
-                    </button>
+                    </Button>
                 ) : youFollow ? (
-                    <button
-                        className="
-                        focus:shadow-outline
-                        rounded
-                        bg-tiviElectricPurple-100
-                        px-4
-                        py-2
-                        font-bold
-                        hover:bg-tiviElectricViolet
-                        focus:outline-none
-                    "
+                    <Button
+                    className='rounded-lg font-bold text-lg'
+
+                        bgColor='primaryPink-500'
                         onClick={() =>
                             destroyFollow(
                                 loggedUser.id,
@@ -137,19 +125,12 @@ const UserInfo: React.FC<IUserInfoProps> = ({ user }) => {
                         }
                     >
                         {t('profile.Unfollow')}
-                    </button>
+                    </Button>
                 ) : (
-                    <button
-                        className="
-                        focus:shadow-outline
-                        rounded
-                        bg-tiviElectricPurple-100
-                        px-4
-                        py-2
-                        font-bold
-                        hover:bg-tiviElectricViolet
-                        focus:outline-none
-                    "
+                    <Button
+                    className='rounded-lg font-bold text-lg'
+
+                        bgColor='primaryBlue-500'
                         onClick={() =>
                             createFollow(
                                 loggedUser.id,
@@ -159,12 +140,10 @@ const UserInfo: React.FC<IUserInfoProps> = ({ user }) => {
                         }
                     >
                         {t('profile.Follow')}
-                    </button>
+                    </Button>
                 )}
-                {/* TODO: Add share func */}
-                <button className="">Share button</button>
             </div>
-        </>
+        </div>
     );
 };
 

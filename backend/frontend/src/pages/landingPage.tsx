@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext} from 'react';
 import { AuthContext } from '../hoc/auth/context';
 import { FormLogin } from '../components/FormLogin';
 import { PageContainer } from '../components/PageContainer';
@@ -8,13 +8,15 @@ import Loader from './loader';
 import HeadFoot from '../components/HeadFoot';
 import Scribly from '../components/Scribly';
 import { FormRegister } from '../components/FormRegister';
-import { registerUser } from '../services/auth';
 
 const LandingPage: React.FC = () => {
     const location = useLocation();
     const { t } = useTranslation();
 
-    const { loginUser, loading } = useContext(AuthContext);
+
+    const { loginUser, loading, registerUser } = useContext(AuthContext);
+
+
 
     const handleLogin = async (email: string, password: string) => {
         loginUser({ email, password });

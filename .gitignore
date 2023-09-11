@@ -35,3 +35,4 @@ backend/users/migrations/
 backend/units/migrations/
 backend/media/
 backend/staticfiles/
+settings.py

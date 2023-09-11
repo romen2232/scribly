@@ -75,8 +75,10 @@ const Profile = () => {
                     )}
                 </div>
             </Header>
-            <UserInfo user={user} />
-            <BadgesDisplay user={user} />
+            <div className='flex flex-row-reverse items-center p-8'>
+                <UserInfo user={user} />
+                <BadgesDisplay user={user} />
+            </div>
             <PostsScroll posts={posts} />
         </div>
     );

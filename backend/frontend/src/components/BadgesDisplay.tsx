@@ -4,7 +4,6 @@ import { parseCookies } from 'nookies';
 import Badge from './Badge';
 import { useEffect, useState } from 'react';
 import { listUserBadges, listBadges } from '../services/badges';
-import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 export interface IBadgeDisplayProps {
@@ -37,14 +36,14 @@ export default function BadgesDisplay(props: IBadgeDisplayProps) {
     }, []);
 
     return (
-        <section>
-            <div className="flex flex-row justify-between px-5">
-                <p className="text-lg font-bold text-gray-700">
+        <section className='w-full'>
+            <div className="flex flex-row justify-between w-full px-12">
+                <p className="text-lg font-bold w-full text-gray-700 px-2">
                     {t('badge.Title')}
                 </p>
             </div>
 
-            <div className="m-4 flex flex-col flex-wrap justify-center rounded-lg border-2">
+            <div className="m-4 flex flex-col flex-wrap justify-center rounded-lg border-2 border-b-0">
                 {badges
                     // Sort by progress and then by level
                     .sort(
@@ -85,13 +84,7 @@ export default function BadgesDisplay(props: IBadgeDisplayProps) {
                                 grayscale={true}
                             />
                         ))}{' '}
-                {/* TODO: To where does this link takes? */}
-                <Link
-                    to=""
-                    className="rounded-b-lg p-4 text-center font-semibold text-gray-600 hover:bg-tiviElectricPurple-100 hover:text-black"
-                >
-                    {t('profile.SeeMore')}
-                </Link>
+                {/* TODO: Make a see more */}
             </div>
         </section>
     );

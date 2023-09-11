@@ -24,7 +24,7 @@ export const FormLogin: FC<FormProps> = ({ onSubmit }) => {
                 {t('login.Title')}
             </h2>
 
-            <p>
+            <p className='text-center'>
                 {t('login.NoAccount')}
                 &nbsp;
                 <Hyperlink to={t('/register')} color="pink">

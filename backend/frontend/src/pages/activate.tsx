@@ -58,7 +58,7 @@ const Activate: React.FC = () => {
                     {domain !== '' ? (
                         <Button
                             linkTo={domain}
-                            className="mt-4 w-full rounded  px-3 py-2 font-bold text-secondaryYellow-500 duration-200 ease-in-out transition"
+                            className="mt-4 rounded  px-3 py-2 font-bold text-secondaryYellow-500 duration-200 ease-in-out transition"
                             bgColor="zinc-800 "
                         >
                             {t('activate.GoToMail')}

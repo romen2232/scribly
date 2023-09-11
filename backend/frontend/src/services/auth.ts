@@ -46,6 +46,7 @@ const registerUser = async (user: Register): Promise<Response> => {
                 },
             },
         );
+        console.log(response.data);
         return response.data;
     } catch (error) {
         throw new Error(`Error registering user: ${error}`);
@@ -85,7 +86,6 @@ const activateUser = async (token: string): Promise<Activate> => {
  */
 const loginUser = async (email: string, password: string): Promise<Token> => {
     try {
-        console.log(apiClient);
         const response = await apiClient.post<Token>(
             '/api/v1/auth/login/',
             { email, password },

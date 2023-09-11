@@ -23,7 +23,6 @@ const WavyFooter = ({ children, color, className }: wavyFooterProps) => {
 
     const updateMedia = () => {
         setDesktop(window.innerWidth >= 1024);
-        console.log(window.innerWidth);
     };
 
     useEffect(() => {

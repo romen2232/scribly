@@ -140,11 +140,14 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
                 return;
             }
             try {
+                console.log(email, password, username);
                 const response = await registerUser({
                     email,
                     password,
                     username,
                 });
+                console.log(response);
+                
                 setLoading(false);
                 setEmail(email);
                 if (response) {

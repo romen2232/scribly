@@ -24,7 +24,7 @@ export const FormRegister: FC<FormProps> = ({ onSubmit }) => {
             <h2 className="my-4 text-center text-2xl font-bold">
                 {t('register.Register')}
             </h2>
-            <p>
+            <p className='text-center'>
                 {t('register.Already')} &nbsp;
                 <Hyperlink to={t('/login')} color="blue">
                     {t('login.Login')}

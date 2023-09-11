@@ -202,7 +202,6 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
             const text = analysisArray[i + 1];
             parsedAnalysis.push([title, text]);
         }
-        console.log(parsedAnalysis);
         return parsedAnalysis;
     };
 
@@ -231,7 +230,7 @@ export function Note({ note, folder, onNoteChange, updateURL }: INoteProps) {
                         type="text"
                         name="title"
                         id="title"
-                        className="h-16 w-full bg-mainBackground-200 p-16 text-7xl placeholder-gray-500 focus:placeholder-gray-600 focus:outline-none"
+                        className="h-16 w-full bg-mainBackground-200 p-16 md:text-5xl sm:text-4xl text-7xl placeholder-gray-500 focus:placeholder-gray-600 focus:outline-none"
                         placeholder={t('note.Title')}
                         autoFocus
                         autoComplete="off"
