@@ -13,7 +13,7 @@
         "parser": "@typescript-eslint/parser",
         "ecmaVersion": "latest",
         "sourceType": "module",
-        "project": "./backend/frontend/tsconfig.json",
+        "project": "./frontend/tsconfig.json",
         "tsconfigRootDir": "./"
     },
     "plugins": ["@typescript-eslint", "react"],
