@@ -19,7 +19,7 @@ from dotenv import load_dotenv
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = 'shttp://scribly.org/'
+BASE_DIR = 'http://scribly.org/'
 
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 # Quick-start development settings - unsuitable for production
