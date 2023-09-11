@@ -19,7 +19,7 @@ from dotenv import load_dotenv
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = 'http://scribly.org/'
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 # Quick-start development settings - unsuitable for production
@@ -36,8 +36,8 @@ ALLOWED_HOSTS = [
     '*',
 ]
 
-FRONTEND_URL = 'http://localhost:5173'
-BACKEND_URL = 'http://localhost:8000'
+FRONTEND_URL = 'http://scribly.org/'
+BACKEND_URL = 'http://scribly.org/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
