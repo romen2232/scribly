@@ -4,7 +4,7 @@ import "../assets/styles/About.css"
 
 
 
-const About = () =>  () {
+export function About() {
     return (
     <div className="readme-container">
       <header>
@@ -24,5 +24,5 @@ const About = () =>  () {
     </div>
     
   );
-};
-export default About;
+}
+
