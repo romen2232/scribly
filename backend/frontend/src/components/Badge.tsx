@@ -14,7 +14,7 @@ export default function Badge(props: IBadgeProps) {
     //TODO: DELETE THIS
     props.badge.badgeColor = 'tiviElectricPurple';
     return (
-        <div className="flex items-center border-b-2 p-6">
+        <article className="flex items-center border-b-2 p-6">
             {/* TODO: Make this a button to display a modal with badge info */}
             <div
                 style={{
@@ -56,6 +56,6 @@ export default function Badge(props: IBadgeProps) {
                     progressColor="tiviElectricPurple"
                 />
             </div>
-        </div>
+        </article>
     );
 }

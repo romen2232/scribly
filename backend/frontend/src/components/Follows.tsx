@@ -52,7 +52,7 @@ const Follows: React.FunctionComponent<IFollowsProps> = ({ type, follows }) => {
                             {capitalize}
                         </ModalHeader>
                         <ModalBody>
-                            <UserList users={users}>{followButton}</UserList>
+                            <UserList users={users??[]}>{followButton}</UserList>
                         </ModalBody>
                     </>
                 </ModalContent>

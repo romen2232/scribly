@@ -19,7 +19,6 @@ export function Button({
 }: IButtonProps) {
     const hexColor = getColor(bgColor);
     const isLightColor = determineLightColor(hexColor);
-    console.log(isLightColor);
 
     const [isActive, setIsActive] = useState(false);
 
@@ -38,6 +37,7 @@ export function Button({
         'active:translate-y-1.5 active:shadow-none-important ',
         className,
     ].filter(Boolean); // Filter out any falsy values
+    
 
     return linkTo ? (
         <Link

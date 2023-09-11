@@ -5,16 +5,16 @@ import { retrieveUserByUsername } from '../services/user';
 import { parseCookies } from 'nookies';
 import { USER_COOKIE_NAME, AUTH_COOKIE_NAME } from '../utils/consts';
 import { User } from '../utils/types';
-import { lazy, useEffect, useState } from 'react';
+import { lazy, useContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import Loader from './loader';
 import { Header } from '../components/Header';
-import { Flag, Setting } from '../utils/icons';
-import { Link } from 'react-router-dom';
 import BadgesDisplay from '../components/BadgesDisplay';
 import PostsScroll from '../components/PostsScroll';
 import { listNotes } from '../services/notes';
 import { Note } from '../utils/types';
+import { LogoutIcon } from '../assets/icons/Icons';
+import { AuthContext } from '../hoc/auth/context';
 
 const PageNotFound = lazy(() => import('./pageNotFound'));
 
@@ -26,8 +26,7 @@ const Profile = () => {
     const cookies = parseCookies();
     const loggedUsername = JSON.parse(cookies[USER_COOKIE_NAME]).username;
     const [posts, setPosts] = useState<Note[]>([]);
-
-    console.log(username);
+    const {logout} = useContext(AuthContext);
 
     //TODO: change list Notes to list Notes by user
     useEffect(() => {
@@ -63,20 +62,19 @@ const Profile = () => {
         return <PageNotFound />;
     }
     return (
-        <div>
+        <div className='overflow-x-hidden'>
             <Header>
                 <div className="h-fill flex items-center">
-                    {loggedUsername !== user.username ? (
-                        <Flag className="h-10 w-10" />
-                    ) : (
-                        <Link to={t('/settings')}>
-                            <Setting className="h-7 w-7" />
-                        </Link>
-                    )}
+                        <button onClick={logout} className='mx-16
+                        + text-3xl font-bold'>
+                            <LogoutIcon/>
+                        </button>
                 </div>
             </Header>
-            <UserInfo user={user} />
-            <BadgesDisplay user={user} />
+            <div className='flex flex-row-reverse items-center p-8'>
+                <UserInfo user={user} />
+                <BadgesDisplay user={user} />
+            </div>
             <PostsScroll posts={posts} />
         </div>
     );

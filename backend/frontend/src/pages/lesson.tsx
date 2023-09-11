@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Loader from './loader';
 import LessonTheory from '../components/LessonTheory';
 import TaskChoose from '../components/TaskChoose';
@@ -52,6 +52,7 @@ const Lesson = () => {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const cookies = parseCookies();
     const navigate = useNavigate();
+    const [isFinished, setIsFinished] = useState(false);
 
     // useEffect for opening the modal
     useEffect(() => {
@@ -115,8 +116,8 @@ const Lesson = () => {
             setCurrentIndex(nextIndex);
             setSkippedTask(false);
         } else {
-            // TODO: Make page for when the lesson is completed
-            navigate(t('/finishLesson'));
+            setIsFinished(true);
+            onOpen();
         }
     };
 
@@ -178,16 +179,18 @@ const Lesson = () => {
                         return (
                             <>
                                 <ModalHeader>
-                                    {skippedTask
+                                    {isFinished ? t('task.Finished') :
+                                    skippedTask
                                         ? t('task.Skip')
                                         : currentTaskUser?.answerBoolean
                                         ? t('task.Correct')
                                         : t('task.Incorrect')}
                                 </ModalHeader>
                                 <ModalBody>
-                                    {skippedTask ? (
+                                    { isFinished ? t('task.FinishedText') :
+                                    skippedTask ? (
                                         <>
-                                            {t('task.SkipText')}
+                                    /api/v1/lessons/import/        {t('task.SkipText')}
                                             <br />
                                             {t('task.NoPoints')}
                                         </>
@@ -196,20 +199,33 @@ const Lesson = () => {
                                     )}
                                 </ModalBody>
                                 <ModalFooter>
+                                    {isFinished ? (
+                                        <Button
+                                            className={`rounded-xl  p-4 font-bold hover:shadow-[0px_0px_5px_rgba(0,0,0,0.35)] text-white
+                                        `}
+                                            bgColor={'bg-primaryBlue-500'}
+                                            onClick={() => {
+                                                onClose();
+                                                navigate('/');
+                                            }}
+                                        >
+                                            {t('task.GoHome')}
+                                        </Button>
+                                    ):(<>
                                     <Button
                                         className={`rounded-xl
-                                             p-4 font-semibold hover:shadow-[0px_0px_5px_rgba(0,0,0,0.35)]
-                                    `}
+                                        p-4 font-semibold hover:shadow-[0px_0px_5px_rgba(0,0,0,0.35)]
+                                        `}
                                         bgColor={
                                             skippedTask ||
                                             !currentTaskUser?.answerBoolean
-                                                ? 'primaryPink-500'
+                                            ? 'primaryPink-500'
                                                 : 'primaryBlue-50'
                                         }
                                         onClick={() => {
                                             onClose();
                                         }}
-                                    >
+                                        >
                                         {currentTaskUser?.answerBoolean
                                             ? t('task.Review')
                                             : t('task.Retry')}
@@ -237,6 +253,8 @@ const Lesson = () => {
                                             ? t('task.SkipNext')
                                             : t('task.Next')}
                                     </Button>
+                                    </>
+                                    )}
                                 </ModalFooter>
                             </>
                         );
