@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Scribly from './Scribly';
 import { Hyperlink } from './Hyperlink';
 
