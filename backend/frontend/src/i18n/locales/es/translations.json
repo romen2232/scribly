@@ -87,7 +87,9 @@
     "task.Retry": "Reintentar",
     "task.Finished" : "Completado",
     "task.FinishedText" : "Has completado toda la lección!",
-    "task.GoHome" : "Pantalla Princcipal"
+    "task.GoHome" : "Pantalla Princcipal",
+
+    "notes.Close" : "Cerrar",
 
     "ratings.AverageRating": "Puntuación media",
 
