@@ -36,8 +36,8 @@ ALLOWED_HOSTS = [
     '*',
 ]
 
-FRONTEND_URL = 'http://localhost:5173'
-BACKEND_URL = 'http://localhost:8000'
+FRONTEND_URL = 'https://scribly.org'
+BACKEND_URL = 'https://scribly.org'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

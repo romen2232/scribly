@@ -26,6 +26,7 @@
     "register.Welcome": "¡Bienvenide a bordo!",
     "register.weakPassword": "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número",
 
+    "about.Title": "Acerca de",
     "activate.Thanks": "¡Muchas gracias!",
     "activate.Success": "Tu cuenta ha sido activada",
     "activate.Error": "Error al activar tu cuenta",
@@ -72,6 +73,7 @@
     "badge.Level": "Nivel",
 
     "lessons.Unit": "Unidad",
+    "lessons.Title": "Lecciones",
 
     "task.Title": "Tarea",
     "task.Description": "Descripción",

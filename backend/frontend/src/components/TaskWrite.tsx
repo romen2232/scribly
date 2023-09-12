@@ -38,10 +38,11 @@ const TaskWrite = ({ task, onSubmit, initialNote }: TaskWriteProps) => {
 
     return (
         <div className="relative flex h-full flex-col items-center justify-around gap-4">
-            <div>
+            <p>
+                {task.taskDescription}
+            </p>
                 {/* Render the Note component for writing the task */}
                 <Note note={initialNote} onNoteChange={handleNoteChange} />
-            </div>
 
             <Button
                 className={`h-24 w-1/2 rounded-xl border-2 bg-primaryBlue-500 p-4 text-2xl font-bold text-white`}
