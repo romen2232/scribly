@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 
 from .models import Lessons
 from .serializers import LessonsSerializer
+from units.serializers import UnitSerializer
 
 from tasks.views import TaskImportView, import_tasks
 
