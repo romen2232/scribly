@@ -1,4 +1,3 @@
-import Scribly from './Scribly';
 import { Hyperlink } from './Hyperlink';
 
 

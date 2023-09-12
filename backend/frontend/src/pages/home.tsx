@@ -5,7 +5,6 @@ import { AsideButton } from '../components/AsideButton';
 import {
     AddIcon,
     CategoryIcon,
-    CommunityIcon,
     FolderIcon,
     PoetryIcon,
     ProfileIcon,
@@ -123,11 +122,6 @@ const Home: React.FunctionComponent<IHomeProps> = () => {
                             icon={<ProfileIcon className="h-6 w-6" />}
                             title={t('profile.Title')}
                             linkTo={t('/profile')}
-                        />
-                        <AsideButton
-                            icon={<CommunityIcon className="h-6 w-6" />}
-                            title={t('community.Title')}
-                            linkTo={t('/community')}
                         />
 
                         {location.pathname === t('/about') && (
