@@ -87,10 +87,16 @@
     "task.SkipNext": "Saltar y continuar",
     "task.Review": "Revisar",
     "task.Retry": "Reintentar",
+    "task.Finished" : "Completado",
+    "task.FinishedText" : "Has completado toda la lección!",
+    "task.GoHome" : "Pantalla Princcipal",
+
+    "notes.Close" : "Cerrar",
 
     "ratings.AverageRating": "Puntuación media",
 
     "knowMore": "Saber más",
+    "about.Title" : "Saber más",
 
     "Loading": "Cargando...",
     "loading.Longer": "Esto puede tardar un poco más de lo normal...",

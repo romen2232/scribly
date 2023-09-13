@@ -101,25 +101,25 @@ class LessonsUsersSerializerWithTaskUser(serializers.ModelSerializer):
         lesson_user = Lessons_users.objects.create(**validated_data)
 
         # Create a task_user for each task in the lesson
-        tasks = Tasks.objects.filter(lesson=validated_data['lesson'])
+        tasks = Tasks.objects.filter(lesson=validated_data['lesson']).exclude(type = 'REORDER')
 
         # Filter tasks by every type
 
-        task_write = Tasks.objects.filter(
-            lesson=validated_data['lesson'], type="WRITE")
-        task_complete = Tasks.objects.filter(
-            lesson=validated_data['lesson'], type="COMPLETE")
-        task_reorder = Tasks.objects.filter(
-            lesson=validated_data['lesson'], type="REORDER")
-        task_choose = Tasks.objects.filter(
-            lesson=validated_data['lesson'], type="CHOOSE")
+        # task_write = Tasks.objects.filter(
+        #     lesson=validated_data['lesson'], type="WRITE")
+        # task_complete = Tasks.objects.filter(
+        #     lesson=validated_data['lesson'], type="COMPLETE")
+        # task_reorder = Tasks.objects.filter(
+        #     lesson=validated_data['lesson'], type="REORDER")
+        # task_choose = Tasks.objects.filter(
+            # lesson=validated_data['lesson'], type="CHOOSE")
 
         # Select random n task from each type - Inactive -> Activation in line 131
-        n = 3
-        task_write = task_write.order_by('?')[:1]
-        task_complete = task_complete.order_by('?')[:n]
+        # n = 3
+        # task_write = task_write.order_by('?')[:1]
+        # task_complete = task_complete.order_by('?')[:n]
         # task_reorder = task_reorder.order_by('?')[:n]
-        task_choose = task_choose.order_by('?')[:n]
+        # task_choose = task_choose.order_by('?')[:n]
 
         # Define a list with all the tasks
 

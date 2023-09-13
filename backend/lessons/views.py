@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 
 from .models import Lessons
 from .serializers import LessonsSerializer
+from units.serializers import UnitSerializer
 
 from tasks.views import TaskImportView, import_tasks
 
@@ -83,6 +84,7 @@ class LessonsList(generics.ListAPIView):
 #         return Response(lessons_combined, status=status.HTTP_201_CREATED)
 
 
+
 class LessonImportView(generics.CreateAPIView):
 
     serializer_class = LessonsSerializer
@@ -92,13 +94,43 @@ class LessonImportView(generics.CreateAPIView):
         lessons_datas = request.data.get('lessons', [])
         created_lessons = []
         created_tasks = []
+        
+        units_datas = request.data.get('units', [])
+        units = []
+        print('loquillo')
+        i=0
+        for unit_data in units_datas:
+            
+            i = i +1
+            unit_data_edited = {"unit_name": unit_data["unit_name"], "unit_description": unit_data["unit_description"],"unit_color":unit_data["unit_color"]}
 
+            unit_data_edited["unit_number"] = i
+            unit_data_edited["unit_style"] = "PROSE"
+
+            # create unit object
+            serializer = UnitSerializer(data=unit_data_edited)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+
+            # add unit id to units list
+            units.append(serializer.data["id"])
+            
+            
+
+            
+            
+            
+            
+        print('loco')
         for lesson_data in lessons_datas:
 
+            print(lesson_data)
             lesson_data_edited = {"lesson_name": lesson_data["lesson_name"], "lesson_description": lesson_data["lesson_description"],
                                   "lesson_theory": lesson_data["lesson_theory"], "difficulty": lesson_data["difficulty"], "unit": lesson_data["unit"], "bg_color": lesson_data["bg_color"]}
             # print(lesson_data_edited["lesson_name"])
-
+            # print(lesson_data["unit"]-1)
+            lesson_data_edited["unit"] = units[lesson_data["unit"]-1]
+            
             serializer = self.get_serializer(data=lesson_data_edited)
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
