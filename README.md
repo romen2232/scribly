@@ -106,8 +106,15 @@ For those who love to tinker with code, you can set up Scribly locally and make 
     ```
 
 -   Celery Worker Command:
+
     ```bash
     celery -A scribly_api worker -l info -P eventlet
+    ```
+
+    Create migrations:
+
+    ```bash
+    ./migrations.sh
     ```
 
 #### Frontend
@@ -188,9 +195,40 @@ scribly/
 
 ```
 
+## Tech Stack 🛠️
+
+Scribly is built using a combination of powerful technologies. Here's a breakdown of the primary tools and frameworks that power our platform:
+
+### Backend:
+
+-   **Django**: A high-level Python web framework that encourages rapid design and a clean, pragmatic design.
+-   **Django Rest Framework**: A powerful and flexible toolkit for building Web APIs.
+-   **Celery**: An asynchronous task queue/job queue based on distributed message passing.
+-   **RabbitMQ**: Our chosen message broker, ensuring that our task queue runs smoothly.
+-   **PostgreSQL**: A powerful, open-source object-relational database system.
+-   **ChatGPT API**: Leveraging OpenAI's powerful language model to enhance our chat functionalities and provide real-time writing feedback.
+
+### Frontend:
+
+-   **React**: A JavaScript library for building user interfaces.
+-   **TailwindCSS**: A utility-first CSS framework for rapidly building custom user interfaces.
+-   **Zustand**: A small, fast, and scaleable bearbones state-management solution.
+-   **i18n**: An internationalization-framework written in and for JavaScript.
+
+### DevOps & Deployment:
+
+-   **Docker**: Empowering our application to run consistently across different environments.
+-   **GitHub Actions**: Automating our workflows, from testing to deployment.
+-   **Nginx**: Acting as a reverse proxy to direct web traffic.
+
+### Other Tools:
+
+-   **Git**: For distributed version control.
+-   **VS Code**: Our preferred code editor, equipped with a suite of powerful extensions.
+
 ## Contributing 🤝
 
-For contributions, check our [contribution guidelines](https://github.com/romen2232/scribly/blob/main/CONTRIBUTING.md). It includes instructions on how to open issues, coding standards, and development notes.
+For contributions, check our [contribution guidelines](https://github.com/romen2232/scribly/blob/main/CONTRIBUITING.md). It includes instructions on how to open issues, coding standards, and development notes.
 
 We welcome contributions! If you find a bug or have a feature request, please open an issue. If you'd like to contribute code, please fork the repository and submit a pull request.
 
